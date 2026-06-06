@@ -1,4 +1,4 @@
-import type { AuditFields, Address } from './common.types'
+import type { AuditFields } from './common.types'
 import type { PayrollStatus } from './enums'
 
 export interface Payroll extends AuditFields {
