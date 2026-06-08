@@ -1,7 +1,3 @@
-// =============================================================================
-// useCrud.ts — hook generico de CRUD reutilizado por todos os dominios
-// =============================================================================
-
 import { useState, useCallback } from 'react'
 import { getErrorMessage } from '../utils/errorHandler'
 import type { PagedResult } from '../types/pagination.types'
@@ -33,11 +29,16 @@ export function useCrud<T, CreateDto = Partial<T>, UpdateDto = Partial<T>>(
     setError(null)
     try {
       const result = await service.getAll({ pageNumber: page, pageSize, ...params })
-      setItems(result.items)
-      setTotal(result.totalCount)
-      setTotalPages(result.totalPages)
+
+      setItems(result?.items ?? [])
+      setTotal(result?.totalCount ?? 0)
+      setTotalPages(result?.totalPages ?? 0)
+
       return result
     } catch (err) {
+      setItems([])
+      setTotal(0)
+      setTotalPages(0)
       setError(getErrorMessage(err))
     } finally {
       setLoading(false)

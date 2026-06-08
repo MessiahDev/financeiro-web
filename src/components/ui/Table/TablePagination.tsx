@@ -1,7 +1,3 @@
-// =============================================================================
-// TablePagination.tsx
-// =============================================================================
-
 import type { PagedResult } from '../../../types/pagination.types'
 import { PAGE_SIZE_OPTIONS } from '../../../types/pagination.types'
 import { Button } from '../Button/Button'

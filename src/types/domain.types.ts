@@ -417,13 +417,30 @@ export interface CreateTaxPaymentRequest {
 }
 
 export interface FinancialSummary {
-  period:            string
-  totalRevenue:      number
-  totalExpenses:     number
-  netResult:         number
-  totalReceivables:  number
-  totalPayables:     number
-  cashBalance:       number
+  from:               string
+  to:                 string
+  totalCredits:       number
+  totalDebits:        number
+  netBalance:         number
+  payrollsProcessed:  number
+  totalPayroll:       number
+  activeEmployees:    number
+  breakdown:          CategoryBreakdown[]
+  monthlyTrend:       MonthlyTrend[]
+}
+
+export interface CategoryBreakdown {
+  category: string
+  type:     string
+  total:    number
+  count:    number
+}
+
+export interface MonthlyTrend {
+  month:      string
+  credits:    number
+  debits:     number
+  netBalance: number
 }
 
 export interface TrialBalanceEntry {

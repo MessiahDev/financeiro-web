@@ -1,7 +1,3 @@
-// =============================================================================
-// Table.tsx
-// =============================================================================
-
 import { Spinner } from '../Spinner/Spinner'
 import { EmptyState } from '../EmptyState/EmptyState'
 
@@ -25,7 +21,7 @@ interface TableProps<T> {
 
 export function Table<T>({
   columns,
-  data,
+  data = [],
   keyExtractor,
   isLoading = false,
   emptyMessage = 'Nenhum registro encontrado.',
@@ -61,7 +57,7 @@ export function Table<T>({
                 </div>
               </td>
             </tr>
-          ) : data.length === 0 ? (
+          ) : (data?.length ?? 0) === 0 ? (
             <tr>
               <td colSpan={columns.length} className="py-12 text-center">
                 <EmptyState message={emptyMessage} />

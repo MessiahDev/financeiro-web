@@ -1,4 +1,1 @@
-export {
-  bankReconciliationsService,
-  type CreateBankReconciliationRequest,
-} from './bankStatements.service'
+export { bankReconciliationsService, type CreateBankReconciliationRequest } from './bankStatements.service'

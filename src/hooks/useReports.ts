@@ -1,7 +1,3 @@
-// =============================================================================
-// useReports.ts
-// =============================================================================
-
 import { useState, useCallback } from 'react'
 import { reportsService } from '../services/reports.service'
 import { getErrorMessage } from '../utils/errorHandler'

@@ -39,15 +39,15 @@ export default function FinancialSummaryPage() {
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
           <Card>
             <h3 className="mb-2 font-display font-semibold text-slate-900">Resultado do Periodo</h3>
-            <MetricRow label="Total de Receitas"  value={summary.totalRevenue}  highlight="positive" />
-            <MetricRow label="Total de Despesas"  value={summary.totalExpenses} highlight="negative" />
-            <MetricRow label="Resultado Liquido"  value={summary.netResult}     highlight={summary.netResult >= 0 ? 'positive' : 'negative'} />
+            <MetricRow label="Total de Creditos"  value={summary.totalCredits}  highlight="positive" />
+            <MetricRow label="Total de Debitos"   value={summary.totalDebits}   highlight="negative" />
+            <MetricRow label="Resultado Liquido"  value={summary.netBalance}    highlight={summary.netBalance >= 0 ? 'positive' : 'negative'} />
           </Card>
           <Card>
-            <h3 className="mb-2 font-display font-semibold text-slate-900">Posicao Financeira</h3>
-            <MetricRow label="Contas a Receber"   value={summary.totalReceivables} highlight="positive" />
-            <MetricRow label="Contas a Pagar"     value={summary.totalPayables}    highlight="negative" />
-            <MetricRow label="Saldo em Caixa"     value={summary.cashBalance} />
+            <h3 className="mb-2 font-display font-semibold text-slate-900">Folha e Equipe</h3>
+            <MetricRow label="Total Folha de Pagamento"  value={summary.totalPayroll}       highlight="negative" />
+            <MetricRow label="Funcionarios Ativos"       value={summary.activeEmployees}    highlight="neutral" />
+            <MetricRow label="Folhas Processadas"        value={summary.payrollsProcessed}  highlight="neutral" />
           </Card>
         </div>
       ) : (
