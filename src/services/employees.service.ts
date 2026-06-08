@@ -35,7 +35,8 @@ export interface GetEmployeesParams {
 
 export const employeesService = {
   async getAll(params?: GetEmployeesParams): Promise<PagedResult<Employee>> {
-    return get<PagedResult<Employee>>(API_ROUTES.EMPLOYEES + buildQueryString(params ?? {}))
+    return get<PagedResult<Employee>>(API_ROUTES.EMPLOYEES + buildQueryString(
+    (params ?? {}) as Record<string, string | number | boolean | null | undefined>))
   },
 
   async getById(id: string): Promise<Employee> {

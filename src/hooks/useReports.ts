@@ -4,38 +4,54 @@ import { getErrorMessage } from '../utils/errorHandler'
 import type { FinancialSummary, TrialBalance } from '../types/domain.types'
 
 export function useReports() {
-  const [summary, setSummary]         = useState<FinancialSummary | null>(null)
+  const [summary, setSummary]           = useState<FinancialSummary | null>(null)
   const [trialBalance, setTrialBalance] = useState<TrialBalance | null>(null)
-  const [isLoading, setIsLoading]     = useState(false)
-  const [error, setError]             = useState<string | null>(null)
+  const [isSummaryLoading, setSummaryLoading]             = useState(false)
+  const [isTrialBalanceLoading, setTrialBalanceLoading]   = useState(false)
+  const [summaryError, setSummaryError]                   = useState<string | null>(null)
+  const [trialBalanceError, setTrialBalanceError]         = useState<string | null>(null)
 
-  const fetchSummary = useCallback(async (params?: { startDate?: string; endDate?: string }) => {
-    setIsLoading(true)
-    setError(null)
-    try {
-      const data = await reportsService.getFinancialSummary(params)
-      setSummary(data)
-      return data
-    } catch (err) {
-      setError(getErrorMessage(err))
-    } finally {
-      setIsLoading(false)
-    }
-  }, [])
+  const fetchSummary = useCallback(
+    async (params?: { startDate?: string; endDate?: string }) => {
+      setSummaryLoading(true)
+      setSummaryError(null)
+      try {
+        const data = await reportsService.getFinancialSummary(params)
+        setSummary(data)
+        return data
+      } catch (err) {
+        setSummaryError(getErrorMessage(err))
+      } finally {
+        setSummaryLoading(false)
+      }
+    },
+    [],
+  )
 
   const fetchTrialBalance = useCallback(async (periodId: string) => {
-    setIsLoading(true)
-    setError(null)
+    setTrialBalanceLoading(true)
+    setTrialBalanceError(null)
     try {
       const data = await reportsService.getTrialBalance(periodId)
       setTrialBalance(data)
       return data
     } catch (err) {
-      setError(getErrorMessage(err))
+      setTrialBalanceError(getErrorMessage(err))
     } finally {
-      setIsLoading(false)
+      setTrialBalanceLoading(false)
     }
   }, [])
 
-  return { summary, trialBalance, isLoading, error, fetchSummary, fetchTrialBalance }
+  return {
+    summary,
+    trialBalance,
+    isSummaryLoading,
+    isTrialBalanceLoading,
+    summaryError,
+    trialBalanceError,
+    fetchSummary,
+    fetchTrialBalance,
+    clearSummaryError:      () => setSummaryError(null),
+    clearTrialBalanceError: () => setTrialBalanceError(null),
+  }
 }

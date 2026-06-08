@@ -5,7 +5,7 @@ export const employeeSchema = z.object({
   email:              z.string().min(1, 'E-mail obrigatorio').email('E-mail invalido'),
   cpf:                z.string().length(11, 'CPF deve ter 11 digitos').regex(/^\d+$/, 'Apenas numeros'),
   position:           z.string().min(2, 'Cargo obrigatorio').max(100),
-  departmentId:       z.string().uuid('Departamento obrigatorio'),
+  departmentId:       z.uuid({ message: 'Departamento obrigatorio' }),
   salary:             z.coerce.number().min(0.01, 'Salario deve ser maior que zero'),
   hireDate:           z.string().min(1, 'Data de admissao obrigatoria'),
   bankName:           z.string().optional(),

@@ -1,7 +1,3 @@
-// =============================================================================
-// CustomersPage.tsx — CRUD completo de clientes
-// =============================================================================
-
 import { useEffect, useState, useCallback } from 'react'
 import { PageHeader } from '../../components/layout/PageHeader/PageHeader'
 import { CustomerList } from '../../components/features/customers/CustomerList'

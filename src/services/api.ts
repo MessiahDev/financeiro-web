@@ -17,7 +17,6 @@ api.interceptors.request.use(
     const token = storage.getToken()
  
     if (token) {
-      // Token expirado: limpa sessao e redireciona para login
       if (isTokenExpired(token)) {
         storage.clearAuth()
         window.location.href = '/login'
