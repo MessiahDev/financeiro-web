@@ -4,7 +4,7 @@ export const journalEntryLineSchema = z.object({
   chartOfAccountId:   z.uuid({ message: 'Conta obrigatória' }),
   costCenterId:       z.uuid().optional().or(z.literal('')),
 type:                 z.enum(['Debit', 'Credit'], { message: 'Tipo obrigatório' }),
-  amount:             z.coerce.number().min(0.01, 'Valor deve ser maior que zero'),
+  amount:             z.number().min(0.01, 'Valor deve ser maior que zero'),
   description:        z.string().max(300).optional(),
 })
 

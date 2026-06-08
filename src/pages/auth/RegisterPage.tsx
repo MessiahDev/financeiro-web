@@ -13,11 +13,7 @@ export default function RegisterPage() {
   const { error: notifyError, success } = useNotifications()
   const navigate = useNavigate()
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<RegisterFormData>({ resolver: zodResolver(registerSchema) })
+  const { register, handleSubmit, formState: { errors } } = useForm({ resolver: zodResolver(registerSchema) })
 
   async function onSubmit(data: RegisterFormData) {
     try {

@@ -1,3 +1,7 @@
+// =============================================================================
+// UserMenu.tsx — menu dropdown do usuario no header
+// =============================================================================
+
 import { useState } from 'react'
 import { useAuthContext } from '../../../contexts/AuthContext'
 

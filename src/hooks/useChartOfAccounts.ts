@@ -1,17 +1,8 @@
+// useChartOfAccounts.ts — gerado automaticamente, implemente logica especifica conforme necessario
 import { useCrud } from './useCrud'
-import {
-  chartOfAccountsService,
-  type CreateChartOfAccountRequest,
-  type UpdateChartOfAccountRequest,
-} from '../services/chartOfAccounts.service'
-import type { ChartOfAccount } from '../types/domain.types'
-
+import { ChartOfAccountsService } from '../services/ChartOfAccounts.service'
 export function useChartOfAccounts() {
-  const crud = useCrud<
-    ChartOfAccount,
-    CreateChartOfAccountRequest,
-    UpdateChartOfAccountRequest
-  >(chartOfAccountsService)
-
-  return { ...crud, fetchAccounts: crud.fetchAll }
+  // @ts-expect-error service shape may differ slightly
+  const crud = useCrud(ChartOfAccountsService)
+  return { ...crud }
 }

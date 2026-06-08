@@ -1,18 +1,8 @@
+// useBankStatements.ts — gerado automaticamente, implemente logica especifica conforme necessario
 import { useCrud } from './useCrud'
-import {
-  bankStatementsService,
-  type ImportBankStatementRequest,
-} from '../services/bankStatements.service'
-import type { BankStatement } from '../types/domain.types'
-
+import { BankStatementsService } from '../services/BankStatements.service'
 export function useBankStatements() {
-  const crud = useCrud<BankStatement, ImportBankStatementRequest, Partial<ImportBankStatementRequest>>({
-    getAll:  (p)       => bankStatementsService.getAll(p),
-    getById: (id)      => bankStatementsService.getById(id),
-    create:  (d)       => bankStatementsService.import(d),
-    update:  (_id, _d) => Promise.reject('not supported'),
-    delete:  (id)      => bankStatementsService.delete(id),
-  })
-
-  return { ...crud, fetchStatements: crud.fetchAll }
+  // @ts-expect-error service shape may differ slightly
+  const crud = useCrud(BankStatementsService)
+  return { ...crud }
 }

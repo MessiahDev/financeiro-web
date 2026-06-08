@@ -14,7 +14,6 @@ export const transactionsService = {
   async getById(id: string): Promise<Transaction> {
     return get<Transaction>(`${API_ROUTES.TRANSACTIONS}/${id}`)
   },
-  // CORRIGIDO: data tipado com CreateTransactionRequest (era unknown)
   async create(data: CreateTransactionRequest): Promise<Transaction> {
     return post<Transaction>(API_ROUTES.TRANSACTIONS, data)
   },

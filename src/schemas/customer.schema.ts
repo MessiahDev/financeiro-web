@@ -6,7 +6,7 @@ export const customerSchema = z.object({
   phone:       z.string().optional(),
   document:    z.string().min(11, 'Documento invalido').max(18),
   personType:  z.enum(['Individual', 'Company'], { message: 'Tipo obrigatorio' }),
-  creditLimit: z.coerce.number().min(0).optional(),
+  creditLimit: z.number().min(0).optional(),
   notes:       z.string().max(500).optional(),
 })
 

@@ -1,3 +1,7 @@
+// =============================================================================
+// CashFlowChart.tsx — grafico simples de barras SVG (sem dependencia externa)
+// =============================================================================
+
 import { Card, CardHeader } from '../../ui/Card/Card'
 import { formatCurrency } from '../../../utils/formatters'
 

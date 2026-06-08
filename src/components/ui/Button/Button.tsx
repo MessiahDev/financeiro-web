@@ -1,3 +1,7 @@
+// =============================================================================
+// Button.tsx
+// =============================================================================
+
 import { forwardRef, type ButtonHTMLAttributes } from 'react'
 import { Spinner } from '../Spinner/Spinner'
 

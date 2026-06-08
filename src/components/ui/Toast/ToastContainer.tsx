@@ -1,3 +1,7 @@
+// =============================================================================
+// ToastContainer.tsx — container fixo que renderiza a lista de toasts
+// =============================================================================
+
 import { Toast, type ToastData } from './Toast'
 
 interface ToastContainerProps {

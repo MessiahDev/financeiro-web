@@ -1,5 +1,10 @@
+// =============================================================================
+// FormField.tsx + FormError.tsx
+// =============================================================================
+
 import type { ReactNode } from 'react'
 
+// --- FormError ---------------------------------------------------------------
 interface FormErrorProps {
   message?: string
   className?: string
@@ -14,6 +19,7 @@ export function FormError({ message, className = '' }: FormErrorProps) {
   )
 }
 
+// --- FormField ---------------------------------------------------------------
 interface FormFieldProps {
   label?: string
   error?: string

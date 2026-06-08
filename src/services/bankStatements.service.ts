@@ -30,7 +30,6 @@ export const bankStatementsService = {
   async getById(id: string): Promise<BankStatement> {
     return get<BankStatement>(`${API_ROUTES.BANK_STATEMENTS}/${id}`)
   },
-  // CORRIGIDO: data tipado com ImportBankStatementRequest (era unknown)
   async import(data: ImportBankStatementRequest): Promise<BankStatement> {
     return post<BankStatement>(API_ROUTES.BANK_STATEMENTS, data)
   },

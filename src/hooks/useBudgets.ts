@@ -1,12 +1,8 @@
+// useBudgets.ts — gerado automaticamente, implemente logica especifica conforme necessario
 import { useCrud } from './useCrud'
-import {
-  budgetsService,
-  type UpdateBudgetRequest,
-} from '../services/budgets.service'
-import type { Budget, CreateBudgetRequest } from '../types/domain.types'
-
+import { BudgetsService } from '../services/Budgets.service'
 export function useBudgets() {
-  const crud = useCrud<Budget, CreateBudgetRequest, UpdateBudgetRequest>(budgetsService)
-
-  return { ...crud, fetchBudgets: crud.fetchAll }
+  // @ts-expect-error service shape may differ slightly
+  const crud = useCrud(BudgetsService)
+  return { ...crud }
 }

@@ -68,7 +68,6 @@ function withSuspense(Component: React.ComponentType) {
 }
 
 const router = createBrowserRouter([
-  // Public routes
   {
     element: <Suspense fallback={<PageLoader />}><AuthLayout /></Suspense>,
     children: [
@@ -85,21 +84,18 @@ const router = createBrowserRouter([
         children: [
           { path: ROUTES.DASHBOARD, element: withSuspense(DashboardPage) },
 
-          // Bank
           { path: ROUTES.BANK_ACCOUNTS,              element: withSuspense(BankAccountsPage) },
           { path: ROUTES.BANK_ACCOUNT_DETAIL,        element: withSuspense(BankAccountDetailPage) },
           { path: ROUTES.BANK_STATEMENTS,            element: withSuspense(BankStatementsPage) },
           { path: ROUTES.BANK_RECONCILIATIONS,       element: withSuspense(BankReconciliationsPage) },
           { path: ROUTES.BANK_RECONCILIATION_DETAIL, element: withSuspense(BankReconciliationDetailPage) },
 
-          // Accounting
           { path: ROUTES.ACCOUNTING_PERIODS,    element: withSuspense(AccountingPeriodsPage) },
           { path: ROUTES.CHART_OF_ACCOUNTS,     element: withSuspense(ChartOfAccountsPage) },
           { path: ROUTES.COST_CENTERS,          element: withSuspense(CostCentersPage) },
           { path: ROUTES.JOURNAL_ENTRIES,       element: withSuspense(JournalEntriesPage) },
           { path: ROUTES.JOURNAL_ENTRY_DETAIL,  element: withSuspense(JournalEntryDetailPage) },
 
-          // Financial
           { path: ROUTES.ACCOUNTS_PAYABLE,          element: withSuspense(AccountsPayablePage) },
           { path: ROUTES.ACCOUNT_PAYABLE_DETAIL,    element: withSuspense(AccountPayableDetailPage) },
           { path: ROUTES.ACCOUNTS_RECEIVABLE,       element: withSuspense(AccountsReceivablePage) },
@@ -108,24 +104,20 @@ const router = createBrowserRouter([
           { path: ROUTES.BUDGETS,                   element: withSuspense(BudgetsPage) },
           { path: ROUTES.BUDGET_DETAIL,             element: withSuspense(BudgetDetailPage) },
 
-          // CRM
           { path: ROUTES.CUSTOMERS,       element: withSuspense(CustomersPage) },
           { path: ROUTES.CUSTOMER_DETAIL, element: withSuspense(CustomerDetailPage) },
           { path: ROUTES.SUPPLIERS,       element: withSuspense(SuppliersPage) },
           { path: ROUTES.SUPPLIER_DETAIL, element: withSuspense(SupplierDetailPage) },
 
-          // HR
           { path: ROUTES.DEPARTMENTS,    element: withSuspense(DepartmentsPage) },
           { path: ROUTES.EMPLOYEES,      element: withSuspense(EmployeesPage) },
           { path: ROUTES.EMPLOYEE_DETAIL, element: withSuspense(EmployeeDetailPage) },
           { path: ROUTES.PAYROLL,        element: withSuspense(PayrollPage) },
           { path: ROUTES.PAYROLL_DETAIL, element: withSuspense(PayrollDetailPage) },
 
-          // Tax
           { path: ROUTES.TAX_ENTRIES,      element: withSuspense(TaxEntriesPage) },
           { path: ROUTES.TAX_ENTRY_DETAIL, element: withSuspense(TaxEntryDetailPage) },
 
-          // Reports
           { path: ROUTES.REPORTS,                   element: withSuspense(ReportsPage) },
           { path: ROUTES.REPORTS_FINANCIAL_SUMMARY,  element: withSuspense(FinancialSummaryPage) },
           { path: ROUTES.REPORTS_TRIAL_BALANCE,      element: withSuspense(TrialBalancePage) },
@@ -134,7 +126,6 @@ const router = createBrowserRouter([
     ],
   },
 
-  // Errors
   { path: ROUTES.UNAUTHORIZED, element: withSuspense(UnauthorizedPage) },
   { path: ROUTES.NOT_FOUND,    element: withSuspense(NotFoundPage) },
   { path: '*',                 element: withSuspense(NotFoundPage) },

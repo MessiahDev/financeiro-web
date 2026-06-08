@@ -3,8 +3,8 @@ import { z } from 'zod'
 export const bankReconciliationSchema = z.object({
   bankAccountId:  z.uuid({ message: 'Conta bancária obrigatória' }),
   statementDate:  z.string().min(1, 'Data do extrato obrigatória'),
-  openingBalance: z.coerce.number(),
-  closingBalance: z.coerce.number(),
+  openingBalance: z.number(),
+  closingBalance: z.number(),
 })
 
 export const bankReconciliationItemSchema = z.object({

@@ -6,7 +6,7 @@ export const supplierSchema = z.object({
   phone:            z.string().optional(),
   document:         z.string().min(11, 'Documento invalido').max(18),
   personType: z.enum(['Individual', 'Company'], { message: 'Tipo obrigatorio' }),
-  paymentTermDays:  z.coerce.number().int().min(0).optional(),
+  paymentTermDays:  z.number().int().min(0).optional(),
   notes:            z.string().max(500).optional(),
 })
 

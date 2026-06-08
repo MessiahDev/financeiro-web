@@ -1,3 +1,7 @@
+// =============================================================================
+// SidebarGroup.tsx — grupo de itens da sidebar com label de secao
+// =============================================================================
+
 import type { ReactNode } from 'react'
 
 interface SidebarGroupProps {

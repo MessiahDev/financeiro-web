@@ -1,79 +1,44 @@
-export const API_BASE_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:5000'
- 
+export const API_BASE_URL = import.meta.env.VITE_API_URL
+
 export const API_VERSION = 'v1'
- 
+
 export const API_ROUTES = {
-  // Auth
   AUTH_LOGIN: '/auth/login',
   AUTH_REGISTER: '/auth/register',
- 
-  // Bank Accounts
   BANK_ACCOUNTS: '/bank-accounts',
- 
-  // Bank Statements
   BANK_STATEMENTS: '/bank-statements',
- 
-  // Accounting Periods
   ACCOUNTING_PERIODS: '/accounting-periods',
- 
-  // Chart of Accounts
   CHART_OF_ACCOUNTS: '/chart-of-accounts',
- 
-  // Cost Centers
   COST_CENTERS: '/cost-centers',
- 
-  // Journal Entries
   JOURNAL_ENTRIES: '/journal-entries',
- 
-  // Accounts Payable
   ACCOUNTS_PAYABLE: '/accounts-payable',
- 
-  // Accounts Receivable
   ACCOUNTS_RECEIVABLE: '/accounts-receivable',
- 
-  // Transactions
   TRANSACTIONS: '/transactions',
- 
-  // Budgets
   BUDGETS: '/budgets',
- 
-  // Customers
   CUSTOMERS: '/customers',
- 
-  // Suppliers
   SUPPLIERS: '/suppliers',
- 
-  // Departments
   DEPARTMENTS: '/departments',
- 
-  // Employees
   EMPLOYEES: '/employees',
- 
-  // Payroll
   PAYROLL: '/payroll',
- 
-  // Tax Entries
   TAX_ENTRIES: '/tax-entries',
- 
-  // Reports
   REPORTS: '/reports',
 } as const
- 
+
 export const STORAGE_KEYS = {
   TOKEN: '@financeiro:token',
   USER: '@financeiro:user',
   REFRESH_TOKEN: '@financeiro:refreshToken',
 } as const
- 
+
 export const DATE_FORMAT = 'dd/MM/yyyy'
 export const DATETIME_FORMAT = 'dd/MM/yyyy HH:mm'
 export const MONTH_YEAR_FORMAT = 'MM/yyyy'
- 
+
 export const CURRENCY = {
   locale: 'pt-BR',
   currency: 'BRL',
 } as const
- 
+
 export const BRAZIL_STATES = [
   { value: 'AC', label: 'Acre' },
   { value: 'AL', label: 'Alagoas' },

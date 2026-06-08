@@ -1,6 +1,6 @@
 import type { AxiosError } from 'axios'
 import type { ApiError } from '../types/common.types'
- 
+
 export function parseApiError(error: unknown): ApiError {
   if (isAxiosError(error) && error.response) {
     const { status, data } = error.response
@@ -36,7 +36,7 @@ export function parseApiError(error: unknown): ApiError {
         }
       }
     }
- 
+
     return { status, message: httpMessage(status) }
   }
 
@@ -46,14 +46,13 @@ export function parseApiError(error: unknown): ApiError {
       message: 'Sem conexao com o servidor. Verifique sua internet.',
     }
   }
- 
-  // Erro desconhecido
+
   return {
     status: 500,
     message: error instanceof Error ? error.message : 'Ocorreu um erro inesperado.',
   }
 }
- 
+
 export function getErrorMessage(error: unknown): string {
   return parseApiError(error).message
 }
@@ -61,7 +60,7 @@ export function getErrorMessage(error: unknown): string {
 function isAxiosError(error: unknown): error is AxiosError {
   return typeof error === 'object' && error !== null && 'isAxiosError' in error
 }
- 
+
 function httpMessage(status: number): string {
   const messages: Record<number, string> = {
     400: 'Requisicao invalida.',

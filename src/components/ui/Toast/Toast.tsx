@@ -1,3 +1,7 @@
+// =============================================================================
+// Toast.tsx + ToastContainer.tsx
+// =============================================================================
+
 import { useEffect } from 'react'
 
 export type ToastType = 'success' | 'error' | 'warning' | 'info'
@@ -9,6 +13,7 @@ export interface ToastData {
   duration?: number
 }
 
+// --- Toast item --------------------------------------------------------------
 interface ToastProps {
   toast: ToastData
   onClose: (id: string) => void

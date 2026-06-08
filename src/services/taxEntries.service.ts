@@ -19,7 +19,6 @@ export const taxEntriesService = {
   async getById(id: string): Promise<TaxEntry> {
     return get<TaxEntry>(`${API_ROUTES.TAX_ENTRIES}/${id}`)
   },
-  // CORRIGIDO: data tipado com CreateTaxEntryRequest (era unknown)
   async create(data: CreateTaxEntryRequest): Promise<TaxEntry> {
     return post<TaxEntry>(API_ROUTES.TAX_ENTRIES, data)
   },
@@ -29,7 +28,6 @@ export const taxEntriesService = {
   async delete(id: string): Promise<void> {
     return del<void>(`${API_ROUTES.TAX_ENTRIES}/${id}`)
   },
-  // CORRIGIDO: data tipado com CreateTaxPaymentRequest (era unknown)
   async pay(id: string, data: CreateTaxPaymentRequest): Promise<TaxPayment> {
     return post<TaxPayment>(`${API_ROUTES.TAX_ENTRIES}/${id}/payments`, data)
   },

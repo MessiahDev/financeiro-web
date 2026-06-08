@@ -1,3 +1,9 @@
+export const UserRole = {
+  Admin: 1,
+  Manager: 2,
+  Employee: 3,
+} as const;
+
 export const TransactionType = {
   Income: 'Income',
   Expense: 'Expense',

@@ -5,7 +5,7 @@ export const bankAccountSchema = z.object({
   accountNumber:  z.string().min(1, 'Número da conta obrigatório').max(30),
   agency:         z.string().min(1, 'Agência obrigatória').max(20),
   accountType:    z.enum(['Checking', 'Savings', 'Investment'], { message: 'Tipo obrigatório' }),
-  initialBalance: z.coerce.number().min(0).optional(),
+  initialBalance: z.number().min(0).optional(),
 })
 
 export type BankAccountFormData = z.infer<typeof bankAccountSchema>

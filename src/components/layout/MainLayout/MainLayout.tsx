@@ -1,3 +1,7 @@
+// =============================================================================
+// MainLayout.tsx — layout principal autenticado
+// =============================================================================
+
 import { useState } from 'react'
 import { Outlet } from 'react-router-dom'
 import { Sidebar } from '../Sidebar/Sidebar'

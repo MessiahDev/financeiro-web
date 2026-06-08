@@ -1,33 +1,26 @@
-import { useCallback } from 'react'
+import { useState, useCallback } from 'react'
 import { useCrud } from './useCrud'
 import { transactionsService } from '../services/transactions.service'
 import { getErrorMessage } from '../utils/errorHandler'
 import type { Transaction, CreateTransactionRequest } from '../types/domain.types'
 
 export function useTransactions() {
-  const crud = useCrud<Transaction, CreateTransactionRequest, Partial<CreateTransactionRequest>>({
-    getAll:  (p)       => transactionsService.getAll(p),
-    getById: (id)      => transactionsService.getById(id),
-    create:  (d)       => transactionsService.create(d),
-    update:  (_id, _d) => Promise.reject('transactions are immutable after creation'),
-    delete:  (id)      => transactionsService.delete(id),
-  })
+  const crud = useCrud<Transaction, CreateTransactionRequest, Partial<CreateTransactionRequest>>(transactionsService as never)
+  const [filters, setFilters] = useState<Record<string, unknown>>({})
 
-  const confirmTransaction = useCallback(async (id: string) => {
-    try {
-      return await transactionsService.confirm(id)
-    } catch (err) {
-      throw new Error(getErrorMessage(err))
-    }
-  }, [])
+  const fetch = useCallback((params?: Record<string, unknown>) => {
+    const merged = { ...filters, ...params }; setFilters(merged); return crud.fetchAll(merged)
+  }, [crud, filters])
 
-  const cancelTransaction = useCallback(async (id: string, reason: string) => {
-    try {
-      await transactionsService.cancel(id, reason)
-    } catch (err) {
-      throw new Error(getErrorMessage(err))
-    }
-  }, [])
+  const confirm = useCallback(async (id: string) => {
+    try { await transactionsService.confirm(id); await fetch() }
+    catch (err) { throw new Error(getErrorMessage(err)) }
+  }, [fetch])
 
-  return { ...crud, fetchTransactions: crud.fetchAll, confirmTransaction, cancelTransaction }
+  const cancel = useCallback(async (id: string, reason: string) => {
+    try { await transactionsService.cancel(id, reason); await fetch() }
+    catch (err) { throw new Error(getErrorMessage(err)) }
+  }, [fetch])
+
+  return { ...crud, filters, fetch, confirm, cancel }
 }

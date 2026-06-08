@@ -18,7 +18,7 @@ export interface Notification {
 }
 
 export interface AuditFields {
-  createdAt: string
+  createdAt: string   // ISO 8601
   updatedAt?: string
   createdBy?: string
   updatedBy?: string

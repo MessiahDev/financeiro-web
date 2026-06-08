@@ -1,3 +1,7 @@
+// =============================================================================
+// SidebarItem.tsx — item individual de navegacao da sidebar
+// =============================================================================
+
 import { NavLink } from 'react-router-dom'
 
 interface SidebarItemProps {

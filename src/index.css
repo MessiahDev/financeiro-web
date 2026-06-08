@@ -4,7 +4,6 @@
 @tailwind components;
 @tailwind utilities;
 
-/* --- Tokens ---------------------------------------------------------------- */
 :root {
   /* Brand */
   --color-brand-50:  #eff6ff;
@@ -93,7 +92,7 @@ h1, h2, h3, h4, h5, h6 {
 
 code, pre, kbd { font-family: var(--font-mono); }
 
-/* --- Scrollbar refinado ---------------------------------------------------- */
+/* --- Scrollbar ---------------------------------------------------- */
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb {

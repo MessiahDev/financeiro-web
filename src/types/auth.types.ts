@@ -8,6 +8,7 @@ export interface RegisterRequest {
   email: string
   password: string
   confirmPassword: string
+  role: 3
 }
 
 export interface AuthResponse {
@@ -16,7 +17,7 @@ export interface AuthResponse {
   expiresAt: string
   user: AuthUser
 }
- 
+
 export interface AuthUser {
   id: string
   name: string

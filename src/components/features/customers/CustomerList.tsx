@@ -1,3 +1,7 @@
+// =============================================================================
+// CustomerList.tsx
+// =============================================================================
+
 import { Table, type Column } from '../../ui/Table/Table'
 import { TablePagination } from '../../ui/Table/TablePagination'
 import { Button } from '../../ui/Button/Button'

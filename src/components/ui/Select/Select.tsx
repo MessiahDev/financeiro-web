@@ -1,3 +1,7 @@
+// =============================================================================
+// Select.tsx
+// =============================================================================
+
 import { forwardRef, type SelectHTMLAttributes } from 'react'
 import type { SelectOption } from '../../../types/common.types'
 

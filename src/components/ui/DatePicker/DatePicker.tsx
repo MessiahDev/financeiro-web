@@ -1,3 +1,7 @@
+// =============================================================================
+// DatePicker.tsx — wrapper sobre <input type="date"> com formatacao pt-BR
+// =============================================================================
+
 import { forwardRef, type InputHTMLAttributes } from 'react'
 
 export interface DatePickerProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'type'> {

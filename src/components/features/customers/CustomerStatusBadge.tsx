@@ -1,3 +1,7 @@
+// =============================================================================
+// Componentes de status badge reutilizados em Customer e Supplier
+// =============================================================================
+
 import { Badge, type BadgeVariant } from '../../ui/Badge/Badge'
 import { PersonStatus } from '../../../types/enums'
 

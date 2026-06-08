@@ -1,17 +1,16 @@
 import { z } from 'zod'
-
 export const taxEntrySchema = z.object({
-  taxType:        z.enum(
-  ['IRPJ', 'CSLL', 'PIS', 'COFINS', 'ISS', 'ICMS', 'IPI', 'Other'],
-  { message: 'Tipo obrigatório' },
-),
-  description:    z.string().min(2, 'Descrição obrigatória').max(300),
-  competenceDate: z.string().min(1, 'Competência obrigatória'),
-  dueDate:        z.string().min(1, 'Vencimento obrigatório'),
-  amount:         z.coerce.number().min(0.01, 'Valor deve ser maior que zero'),
-}).refine((d) => d.competenceDate <= d.dueDate, {
-  message: 'Competência deve ser anterior ou igual ao vencimento',
-  path: ['dueDate'],
+  taxType:        z.enum(['IRPJ','CSLL','PIS','COFINS','ISS','ICMS','IPI','Other']),
+  description:    z.string().min(2, 'Descricao obrigatoria'),
+  competenceDate: z.string().min(1, 'Data de competencia obrigatoria'),
+  dueDate:        z.string().min(1, 'Data de vencimento obrigatoria'),
+  amount:         z.number().min(0.01, 'Valor deve ser maior que zero'),
 })
-
-export type TaxEntryFormData = z.infer<typeof taxEntrySchema>
+export const taxPaymentSchema = z.object({
+  paymentDate:    z.string().min(1, 'Data obrigatoria'),
+  amount:         z.number().min(0.01, 'Valor obrigatorio'),
+  bankAccountId:  z.string().uuid('Conta bancaria obrigatoria'),
+  receiptNumber:  z.string().optional(),
+})
+export type TaxEntryFormData   = z.infer<typeof taxEntrySchema>
+export type TaxPaymentFormData = z.infer<typeof taxPaymentSchema>
