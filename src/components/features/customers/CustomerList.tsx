@@ -1,7 +1,3 @@
-// =============================================================================
-// CustomerList.tsx
-// =============================================================================
-
 import { Table, type Column } from '../../ui/Table/Table'
 import { TablePagination } from '../../ui/Table/TablePagination'
 import { Button } from '../../ui/Button/Button'
@@ -30,7 +26,7 @@ export function CustomerList({
 
   const columns: Column<Customer>[] = [
     { key: 'name',     header: 'Nome',      render: (r) => <span className="font-medium text-slate-900">{r.name}</span> },
-    { key: 'document', header: 'CPF/CNPJ',  render: (r) => formatDocument(r.document) },
+    { key: 'taxId', header: 'CPF/CNPJ', render: (r) => formatDocument(r.taxId) },
     { key: 'email',    header: 'E-mail' },
     { key: 'phone',    header: 'Telefone',  render: (r) => r.phone ? formatPhone(r.phone) : '-' },
     { key: 'status',   header: 'Status',    render: (r) => <PersonStatusBadge status={r.status} /> },

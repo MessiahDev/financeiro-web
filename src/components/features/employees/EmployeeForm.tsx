@@ -7,9 +7,17 @@ import { Select } from '../../ui/Select/Select'
 import { Button } from '../../ui/Button/Button'
 import { CurrencyInput } from '../../ui/CurrencyInput/CurrencyInput'
 import { DatePicker } from '../../ui/DatePicker/DatePicker'
+import { ContractType } from '../../../types/enums'
 import type { Employee, Department } from '../../../types/domain.types'
 
 interface Props { initial?: Employee; departments: Department[]; onSubmit: (d: EmployeeFormData) => Promise<void>; onCancel: () => void; isSaving: boolean }
+
+const contractTypeOptions = [
+  { value: String(ContractType.CLT),        label: 'CLT'        },
+  { value: String(ContractType.PJ),         label: 'PJ'         },
+  { value: String(ContractType.Internship), label: 'Estágio'    },
+  { value: String(ContractType.Temporary),  label: 'Temporário' },
+]
 
 export function EmployeeForm({ initial, departments, onSubmit, onCancel, isSaving }: Props) {
   const { register, handleSubmit, reset, setValue, watch, formState: { errors } } = useForm<EmployeeFormData>({ resolver: zodResolver(employeeSchema) })
@@ -17,31 +25,35 @@ export function EmployeeForm({ initial, departments, onSubmit, onCancel, isSavin
   const deptOptions = departments.map((d) => ({ value: d.id, label: d.name }))
 
   useEffect(() => {
-    if (initial) reset({ name: initial.name, email: initial.email, cpf: initial.cpf, position: initial.position, departmentId: initial.departmentId, salary: initial.salary, hireDate: initial.hireDate?.split('T')[0] ?? '', bankName: initial.bankName ?? '', bankAgency: initial.bankAgency ?? '', bankAccountNumber: initial.bankAccountNumber ?? '' })
+    if (initial) reset({
+      firstName:    initial.firstName,
+      lastName:     initial.lastName,
+      email:        initial.email,
+      cpf:          initial.cpf,
+      position:     initial.position,
+      departmentId: initial.departmentId,
+      salary:       initial.salary,
+      contractType: initial.contractType,
+      hireDate:     initial.hireDate?.split('T')[0] ?? '',
+    })
   }, [initial, reset])
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4" noValidate>
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-        <Input label="Nome completo" required error={errors.name?.message} {...register('name')} />
+        <Input label="Nome"      required error={errors.firstName?.message} {...register('firstName')} />
+        <Input label="Sobrenome" required error={errors.lastName?.message}  {...register('lastName')} />
         <Input label="E-mail" type="email" required error={errors.email?.message} {...register('email')} />
-        <Input label="CPF (somente numeros)" required maxLength={11} error={errors.cpf?.message} disabled={!!initial} {...register('cpf')} />
-        <Input label="Cargo" required error={errors.position?.message} {...register('position')} />
-        <Select label="Departamento" required options={deptOptions} placeholder="Selecione..." error={errors.departmentId?.message} {...register('departmentId')} />
-        <CurrencyInput label="Salario" required value={salary} onChange={(v) => setValue('salary', v, { shouldValidate: true })} error={errors.salary?.message} />
-        <DatePicker label="Data de admissao" required error={errors.hireDate?.message} {...register('hireDate')} />
-      </div>
-
-      <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">Dados bancarios (opcional)</p>
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-        <Input label="Banco" {...register('bankName')} />
-        <Input label="Agencia" {...register('bankAgency')} />
-        <Input label="Conta" {...register('bankAccountNumber')} />
+        <Input label="CPF (somente números)" required maxLength={11} error={errors.cpf?.message} disabled={!!initial} {...register('cpf')} />
+        <Select label="Tipo de contrato" required options={contractTypeOptions} placeholder="Selecione..." error={errors.contractType?.message} {...register('contractType', { valueAsNumber: true })} />
+        <Select label="Departamento"     required options={deptOptions}          placeholder="Selecione..." error={errors.departmentId?.message}  {...register('departmentId')} />
+        <CurrencyInput label="Salário" required value={salary} onChange={(v) => setValue('salary', v, { shouldValidate: true })} error={errors.salary?.message} />
+        <DatePicker label="Data de admissão" required error={errors.hireDate?.message} {...register('hireDate')} />
       </div>
 
       <div className="flex justify-end gap-3 pt-2">
         <Button type="button" variant="secondary" onClick={onCancel} disabled={isSaving}>Cancelar</Button>
-        <Button type="submit" isLoading={isSaving}>{initial ? 'Salvar alteracoes' : 'Cadastrar funcionario'}</Button>
+        <Button type="submit" isLoading={isSaving}>{initial ? 'Salvar alterações' : 'Cadastrar funcionário'}</Button>
       </div>
     </form>
   )

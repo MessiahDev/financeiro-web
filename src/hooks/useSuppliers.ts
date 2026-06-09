@@ -1,7 +1,3 @@
-// =============================================================================
-// useSuppliers.ts
-// =============================================================================
-
 import { useCallback, useState } from 'react'
 import { useCrud } from './useCrud'
 import { suppliersService, type CreateSupplierRequest, type UpdateSupplierRequest, type GetSuppliersParams } from '../services/suppliers.service'

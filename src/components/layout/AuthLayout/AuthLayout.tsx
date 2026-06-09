@@ -1,7 +1,3 @@
-// =============================================================================
-// AuthLayout.tsx — layout para paginas publicas (login, registro)
-// =============================================================================
-
 import { Outlet } from 'react-router-dom'
 
 export default function AuthLayout() {

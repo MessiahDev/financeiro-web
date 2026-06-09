@@ -15,6 +15,8 @@ import { Select } from '../../components/ui/Select/Select'
 import { CurrencyInput } from '../../components/ui/CurrencyInput/CurrencyInput'
 import { Spinner } from '../../components/ui/Spinner/Spinner'
 import type { BankAccount } from '../../types/domain.types'
+import { ROUTES } from '../../router/routes'
+import { useNavigate } from 'react-router-dom'
 
 const typeOptions = [
   { value: 'Checking', label: 'Conta Corrente' },
@@ -29,17 +31,23 @@ const typeLabel: Record<string, string> = {
 }
 
 function BankAccountForm({ onSubmit, onCancel, isSaving }: { onSubmit: (d: BankAccountFormData) => Promise<void>; onCancel: () => void; isSaving: boolean }) {
-  const { register, handleSubmit, setValue, watch, formState: { errors } } = useForm<BankAccountFormData>({ resolver: zodResolver(bankAccountSchema) })
+  const { register, handleSubmit, setValue, watch, formState: { errors } } = useForm({ resolver: zodResolver(bankAccountSchema) })
   const balance = watch('initialBalance')
+
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4" noValidate>
-      <Input label="Nome do banco" required error={errors.bankName?.message} {...register('bankName')} />
       <div className="grid grid-cols-2 gap-4">
-        <Input label="Agência" required error={errors.agency?.message} {...register('agency')} />
+        <Input label="Nome do banco" required error={errors.bankName?.message}    {...register('bankName')} />
+        <Input label="Código do banco" required error={errors.bankCode?.message}  {...register('bankCode')} />
+      </div>
+      <div className="grid grid-cols-2 gap-4">
+        <Input label="Agência" required error={errors.agency?.message}            {...register('agency')} />
         <Input label="Número da conta" required error={errors.accountNumber?.message} {...register('accountNumber')} />
       </div>
       <Select label="Tipo" required options={typeOptions} placeholder="Selecione..." error={errors.accountType?.message} {...register('accountType')} />
       <CurrencyInput label="Saldo inicial" value={balance} onChange={v => setValue('initialBalance', v)} error={errors.initialBalance?.message} />
+      <Input label="Chave PIX" error={errors.pixKey?.message}                     {...register('pixKey')} />
+      <Input label="Descrição" error={errors.description?.message}                {...register('description')} />
       <div className="flex justify-end gap-3">
         <Button type="button" variant="secondary" onClick={onCancel} disabled={isSaving}>Cancelar</Button>
         <Button type="submit" isLoading={isSaving}>Cadastrar</Button>
@@ -49,8 +57,13 @@ function BankAccountForm({ onSubmit, onCancel, isSaving }: { onSubmit: (d: BankA
 }
 
 function AccountCard({ account }: { account: BankAccount }) {
+  const navigate = useNavigate()
+  
   return (
-    <Card>
+    <Card
+      className="cursor-pointer hover:shadow-md transition-shadow"
+      onClick={() => navigate(`${ROUTES.BANK_ACCOUNTS}/${account.id}`)}
+    >
       <div className="flex items-start justify-between">
         <div>
           <p className="font-display font-semibold text-slate-900">{account.bankName}</p>

@@ -2,12 +2,11 @@ import { z } from 'zod'
 
 export const customerSchema = z.object({
   name:        z.string().min(2, 'Nome deve ter ao menos 2 caracteres').max(150),
-  email:       z.string().min(1, 'E-mail obrigatorio').email('E-mail invalido'),
+  email:       z.string().min(1, 'E-mail obrigatório').email('E-mail inválido'),
   phone:       z.string().optional(),
-  document:    z.string().min(11, 'Documento invalido').max(18),
-  personType:  z.enum(['Individual', 'Company'], { message: 'Tipo obrigatorio' }),
+  taxId:       z.string().min(11, 'Documento inválido').max(18),
+  personType:  z.union([z.literal(1), z.literal(2)], { message: 'Tipo obrigatório' }),
   creditLimit: z.number().min(0).optional(),
-  notes:       z.string().max(500).optional(),
 })
 
 export type CustomerFormData = z.infer<typeof customerSchema>

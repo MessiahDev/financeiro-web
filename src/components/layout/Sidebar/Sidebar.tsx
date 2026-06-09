@@ -1,7 +1,3 @@
-// =============================================================================
-// Sidebar.tsx — navegacao lateral completa
-// =============================================================================
-
 import { NavLink, useLocation } from 'react-router-dom'
 import { ROUTES } from '../../../router/routes'
 

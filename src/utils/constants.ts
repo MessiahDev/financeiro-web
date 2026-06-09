@@ -7,6 +7,7 @@ export const API_ROUTES = {
   AUTH_REGISTER: '/auth/register',
   BANK_ACCOUNTS: '/bank-accounts',
   BANK_STATEMENTS: '/bank-statements',
+  BANK_RECONCILIATIONS: '/bank-reconciliations',
   ACCOUNTING_PERIODS: '/accounting-periods',
   CHART_OF_ACCOUNTS: '/chart-of-accounts',
   COST_CENTERS: '/cost-centers',

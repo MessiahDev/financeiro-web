@@ -1,38 +1,88 @@
 import { useEffect, useState } from 'react'
 import { PageHeader } from '../../components/layout/PageHeader/PageHeader'
 import { Table, type Column } from '../../components/ui/Table/Table'
-import { TablePagination } from '../../components/ui/Table/TablePagination'
-import { Button } from '../../components/ui/Button/Button'
 import { Badge } from '../../components/ui/Badge/Badge'
-import { useCrud } from '../../hooks/useCrud'
+import { Select } from '../../components/ui/Select/Select'
 import { bankStatementsService } from '../../services/bankStatements.service'
-import { useNotifications } from '../../contexts/NotificationContext'
-import { formatDate } from '../../utils/formatters'
-import type { BankStatement } from '../../types/domain.types'
-import type { PagedResult } from '../../types/pagination.types'
+import { bankAccountsService } from '../../services/bankAccounts.service'
+import { formatCurrency, formatDate } from '../../utils/formatters'
+import type { BankStatement, BankAccount } from '../../types/domain.types'
+
+const statusVariant = (status: string) =>
+  status === 'Imported' || status === 'Reconciled' ? 'success' : 'default'
+
+const statusLabel = (status: string) => ({
+  Imported: 'Importado',
+  Reconciled: 'Conciliado',
+  Cancelled: 'Cancelado',
+}[status] ?? status)
 
 export default function BankStatementsPage() {
-  const { success, error: notifyError } = useNotifications()
-  const { items, isLoading, page, pageSize, totalCount, totalPages, setPage, fetchAll } = useCrud<BankStatement, unknown, unknown>(bankStatementsService as never)
+  const [items, setItems] = useState<BankStatement[]>([])
+  const [isLoading, setIsLoading] = useState(false)
+  const [accounts, setAccounts] = useState<BankAccount[]>([])
+  const [selectedAccount, setSelected] = useState<string>('')
 
-  const pagedData: PagedResult<BankStatement> = { items, totalCount, pageNumber: page, pageSize, totalPages, hasPreviousPage: page > 1, hasNextPage: page < totalPages }
-  useEffect(() => { fetchAll() }, [page])
+  useEffect(() => {
+    bankAccountsService.getAll()
+      .then(r => setAccounts(r.items))
+      .catch(() => setAccounts([]))
+  }, [])
+
+  useEffect(() => {
+    setIsLoading(true)
+
+    const request = selectedAccount
+      ? bankStatementsService.getAll({ bankAccountId: selectedAccount })
+      : bankStatementsService.getAll({})
+
+    request
+      .then(r => setItems(r.items))
+      .catch(() => setItems([]))
+      .finally(() => setIsLoading(false))
+  }, [selectedAccount])
+
+  const accountOptions = [
+    { value: '', label: 'Todas as contas' },
+    ...accounts.map(a => ({
+      value: a.id,
+      label: `${a.bankName} — Ag. ${a.agency} · Cc. ${a.accountNumber}`,
+    }))
+  ]
 
   const columns: Column<BankStatement>[] = [
     { key: 'bankAccountName', header: 'Conta' },
-    { key: 'referenceDate',   header: 'Data Referencia', render: r => formatDate(r.referenceDate) },
-    { key: 'entries',         header: 'Lancamentos',     render: r => `${r.entries?.length ?? 0} lancamento${r.entries?.length !== 1 ? 's' : ''}` },
-    { key: 'status',          header: 'Status',          render: r => <Badge variant={r.status === 'Active' ? 'success' : 'default'} dot>{r.status === 'Active' ? 'Ativo' : 'Cancelado'}</Badge> },
-    { key: 'actions',         header: '', render: r => r.status === 'Active' ? (
-      <Button size="sm" variant="ghost" onClick={async () => { try { await bankStatementsService.cancel(r.id, 'Cancelado pelo usuário'); success('Cancelado.'); fetchAll() } catch { notifyError('Erro.') } }} className="text-red-500 hover:bg-red-50">Cancelar</Button>
-    ) : null },
+    { key: 'period', header: 'Período', render: r => `${formatDate((r as any).periodStart)} – ${formatDate((r as any).periodEnd)}` },
+    { key: 'openingBalance', header: 'Saldo Inicial', render: r => formatCurrency((r as any).openingBalance ?? 0) },
+    { key: 'closingBalance', header: 'Saldo Final', render: r => formatCurrency((r as any).closingBalance ?? 0) },
+    { key: 'totalEntries', header: 'Lançamentos', render: r => (r as any).totalEntries ?? r.entries?.length ?? 0 },
+    { key: 'status', header: 'Status', render: r => <Badge variant={statusVariant(r.status)} dot>{statusLabel(r.status)}</Badge> },
   ]
 
   return (
     <div className="flex flex-col gap-6">
-      <PageHeader title="Extratos Bancarios" subtitle={`${totalCount} extrato${totalCount !== 1 ? 's' : ''}`} />
-      <Table columns={columns} data={items} keyExtractor={r => r.id} isLoading={isLoading} emptyMessage="Nenhum extrato importado." />
-      {pagedData.totalPages > 1 && <TablePagination pagination={pagedData} onPageChange={setPage} />}
+      <PageHeader
+        title="Extratos Bancários"
+        subtitle={`${items.length} extrato${items.length !== 1 ? 's' : ''}`}
+      />
+
+      <div className="max-w-sm">
+        <Select
+          label="Filtrar por conta"
+          placeholder="Selecione uma conta..."
+          options={accountOptions}
+          value={selectedAccount}
+          onChange={e => setSelected(e.target.value)}
+        />
+      </div>
+
+      <Table
+        columns={columns}
+        data={items}
+        keyExtractor={r => r.id}
+        isLoading={isLoading}
+        emptyMessage={selectedAccount ? 'Nenhum extrato para esta conta.' : 'Selecione uma conta para ver os extratos.'}
+      />
     </div>
   )
 }

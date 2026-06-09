@@ -8,19 +8,15 @@ export function useTaxEntries() {
   const crud = useCrud<TaxEntry, CreateTaxEntryRequest, Partial<CreateTaxEntryRequest>>(taxEntriesService as never)
   const [payments, setPayments] = useState<TaxPayment[]>([])
 
-  const cancel = useCallback(async (id: string) => {
-    try { await taxEntriesService.cancel(id); await crud.fetchAll() }
+  const cancel = useCallback(async (id: string, reason: string) => {
+    try { await taxEntriesService.cancel(id, reason); await crud.fetchAll() }
     catch (e) { throw new Error(getErrorMessage(e)) }
   }, [crud])
 
-  const createPayment = useCallback(async (data: CreateTaxPaymentRequest) => {
-    try { const p = await taxEntriesService.createPayment(data); setPayments(prev => [p, ...prev]); await crud.fetchAll(); return p }
+  const pay = useCallback(async (id: string, data: CreateTaxPaymentRequest) => {
+    try { const p = await taxEntriesService.pay(id, data); setPayments(prev => [p, ...prev]); await crud.fetchAll(); return p }
     catch (e) { throw new Error(getErrorMessage(e)) }
   }, [crud])
 
-  const fetchPayments = useCallback(async (taxEntryId: string) => {
-    const list = await taxEntriesService.getPaymentsByEntry(taxEntryId); setPayments(list)
-  }, [])
-
-  return { ...crud, payments, cancel, createPayment, fetchPayments }
+  return { ...crud, payments, cancel, pay }
 }

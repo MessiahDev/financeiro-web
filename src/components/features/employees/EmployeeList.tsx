@@ -18,7 +18,7 @@ interface Props { data: PagedResult<Employee> | null; isLoading: boolean; onEdit
 
 export function EmployeeList({ data, isLoading, onEdit, onDelete, onUpdateSalary, onPageChange, onSearch, searchValue, onNew }: Props) {
   const columns: Column<Employee>[] = [
-    { key: 'name',           header: 'Nome',       render: (r) => <span className="font-medium text-slate-900">{r.name}</span> },
+    { key: 'name',           header: 'Nome',       render: (r) => <span className="font-medium text-slate-900">{r.fullName}</span> },
     { key: 'cpf',            header: 'CPF',        render: (r) => formatCPF(r.cpf) },
     { key: 'position',       header: 'Cargo' },
     { key: 'departmentName', header: 'Departamento' },

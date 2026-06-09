@@ -1,19 +1,15 @@
-// =============================================================================
-// Componentes de status badge reutilizados em Customer e Supplier
-// =============================================================================
-
 import { Badge, type BadgeVariant } from '../../ui/Badge/Badge'
-import { PersonStatus } from '../../../types/enums'
+import { SupplierStatus } from '../../../types/enums'
 
-interface PersonStatusBadgeProps { status: string }
+interface PersonStatusBadgeProps { status: number }
 
-const map: Record<string, { label: string; variant: BadgeVariant }> = {
-  [PersonStatus.Active]:  { label: 'Ativo',    variant: 'success' },
-  [PersonStatus.Blocked]: { label: 'Bloqueado', variant: 'danger'  },
-  [PersonStatus.Deleted]: { label: 'Inativo',  variant: 'default' },
+const map: Record<number, { label: string; variant: BadgeVariant }> = {
+  [SupplierStatus.Active]:   { label: 'Ativo',     variant: 'success' },
+  [SupplierStatus.Inactive]: { label: 'Inativo',   variant: 'default' },
+  [SupplierStatus.Blocked]:  { label: 'Bloqueado', variant: 'danger'  },
 }
 
 export function PersonStatusBadge({ status }: PersonStatusBadgeProps) {
-  const cfg = map[status] ?? { label: status, variant: 'default' as BadgeVariant }
+  const cfg = map[status] ?? { label: String(status), variant: 'default' as BadgeVariant }
   return <Badge variant={cfg.variant} dot>{cfg.label}</Badge>
 }

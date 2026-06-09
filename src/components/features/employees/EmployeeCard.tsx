@@ -17,19 +17,19 @@ export function EmployeeCard({ employee }: { employee: Employee }) {
       <div className="flex items-start justify-between gap-4">
         <div className="flex items-center gap-3">
           <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-blue-100 font-display text-sm font-semibold text-blue-700">
-            {employee.name.charAt(0).toUpperCase()}
+            {employee.fullName.charAt(0).toUpperCase()}
           </div>
           <div>
-            <p className="font-medium text-slate-900">{employee.name}</p>
-            <p className="text-sm text-slate-500">{employee.position} · {employee.departmentName}</p>
+            <p className="font-medium text-slate-900">{employee.fullName}</p>
+            <p className="text-sm text-slate-500">{employee.departmentName}</p>
           </div>
         </div>
         <Badge variant={s.variant} dot>{s.label}</Badge>
       </div>
       <div className="mt-4 grid grid-cols-2 gap-3 text-sm">
         <div><p className="text-xs text-slate-400">CPF</p><p className="text-slate-700">{formatCPF(employee.cpf)}</p></div>
-        <div><p className="text-xs text-slate-400">Salario</p><p className="font-medium text-slate-900">{formatCurrency(employee.salary)}</p></div>
-        <div><p className="text-xs text-slate-400">Admissao</p><p className="text-slate-700">{formatDate(employee.hireDate)}</p></div>
+        <div><p className="text-xs text-slate-400">Salário</p><p className="font-medium text-slate-900">{formatCurrency(employee.salary)}</p></div>
+        <div><p className="text-xs text-slate-400">Admissão</p><p className="text-slate-700">{formatDate(employee.hireDate)}</p></div>
         <div><p className="text-xs text-slate-400">E-mail</p><p className="truncate text-slate-700">{employee.email}</p></div>
       </div>
     </Card>

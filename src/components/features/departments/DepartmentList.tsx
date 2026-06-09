@@ -10,18 +10,18 @@ interface Props { data: PagedResult<Department> | null; isLoading: boolean; onEd
 
 export function DepartmentList({ data, isLoading, onEdit, onDelete, onPageChange, onSearch, searchValue, onNew }: Props) {
   const columns: Column<Department>[] = [
-    { key: 'code',        header: 'Codigo',    render: (r) => <span className="font-mono text-xs bg-slate-100 px-2 py-0.5 rounded">{r.code}</span> },
-    { key: 'name',        header: 'Nome',      render: (r) => <span className="font-medium text-slate-900">{r.name}</span> },
-    { key: 'managerName', header: 'Gestor',    render: (r) => r.managerName ?? '-' },
-    { key: 'costCenterName', header: 'Centro de Custo', render: (r) => r.costCenterName ?? '-' },
-    { key: 'isActive',    header: 'Status',    render: (r) => <Badge variant={r.isActive ? 'success' : 'default'} dot>{r.isActive ? 'Ativo' : 'Inativo'}</Badge> },
-    { key: 'actions',     header: '', headerClassName: 'w-24', render: (r) => (
-      <div className="flex items-center justify-end gap-1">
-        <Button size="sm" variant="ghost" onClick={() => onEdit(r)}>Editar</Button>
-        <Button size="sm" variant="ghost" onClick={() => onDelete(r)} className="text-red-500 hover:bg-red-50">Excluir</Button>
-      </div>
-    )},
-  ]
+  { key: 'name',          header: 'Nome',           render: (r) => <span className="font-medium text-slate-900">{r.name}</span> },
+  { key: 'costCenter',    header: 'Centro de Custo', render: (r) => r.costCenter ?? '-' },
+  { key: 'description',  header: 'Descrição',       render: (r) => r.description ?? '-' },
+  { key: 'employeeCount', header: 'Funcionários',   render: (r) => r.employeeCount },
+  { key: 'isActive',      header: 'Status',         render: (r) => <Badge variant={r.isActive ? 'success' : 'default'} dot>{r.isActive ? 'Ativo' : 'Inativo'}</Badge> },
+  { key: 'actions',       header: '', headerClassName: 'w-24', render: (r) => (
+    <div className="flex items-center justify-end gap-1">
+      <Button size="sm" variant="ghost" onClick={() => onEdit(r)}>Editar</Button>
+      <Button size="sm" variant="ghost" onClick={() => onDelete(r)} className="text-red-500 hover:bg-red-50">Excluir</Button>
+    </div>
+  )},
+]
   const pagination = data ? { totalCount: data.totalCount, pageNumber: data.pageNumber, pageSize: data.pageSize, totalPages: data.totalPages, hasPreviousPage: data.hasPreviousPage, hasNextPage: data.hasNextPage } : null
   return (
     <div className="flex flex-col gap-4">

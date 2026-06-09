@@ -1,9 +1,5 @@
-// =============================================================================
-// Modal.tsx
-// =============================================================================
-
 import { useEffect, useRef, type ReactNode } from 'react'
-import { Button } from '../Button/Button'
+import { createPortal } from 'react-dom'
 
 interface ModalProps {
   isOpen: boolean
@@ -24,7 +20,6 @@ const sizes = {
 export function Modal({ isOpen, onClose, title, children, footer, size = 'md' }: ModalProps) {
   const overlayRef = useRef<HTMLDivElement>(null)
 
-  // Fecha com Esc
   useEffect(() => {
     if (!isOpen) return
     const handler = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose() }
@@ -32,7 +27,6 @@ export function Modal({ isOpen, onClose, title, children, footer, size = 'md' }:
     return () => document.removeEventListener('keydown', handler)
   }, [isOpen, onClose])
 
-  // Trava scroll do body
   useEffect(() => {
     document.body.style.overflow = isOpen ? 'hidden' : ''
     return () => { document.body.style.overflow = '' }
@@ -40,27 +34,24 @@ export function Modal({ isOpen, onClose, title, children, footer, size = 'md' }:
 
   if (!isOpen) return null
 
-  return (
+  return createPortal(
     <div
       ref={overlayRef}
       className="fixed inset-0 z-50 flex items-center justify-center p-4"
       onClick={(e) => { if (e.target === overlayRef.current) onClose() }}
     >
-      {/* Backdrop */}
-      <div className="absolute inset-0 bg-slate-900/50 backdrop-blur-sm animate-in" />
-
-      {/* Dialog */}
+      <div className="absolute inset-0 bg-slate-900/50 backdrop-blur-sm" />
       <div
         role="dialog"
         aria-modal="true"
         aria-labelledby="modal-title"
         className={[
-          'relative z-10 w-full rounded-2xl bg-white shadow-xl animate-in',
+          'relative z-10 w-full rounded-2xl bg-white shadow-xl',
+          'flex flex-col max-h-[90vh]',
           sizes[size],
         ].join(' ')}
       >
-        {/* Header */}
-        <div className="flex items-center justify-between border-b border-slate-100 px-6 py-4">
+        <div className="flex shrink-0 items-center justify-between border-b border-slate-100 px-6 py-4">
           <h2 id="modal-title" className="font-display text-base font-semibold text-slate-900">
             {title}
           </h2>
@@ -72,17 +63,14 @@ export function Modal({ isOpen, onClose, title, children, footer, size = 'md' }:
             ✕
           </button>
         </div>
-
-        {/* Body */}
-        <div className="px-6 py-5">{children}</div>
-
-        {/* Footer */}
+        <div className="overflow-y-auto px-6 py-5">{children}</div>
         {footer && (
-          <div className="flex justify-end gap-3 border-t border-slate-100 px-6 py-4">
+          <div className="flex shrink-0 justify-end gap-3 border-t border-slate-100 px-6 py-4">
             {footer}
           </div>
         )}
       </div>
-    </div>
+    </div>,
+    document.body
   )
 }

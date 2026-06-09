@@ -1,9 +1,4 @@
-// =============================================================================
-// PageHeader.tsx
-// =============================================================================
-
 import { useNavigate } from 'react-router-dom'
-import { Button } from '../../ui/Button/Button'
 
 interface PageHeaderProps {
   title: string

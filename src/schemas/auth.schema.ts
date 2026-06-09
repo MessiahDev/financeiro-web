@@ -17,7 +17,7 @@ export const registerSchema = z
       .regex(/[0-9]/, 'Deve conter ao menos um numero')
       .regex(/[^A-Za-z0-9]/, 'Deve conter ao menos um caractere especial'),
     confirmPassword: z.string().min(1, 'Confirmacao de senha obrigatoria'),
-    role: z.number().default(UserRole.Employee),
+    role: z.literal(UserRole.Employee).default(UserRole.Employee),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: 'As senhas nao coincidem',

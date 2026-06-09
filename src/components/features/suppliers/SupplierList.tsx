@@ -11,13 +11,12 @@ interface Props { data: PagedResult<Supplier> | null; isLoading: boolean; onEdit
 
 export function SupplierList({ data, isLoading, onEdit, onDelete, onBlock, onPageChange, onSearch, searchValue, onNew }: Props) {
   const columns: Column<Supplier>[] = [
-    { key: 'name',     header: 'Nome',     render: (r) => <span className="font-medium text-slate-900">{r.name}</span> },
-    { key: 'document', header: 'CPF/CNPJ', render: (r) => formatDocument(r.document) },
-    { key: 'email',    header: 'E-mail' },
-    { key: 'phone',    header: 'Telefone', render: (r) => r.phone ? formatPhone(r.phone) : '-' },
-    { key: 'paymentTermDays', header: 'Prazo (dias)', render: (r) => r.paymentTermDays ? `${r.paymentTermDays}d` : '-' },
-    { key: 'status',   header: 'Status',   render: (r) => <PersonStatusBadge status={r.status} /> },
-    { key: 'actions',  header: '', headerClassName: 'w-32', render: (r) => (
+    { key: 'name',   header: 'Nome',     render: (r) => <span className="font-medium text-slate-900">{r.name}</span> },
+    { key: 'taxId',  header: 'CPF/CNPJ', render: (r) => formatDocument(r.taxId) },
+    { key: 'email',  header: 'E-mail' },
+    { key: 'phone',  header: 'Telefone', render: (r) => r.phone ? formatPhone(r.phone) : '-' },
+    { key: 'status', header: 'Status',   render: (r) => <PersonStatusBadge status={r.status} /> },
+    { key: 'actions', header: '', headerClassName: 'w-32', render: (r) => (
       <div className="flex items-center justify-end gap-1">
         <Button size="sm" variant="ghost" onClick={() => onEdit(r)}>Editar</Button>
         <Button size="sm" variant="ghost" onClick={() => onBlock(r)}>Bloquear</Button>

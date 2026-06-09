@@ -1,7 +1,3 @@
-// =============================================================================
-// useDepartments.ts
-// =============================================================================
-
 import { useCrud } from './useCrud'
 import { departmentsService, type CreateDepartmentRequest, type UpdateDepartmentRequest } from '../services/departments.service'
 import type { Department } from '../types/domain.types'

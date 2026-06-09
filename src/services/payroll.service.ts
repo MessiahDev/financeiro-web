@@ -1,7 +1,7 @@
 import { get, post, del } from './api'
 import { API_ROUTES } from '../utils/constants'
 import { buildQueryString } from '../utils/pagination'
-import type { Payroll } from '../types/domain.types'
+import type { Payroll, ProcessPayrollRequest } from '../types/domain.types'
 import type { PagedResult } from '../types/pagination.types'
 
 export const payrollService = {
@@ -11,7 +11,7 @@ export const payrollService = {
   async getById(id: string): Promise<Payroll> {
     return get<Payroll>(`${API_ROUTES.PAYROLL}/${id}`)
   },
-  async process(data: { referenceMonth: number; referenceYear: number }): Promise<Payroll> {
+  async process(data: ProcessPayrollRequest): Promise<Payroll> {
     return post<Payroll>(API_ROUTES.PAYROLL, data)
   },
   async cancel(id: string): Promise<void> {

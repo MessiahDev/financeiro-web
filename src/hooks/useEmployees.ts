@@ -1,7 +1,3 @@
-// =============================================================================
-// useEmployees.ts
-// =============================================================================
-
 import { useCallback, useState } from 'react'
 import { useCrud } from './useCrud'
 import { employeesService, type CreateEmployeeRequest, type UpdateEmployeeRequest, type UpdateSalaryRequest, type GetEmployeesParams } from '../services/employees.service'

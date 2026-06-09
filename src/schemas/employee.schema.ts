@@ -1,21 +1,20 @@
 import { z } from 'zod'
 
 export const employeeSchema = z.object({
-  name:               z.string().min(2, 'Nome deve ter ao menos 2 caracteres').max(150),
-  email:              z.string().min(1, 'E-mail obrigatorio').email('E-mail invalido'),
-  cpf:                z.string().length(11, 'CPF deve ter 11 digitos').regex(/^\d+$/, 'Apenas numeros'),
-  position:           z.string().min(2, 'Cargo obrigatorio').max(100),
-  departmentId:       z.uuid({ message: 'Departamento obrigatorio' }),
-  salary:             z.number().min(0.01, 'Salario deve ser maior que zero'),
-  hireDate:           z.string().min(1, 'Data de admissao obrigatoria'),
-  bankName:           z.string().optional(),
-  bankAgency:         z.string().optional(),
-  bankAccountNumber:  z.string().optional(),
+  firstName:    z.string().min(2, 'Nome obrigatório').max(75),
+  lastName:     z.string().min(2, 'Sobrenome obrigatório').max(75),
+  email:        z.email('E-mail inválido'),
+  cpf:          z.string().length(11, 'CPF deve ter 11 dígitos').regex(/^\d+$/, 'Apenas números'),
+  position:     z.number().optional(),
+  departmentId: z.uuid({ message: 'Departamento obrigatório' }),
+  salary:       z.number().min(0.01, 'Salário deve ser maior que zero'),
+  hireDate:     z.string().min(1, 'Data de admissão obrigatória'),
+  contractType: z.number({ message: 'Tipo de contrato obrigatório' }),
 })
 
 export const updateSalarySchema = z.object({
-  newSalary:     z.number().min(0.01, 'Salario deve ser maior que zero'),
-  effectiveDate: z.string().min(1, 'Data obrigatoria'),
+  newSalary:     z.number().min(0.01, 'Salário deve ser maior que zero'),
+  effectiveDate: z.string().min(1, 'Data obrigatória'),
   reason:        z.string().max(300).optional(),
 })
 

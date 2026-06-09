@@ -1,7 +1,3 @@
-// =============================================================================
-// OverdueAlerts.tsx
-// =============================================================================
-
 import { Card, CardHeader } from '../../ui/Card/Card'
 import { Badge } from '../../ui/Badge/Badge'
 import { formatCurrency, formatDate } from '../../../utils/formatters'

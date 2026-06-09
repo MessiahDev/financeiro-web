@@ -1,8 +1,8 @@
 import { useCallback } from 'react'
 import { useCrud } from './useCrud'
-import { accountingPeriodsService } from '../services/accountingPeriods.service'
 import { getErrorMessage } from '../utils/errorHandler'
-import type { AccountingPeriod, CreateAccountingPeriodRequest } from '../types/domain.types'
+import { accountingPeriodsService, type CreateAccountingPeriodRequest } from '../services/accountingPeriods.service'
+import type { AccountingPeriod } from '../types/domain.types'
 
 export function useAccountingPeriods() {
   const crud = useCrud<AccountingPeriod, CreateAccountingPeriodRequest, Partial<CreateAccountingPeriodRequest>>(accountingPeriodsService as never)

@@ -1,7 +1,3 @@
-// =============================================================================
-// useAuth.ts — hook de autenticacao para uso nos componentes
-// =============================================================================
-
 import { useState } from 'react'
 import { useAuthContext } from '../contexts/AuthContext'
 import { getErrorMessage } from '../utils/errorHandler'
