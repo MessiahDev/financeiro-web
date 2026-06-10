@@ -35,15 +35,28 @@ export default function BankStatementsPage() {
   useEffect(() => {
     setIsLoading(true)
 
-    const request = selectedAccount
-      ? bankStatementsService.getAll({ bankAccountId: selectedAccount })
-      : bankStatementsService.getAll({})
-
-    request
-      .then(r => setItems(r.items))
-      .catch(() => setItems([]))
-      .finally(() => setIsLoading(false))
-  }, [selectedAccount])
+    if (selectedAccount) {
+      // Uma conta específica
+      bankStatementsService.getAll({ bankAccountId: selectedAccount })
+        .then(r => setItems(r.items))
+        .catch(() => setItems([]))
+        .finally(() => setIsLoading(false))
+    } else if (accounts.length > 0) {
+      // Todas as contas — requisição para cada uma e junta os resultados
+      Promise.all(
+        accounts.map(account =>
+          bankStatementsService.getAll({ bankAccountId: account.id })
+            .then(r => r.items)
+            .catch(() => [])
+        )
+      )
+        .then(results => setItems(results.flat()))
+        .finally(() => setIsLoading(false))
+    } else {
+      setItems([])
+      setIsLoading(false)
+    }
+  }, [selectedAccount, accounts])
 
   const accountOptions = [
     { value: '', label: 'Todas as contas' },
@@ -84,7 +97,7 @@ export default function BankStatementsPage() {
         data={items}
         keyExtractor={r => r.id}
         isLoading={isLoading}
-        emptyMessage={selectedAccount ? 'Nenhum extrato para esta conta.' : 'Selecione uma conta para ver os extratos.'}
+        emptyMessage={selectedAccount ? 'Nenhum extrato para esta conta.' : 'Nenhum extrato encontrado.'}
       />
     </div>
   )
