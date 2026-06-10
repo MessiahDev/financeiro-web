@@ -1,18 +1,15 @@
 import { get, post, put, del } from './api'
 import { API_ROUTES } from '../utils/constants'
 import { buildQueryString } from '../utils/pagination'
-import type { AccountPayable } from '../types/domain.types'
+import type { AccountPayable, CreateAccountPayableRequest, PayAccountPayableRequest } from '../types/domain.types'
 import type { PagedResult } from '../types/pagination.types'
 
-export interface CreateAccountPayableRequest {
-  supplierId: string; description: string; amount: number; dueDate: string
-  bankAccountId?: string; costCenterId?: string; chartOfAccountId?: string
-}
-export interface PayAccountPayableRequest {
-  paymentDate: string; amount: number; bankAccountId: string
-}
 export interface GetAccountsPayableParams {
-  pageNumber?: number; pageSize?: number; status?: string; supplierId?: string; search?: string
+  pageNumber?: number
+  pageSize?:   number
+  status?:     string
+  supplierId?: string
+  search?:     string
 }
 
 export const accountsPayableService = {

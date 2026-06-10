@@ -7,6 +7,7 @@ import { Modal } from '../../components/ui/Modal/Modal'
 import { ConfirmModal } from '../../components/ui/Modal/ConfirmModal'
 import { AccountingPeriodStatusBadge } from '../../components/features/accountingPeriods/PeriodStatusBadge'
 import { useAccountingPeriods } from '../../hooks/useAccountingPeriods'
+import { AccountingPeriodStatus } from '../../types/enums'
 import { useNotifications } from '../../contexts/NotificationContext'
 import { formatDate } from '../../utils/formatters'
 import { useForm } from 'react-hook-form'
@@ -49,14 +50,14 @@ export default function AccountingPeriodsPage() {
   const columns: Column<AccountingPeriod>[] = [
     { key: 'name',       header: 'Nome',       render: r => <span className="font-medium">{r.name}</span> },
     { key: 'fiscalYear', header: 'Ano Fiscal' },
-    { key: 'startDate',  header: 'Inicio',     render: r => formatDate(r.startDate) },
-    { key: 'endDate',    header: 'Fim',        render: r => formatDate(r.endDate) },
+    { key: 'startDate',  header: 'Inicio',     render: r => formatDate(r.periodStart) },
+    { key: 'endDate',    header: 'Fim',        render: r => formatDate(r.periodEnd) },
     { key: 'status',     header: 'Status',     render: r => <AccountingPeriodStatusBadge status={r.status} /> },
     { key: 'actions',    header: '', render: r => (
       <div className="flex items-center justify-end gap-1">
-        {r.status === 'Open'   && <Button size="sm" variant="ghost" onClick={() => setActionOpen({ type: 'close',  item: r })}>Fechar</Button>}
-        {r.status === 'Closed' && <Button size="sm" variant="ghost" onClick={() => setActionOpen({ type: 'lock',   item: r })}>Bloquear</Button>}
-        {r.status === 'Closed' && <Button size="sm" variant="ghost" onClick={() => setActionOpen({ type: 'reopen', item: r })}>Reabrir</Button>}
+        {r.status === AccountingPeriodStatus.Open   && <Button size="sm" variant="ghost" onClick={() => setActionOpen({ type: 'close',  item: r })}>Fechar</Button>}
+        {r.status === AccountingPeriodStatus.Closed && <Button size="sm" variant="ghost" onClick={() => setActionOpen({ type: 'lock',   item: r })}>Bloquear</Button>}
+        {r.status === AccountingPeriodStatus.Closed && <Button size="sm" variant="ghost" onClick={() => setActionOpen({ type: 'reopen', item: r })}>Reabrir</Button>}
       </div>
     )},
   ]

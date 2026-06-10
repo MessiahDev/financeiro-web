@@ -20,7 +20,7 @@ export default function AccountReceivableDetailPage() {
   if (!selected) return <p className="text-sm text-slate-400 p-6">Conta nao encontrada.</p>
 
   const a = selected
-  const remaining = a.amount - a.receivedAmount
+  const remaining = a.totalAmount - a.receivedAmount
 
   return (
     <div className="flex flex-col gap-6">
@@ -34,7 +34,7 @@ export default function AccountReceivableDetailPage() {
             <div><dt className="text-slate-400">Status</dt><dd><AccountReceivableStatusBadge status={a.status} /></dd></div>
             <div><dt className="text-slate-400">Vencimento</dt><dd>{formatDate(a.dueDate)}</dd></div>
             <div><dt className="text-slate-400">Data de Recebimento</dt><dd>{a.receiptDate ? formatDate(a.receiptDate) : '-'}</dd></div>
-            <div><dt className="text-slate-400">Valor Total</dt><dd className="font-semibold">{formatCurrency(a.amount)}</dd></div>
+            <div><dt className="text-slate-400">Valor Total</dt><dd className="font-semibold">{formatCurrency(a.totalAmount)}</dd></div>
             <div><dt className="text-slate-400">Valor Recebido</dt><dd className="text-green-600 font-semibold">{formatCurrency(a.receivedAmount)}</dd></div>
           </dl>
         </Card>

@@ -6,29 +6,37 @@ import { Input } from '../../components/ui/Input/Input'
 import { Spinner } from '../../components/ui/Spinner/Spinner'
 import { useReports } from '../../hooks/useReports'
 import { formatCurrency } from '../../utils/formatters'
+import { AccountType } from '../../types/enums'
 import { ROUTES } from '../../router/routes'
-import type { TrialBalanceEntry } from '../../types/domain.types'
+import type { TrialBalanceLine } from '../../types/domain.types'
 
-const typeLabel: Record<string, string> = { Asset: 'Ativo', Liability: 'Passivo', Equity: 'Patrimonio', Revenue: 'Receita', Expense: 'Despesa' }
+const typeLabel: Record<AccountType, string> = {
+  [AccountType.Asset]:       'Ativo',
+  [AccountType.Liability]:   'Passivo',
+  [AccountType.Equity]:      'Patrimônio',
+  [AccountType.Revenue]:     'Receita',
+  [AccountType.Expense]:     'Despesa',
+  [AccountType.CostOfGoods]: 'CMV',
+}
 
 export default function TrialBalancePage() {
   const { trialBalance, isLoading, fetchTrialBalance } = useReports()
   const [periodId, setPeriodId] = useState('')
 
-  const columns: Column<TrialBalanceEntry>[] = [
-    { key: 'accountCode',  header: 'Codigo',  render: r => <span className="font-mono text-xs">{r.accountCode}</span> },
+  const columns: Column<TrialBalanceLine>[] = [
+    { key: 'accountCode',  header: 'Código',  render: r => <span className="font-mono text-xs">{r.accountCode}</span> },
     { key: 'accountName',  header: 'Conta',   render: r => <span className="font-medium">{r.accountName}</span> },
-    { key: 'accountType',  header: 'Tipo',    render: r => typeLabel[r.accountType] ?? r.accountType },
-    { key: 'debitTotal',   header: 'Debito',  render: r => formatCurrency(r.debitTotal) },
-    { key: 'creditTotal',  header: 'Credito', render: r => formatCurrency(r.creditTotal) },
+    { key: 'accountType',  header: 'Tipo',    render: r => typeLabel[r.accountType] ?? String(r.accountType) },
+    { key: 'totalDebits',  header: 'Débito',  render: r => formatCurrency(r.totalDebits) },
+    { key: 'totalCredits', header: 'Crédito', render: r => formatCurrency(r.totalCredits) },
     { key: 'balance',      header: 'Saldo',   render: r => <span className={r.balance >= 0 ? 'text-green-600 font-semibold' : 'text-red-600 font-semibold'}>{formatCurrency(r.balance)}</span> },
   ]
 
   return (
     <div className="flex flex-col gap-6">
-      <PageHeader title="Balancete de Verificacao" backTo={ROUTES.REPORTS} />
+      <PageHeader title="Balancete de Verificação" backTo={ROUTES.REPORTS} />
       <div className="flex items-end gap-3">
-        <div className="w-80"><Input label="ID do Periodo Contabil" value={periodId} onChange={e => setPeriodId(e.target.value)} placeholder="Cole o ID do periodo..." /></div>
+        <div className="w-80"><Input label="ID do Período Contábil" value={periodId} onChange={e => setPeriodId(e.target.value)} placeholder="Cole o ID do período..." /></div>
         <Button onClick={() => periodId && fetchTrialBalance(periodId)} disabled={!periodId}>Gerar balancete</Button>
       </div>
       {isLoading ? (
@@ -36,14 +44,14 @@ export default function TrialBalancePage() {
       ) : trialBalance ? (
         <>
           <div className="flex items-center gap-6 rounded-xl border border-slate-200 bg-slate-50 px-5 py-4">
-            <div><p className="text-xs text-slate-400">Periodo</p><p className="font-medium">{trialBalance.periodName}</p></div>
-            <div><p className="text-xs text-slate-400">Total Debitos</p><p className="font-semibold text-slate-900">{formatCurrency(trialBalance.totalDebit)}</p></div>
-            <div><p className="text-xs text-slate-400">Total Creditos</p><p className="font-semibold text-slate-900">{formatCurrency(trialBalance.totalCredit)}</p></div>
+            <div><p className="text-xs text-slate-400">Período</p><p className="font-medium">{trialBalance.periodName}</p></div>
+            <div><p className="text-xs text-slate-400">Total Débitos</p><p className="font-semibold text-slate-900">{formatCurrency(trialBalance.totalDebits)}</p></div>
+            <div><p className="text-xs text-slate-400">Total Créditos</p><p className="font-semibold text-slate-900">{formatCurrency(trialBalance.totalCredits)}</p></div>
           </div>
-          <Table columns={columns} data={trialBalance.entries} keyExtractor={r => r.accountCode} emptyMessage="Sem lancamentos no periodo." />
+          <Table columns={columns} data={trialBalance.lines} keyExtractor={r => r.accountId} emptyMessage="Sem lançamentos no período." />
         </>
       ) : (
-        <p className="text-sm text-slate-400">Informe o ID do periodo e clique em Gerar.</p>
+        <p className="text-sm text-slate-400">Informe o ID do período e clique em Gerar.</p>
       )}
     </div>
   )

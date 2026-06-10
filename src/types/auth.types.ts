@@ -11,6 +11,12 @@ export interface RegisterRequest {
   role: 3
 }
 
+export interface MeResponse {
+  id:    string
+  email: string
+  role:  number
+}
+
 export interface AuthResponse {
   token: string
   refreshToken?: string

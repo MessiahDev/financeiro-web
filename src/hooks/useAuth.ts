@@ -1,8 +1,7 @@
 import { useState } from 'react'
 import { useAuthContext } from '../contexts/AuthContext'
 import { getErrorMessage } from '../utils/errorHandler'
-import type { LoginFormData } from '../schemas/auth.schema'
-import type { RegisterFormData } from '../schemas/auth.schema'
+import type { LoginFormData, RegisterFormData } from '../schemas/auth.schema'
 
 export function useAuth() {
   const auth = useAuthContext()

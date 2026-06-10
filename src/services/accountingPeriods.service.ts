@@ -5,7 +5,11 @@ import type { AccountingPeriod } from '../types/domain.types'
 import type { PagedResult } from '../types/pagination.types'
 
 export interface CreateAccountingPeriodRequest {
-  name: string; startDate: string; endDate: string; fiscalYear: number
+  name:        string
+  year:        number
+  month:       number
+  periodStart: string
+  periodEnd:   string
 }
 
 export const accountingPeriodsService = {
@@ -33,7 +37,6 @@ export const accountingPeriodsService = {
   async lock(id: string): Promise<void> {
     return post<void>(`${API_ROUTES.ACCOUNTING_PERIODS}/${id}/lock`, {})
   },
-  // CORRIGIDO: estava usando get() — agora usa del() corretamente
   async delete(id: string): Promise<void> {
     return del<void>(`${API_ROUTES.ACCOUNTING_PERIODS}/${id}`)
   },

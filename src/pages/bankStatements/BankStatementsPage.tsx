@@ -7,15 +7,18 @@ import { bankStatementsService } from '../../services/bankStatements.service'
 import { bankAccountsService } from '../../services/bankAccounts.service'
 import { formatCurrency, formatDate } from '../../utils/formatters'
 import type { BankStatement, BankAccount } from '../../types/domain.types'
+import { BankStatementStatus } from '../../types/enums'
 
-const statusVariant = (status: string) =>
-  status === 'Imported' || status === 'Reconciled' ? 'success' : 'default'
+const statusVariant = (status: BankStatementStatus) =>
+  status === BankStatementStatus.Imported || status === BankStatementStatus.Reconciled
+    ? 'success'
+    : 'default'
 
-const statusLabel = (status: string) => ({
-  Imported: 'Importado',
-  Reconciled: 'Conciliado',
-  Cancelled: 'Cancelado',
-}[status] ?? status)
+const statusLabel = (status: BankStatementStatus) => ({
+  [BankStatementStatus.Imported]:   'Importado',
+  [BankStatementStatus.Reconciled]: 'Conciliado',
+  [BankStatementStatus.Cancelled]:  'Cancelado',
+}[status] ?? String(status))
 
 export default function BankStatementsPage() {
   const [items, setItems] = useState<BankStatement[]>([])
@@ -52,11 +55,11 @@ export default function BankStatementsPage() {
 
   const columns: Column<BankStatement>[] = [
     { key: 'bankAccountName', header: 'Conta' },
-    { key: 'period', header: 'Período', render: r => `${formatDate((r as any).periodStart)} – ${formatDate((r as any).periodEnd)}` },
-    { key: 'openingBalance', header: 'Saldo Inicial', render: r => formatCurrency((r as any).openingBalance ?? 0) },
-    { key: 'closingBalance', header: 'Saldo Final', render: r => formatCurrency((r as any).closingBalance ?? 0) },
-    { key: 'totalEntries', header: 'Lançamentos', render: r => (r as any).totalEntries ?? r.entries?.length ?? 0 },
-    { key: 'status', header: 'Status', render: r => <Badge variant={statusVariant(r.status)} dot>{statusLabel(r.status)}</Badge> },
+    { key: 'periodStart',     header: 'Período',       render: r => `${formatDate(r.periodStart)} – ${formatDate(r.periodEnd)}` },
+    { key: 'openingBalance',  header: 'Saldo Inicial',  render: r => formatCurrency(r.openingBalance) },
+    { key: 'closingBalance',  header: 'Saldo Final',    render: r => formatCurrency(r.closingBalance) },
+    { key: 'totalEntries',    header: 'Lançamentos',    render: r => r.totalEntries },
+    { key: 'status',          header: 'Status',         render: r => <Badge variant={statusVariant(r.status)} dot>{statusLabel(r.status)}</Badge> },
   ]
 
   return (

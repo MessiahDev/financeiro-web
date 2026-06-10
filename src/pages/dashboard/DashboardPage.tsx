@@ -47,12 +47,12 @@ export default function DashboardPage() {
         <>
           {/* Cards de resumo */}
           <FinancialSummaryCards
-            totalRevenue={summary?.totalRevenue       ?? 0}
-            totalExpenses={summary?.totalExpenses     ?? 0}
-            netResult={summary?.netResult             ?? 0}
-            totalReceivables={summary?.totalReceivables ?? 0}
-            totalPayables={summary?.totalPayables     ?? 0}
-            cashBalance={summary?.cashBalance         ?? 0}
+            totalRevenue={summary?.totalCredits   ?? 0}
+            totalExpenses={summary?.totalDebits   ?? 0}
+            netResult={summary?.netBalance        ?? 0}
+            totalReceivables={summary?.totalPayroll ?? 0}
+            totalPayables={summary?.payrollsProcessed ?? 0}
+            cashBalance={summary?.netBalance      ?? 0}
           />
 
           {/* Grafico + alertas */}

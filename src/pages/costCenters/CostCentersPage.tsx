@@ -47,7 +47,7 @@ export default function CostCentersPage() {
     { key: 'code',        header: 'Codigo',    render: r => <span className="font-mono text-xs bg-slate-100 px-2 py-0.5 rounded">{r.code}</span> },
     { key: 'name',        header: 'Nome',      render: r => <span className="font-medium">{r.name}</span> },
     { key: 'description', header: 'Descricao', render: r => r.description ?? '-' },
-    { key: 'isActive',    header: 'Status',    render: r => <Badge variant={r.isActive ? 'success' : 'default'} dot>{r.isActive ? 'Ativo' : 'Inativo'}</Badge> },
+    { key: 'status', header: 'Status', render: r => <Badge variant={r.status === 'Active' ? 'success' : 'default'} dot>{r.status === 'Active' ? 'Ativo' : 'Inativo'}</Badge> },
     { key: 'actions',     header: '', render: r => (
       <div className="flex justify-end gap-1">
         <Button size="sm" variant="ghost" onClick={() => { setEditing(r); setFormOpen(true) }}>Editar</Button>

@@ -9,12 +9,14 @@ import { useCrud } from '../../hooks/useCrud'
 import { bankReconciliationsService } from '../../services/bankReconciliations.service'
 import { formatCurrency, formatDate } from '../../utils/formatters'
 import { ROUTES } from '../../router/routes'
+import { BankReconciliationStatus, ReconciliationItemStatus, BankStatementEntryType } from '../../types/enums'
 import type { BankReconciliation, BankReconciliationItem } from '../../types/domain.types'
 
-const statusMap: Record<string, { label: string; variant: BadgeVariant }> = {
-  InProgress: { label: 'Em andamento', variant: 'info'    },
-  Completed:  { label: 'Concluida',    variant: 'success' },
-  Cancelled:  { label: 'Cancelada',    variant: 'default' },
+const statusMap: Record<BankReconciliationStatus, { label: string; variant: BadgeVariant }> = {
+  [BankReconciliationStatus.Open]:       { label: 'Aberta',        variant: 'info'    },
+  [BankReconciliationStatus.InProgress]: { label: 'Em andamento',  variant: 'warning' },
+  [BankReconciliationStatus.Completed]:  { label: 'Concluída',     variant: 'success' },
+  [BankReconciliationStatus.Cancelled]:  { label: 'Cancelada',     variant: 'default' },
 }
 
 export default function BankReconciliationDetailPage() {
@@ -30,9 +32,12 @@ export default function BankReconciliationDetailPage() {
   const s = statusMap[r.status] ?? { label: r.status, variant: 'default' as BadgeVariant }
 
   const columns: Column<BankReconciliationItem>[] = [
-    { key: 'bankStatementEntryId', header: 'ID Extrato',    render: i => <span className="font-mono text-xs">{i.bankStatementEntryId}</span> },
-    { key: 'transactionId',        header: 'ID Transacao',  render: i => i.transactionId ? <span className="font-mono text-xs">{i.transactionId}</span> : '-' },
-    { key: 'isMatched',            header: 'Conciliado',    render: i => <Badge variant={i.isMatched ? 'success' : 'warning'}>{i.isMatched ? 'Sim' : 'Nao'}</Badge> },
+    { key: 'entryDescription', header: 'Descrição',     render: i => i.entryDescription },
+    { key: 'entryDate',        header: 'Data',          render: i => formatDate(i.entryDate) },
+    { key: 'amount',           header: 'Valor',         render: i => formatCurrency(i.amount) },
+    { key: 'entryType',        header: 'Tipo',          render: i => i.entryType === BankStatementEntryType.Credit ? 'Crédito' : 'Débito' },
+    { key: 'transactionId',    header: 'ID Transação',  render: i => i.transactionId ? <span className="font-mono text-xs">{i.transactionId}</span> : '-' },
+    { key: 'status',           header: 'Status',        render: i => <Badge variant={i.status === ReconciliationItemStatus.Matched ? 'success' : 'warning'}>{i.status === ReconciliationItemStatus.Matched ? 'Conciliado' : 'Pendente'}</Badge> },
   ]
 
   return (
@@ -43,19 +48,19 @@ export default function BankReconciliationDetailPage() {
           <CardHeader title="Informacoes" />
           <CardDivider />
           <dl className="grid grid-cols-2 gap-4 text-sm">
-            <div><dt className="text-slate-400">Conta</dt><dd className="font-medium">{r.bankAccountName}</dd></div>
-            <div><dt className="text-slate-400">Data do Extrato</dt><dd>{formatDate(r.statementDate)}</dd></div>
-            <div><dt className="text-slate-400">Saldo Inicial</dt><dd>{formatCurrency(r.openingBalance)}</dd></div>
-            <div><dt className="text-slate-400">Saldo Final</dt><dd>{formatCurrency(r.closingBalance)}</dd></div>
+            <div><dt className="text-slate-400">Período</dt><dd>{formatDate(r.periodStart)} – {formatDate(r.periodEnd)}</dd></div>
+            <div><dt className="text-slate-400">Saldo Inicial</dt><dd>{formatCurrency(r.statementOpeningBalance)}</dd></div>
+            <div><dt className="text-slate-400">Saldo Final</dt><dd>{formatCurrency(r.statementClosingBalance)}</dd></div>
+            <div><dt className="text-slate-400">Diferença</dt><dd>{formatCurrency(r.difference)}</dd></div>
             <div><dt className="text-slate-400">Status</dt><dd><Badge variant={s.variant} dot>{s.label}</Badge></dd></div>
-            <div><dt className="text-slate-400">Itens</dt><dd>{r.items?.length ?? 0} itens</dd></div>
+            <div><dt className="text-slate-400">Itens</dt><dd>{r.totalItems} ({r.matchedItems} conciliados)</dd></div>
           </dl>
         </Card>
         <Card>
           <CardHeader title="Variacao" />
           <CardDivider />
-          <p className={`font-display text-2xl font-bold mt-2 ${(r.closingBalance - r.openingBalance) >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-            {formatCurrency(r.closingBalance - r.openingBalance)}
+          <p className={`... ${r.difference === 0 ? 'text-green-600' : 'text-red-600'}`}>
+            {formatCurrency(r.difference)}
           </p>
         </Card>
       </div>

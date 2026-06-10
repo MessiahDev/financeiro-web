@@ -1,13 +1,21 @@
 import { z } from 'zod'
+import { TransactionType, TransactionCategory } from '../types/enums'
 
 export const transactionSchema = z.object({
-  bankAccountId:    z.uuid({ message: 'Conta bancária obrigatória' }),
-  type:             z.enum(['Income', 'Expense', 'Transfer'], { message: 'Tipo obrigatório' }),
-  amount:           z.number().min(0.01, 'Valor deve ser maior que zero'),
-  description:      z.string().min(2, 'Descrição obrigatória').max(300),
-  transactionDate:  z.uuid({ message: 'Data obrigatória' }),
-  costCenterId:     z.union([z.uuid(), z.literal('')]).optional(),
-  chartOfAccountId: z.union([z.uuid(), z.literal('')]).optional(),
+  description:     z.string().min(2, 'Descrição obrigatória').max(300),
+  amount:          z.number().min(0.01, 'Valor deve ser maior que zero'),
+  type:            z.union([z.literal(TransactionType.Credit), z.literal(TransactionType.Debit)], { message: 'Tipo obrigatório' }),
+  category:        z.union([
+    z.literal(TransactionCategory.Salary),
+    z.literal(TransactionCategory.Bonus),
+    z.literal(TransactionCategory.Deduction),
+    z.literal(TransactionCategory.Tax),
+    z.literal(TransactionCategory.Benefit),
+    z.literal(TransactionCategory.Reimbursement),
+    z.literal(TransactionCategory.Other),
+  ], { message: 'Categoria obrigatória' }),
+  transactionDate: z.string().optional(),
+  referenceNumber: z.string().optional(),
 })
 
 export type TransactionFormData = z.infer<typeof transactionSchema>

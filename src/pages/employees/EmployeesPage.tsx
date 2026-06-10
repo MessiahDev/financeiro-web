@@ -75,11 +75,11 @@ export default function EmployeesPage() {
         <EmployeeForm initial={editing ?? undefined} departments={departments} onSubmit={handleSubmit} onCancel={() => { setFormOpen(false); setEditing(null) }} isSaving={isSaving} />
       </Modal>
 
-      <Modal isOpen={salaryOpen} onClose={() => { setSalaryOpen(false); setTarget(null) }} title={`Atualizar salario — ${target?.name ?? ''}`} size="sm">
+      <Modal isOpen={salaryOpen} onClose={() => { setSalaryOpen(false); setTarget(null) }} title={`Atualizar salario — ${target?.fullName ?? ''}`} size="sm">
         <UpdateSalaryForm currentSalary={target?.salary ?? 0} onSubmit={handleSalary} onCancel={() => { setSalaryOpen(false); setTarget(null) }} isSaving={isSaving} />
       </Modal>
 
-      <ConfirmModal isOpen={deleteOpen} onClose={() => setDeleteOpen(false)} onConfirm={handleDelete} title="Excluir funcionario" message={`Deseja excluir "${target?.name}"? Esta acao nao pode ser desfeita.`} confirmLabel="Excluir" isLoading={isSaving} />
+      <ConfirmModal isOpen={deleteOpen} onClose={() => setDeleteOpen(false)} onConfirm={handleDelete} title="Excluir funcionario" message={`Deseja excluir "${target?.fullName}"? Esta acao nao pode ser desfeita.`} confirmLabel="Excluir" isLoading={isSaving} />
     </div>
   )
 }

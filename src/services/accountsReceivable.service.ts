@@ -1,16 +1,8 @@
 import { get, post, put, del } from './api'
 import { API_ROUTES } from '../utils/constants'
 import { buildQueryString } from '../utils/pagination'
-import type { AccountReceivable } from '../types/domain.types'
+import type { AccountReceivable, CreateAccountReceivableRequest, ReceivePaymentRequest } from '../types/domain.types'
 import type { PagedResult } from '../types/pagination.types'
-
-export interface CreateAccountReceivableRequest {
-  customerId: string; description: string; amount: number; dueDate: string
-  bankAccountId?: string; costCenterId?: string; chartOfAccountId?: string
-}
-export interface ReceivePaymentRequest {
-  receiptDate: string; amount: number; bankAccountId: string
-}
 
 export const accountsReceivableService = {
   async getAll(params?: Record<string, unknown>): Promise<PagedResult<AccountReceivable>> {

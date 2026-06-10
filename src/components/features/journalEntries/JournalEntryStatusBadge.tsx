@@ -5,7 +5,7 @@ const map: Record<string, { label: string; variant: BadgeVariant }> = {
   [JournalEntryStatus.Posted]: { label: 'Lancado', variant: 'success' },
   [JournalEntryStatus.Reversed]: { label: 'Estornado', variant: 'warning' },
 }
-export function JournalEntryStatusBadge({ status }: { status: string }) {
-  const c = map[status] ?? { label: status, variant: 'default' as BadgeVariant }
+export function JournalEntryStatusBadge({ status }: { status: number }) {
+  const c = map[status] ?? { label: String(status), variant: 'default' as BadgeVariant }
   return <Badge variant={c.variant} dot>{c.label}</Badge>
 }

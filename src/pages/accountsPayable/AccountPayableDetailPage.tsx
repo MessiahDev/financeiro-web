@@ -17,10 +17,10 @@ export default function AccountPayableDetailPage() {
   useEffect(() => { if (id) fetchById(id) }, [id])
 
   if (isLoading) return <div className="flex justify-center py-20"><Spinner size="lg" className="text-blue-500" /></div>
-  if (!selected) return <p className="text-sm text-slate-400 p-6">Conta nao encontrada.</p>
+  if (!selected) return <p className="text-sm text-slate-400 p-6">Conta não encontrada.</p>
 
   const a = selected
-  const remaining = a.amount - a.paidAmount
+  const remaining = a.remainingAmount
 
   return (
     <div className="flex flex-col gap-6">
@@ -34,7 +34,7 @@ export default function AccountPayableDetailPage() {
             <div><dt className="text-slate-400">Status</dt><dd><AccountPayableStatusBadge status={a.status} /></dd></div>
             <div><dt className="text-slate-400">Vencimento</dt><dd>{formatDate(a.dueDate)}</dd></div>
             <div><dt className="text-slate-400">Data de Pagamento</dt><dd>{a.paymentDate ? formatDate(a.paymentDate) : '-'}</dd></div>
-            <div><dt className="text-slate-400">Valor Total</dt><dd className="font-semibold">{formatCurrency(a.amount)}</dd></div>
+            <div><dt className="text-slate-400">Valor Total</dt><dd className="font-semibold">{formatCurrency(a.totalAmount)}</dd></div>
             <div><dt className="text-slate-400">Valor Pago</dt><dd className="text-green-600 font-semibold">{formatCurrency(a.paidAmount)}</dd></div>
           </dl>
         </Card>

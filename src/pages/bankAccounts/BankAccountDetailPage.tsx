@@ -11,31 +11,38 @@ import { Input } from '../../components/ui/Input/Input'
 import { Select } from '../../components/ui/Select/Select'
 import { CurrencyInput } from '../../components/ui/CurrencyInput/CurrencyInput'
 import { useBankAccounts } from '../../hooks/useBankAccounts'
-import { bankStatementsService, type ImportBankStatementRequest, type ImportBankStatementEntryRequest } from '../../services/bankStatements.service'
+import { bankStatementsService } from '../../services/bankStatements.service'
+import type { ImportBankStatementRequest, BankStatement } from '../../types/domain.types'
+import { BankStatementEntryType, BankAccountType, BankStatementStatus } from '../../types/enums'
 import { useNotifications } from '../../contexts/NotificationContext'
 import { formatCurrency, formatDate } from '../../utils/formatters'
 import { ROUTES } from '../../router/routes'
-import type { BankStatement } from '../../types/domain.types'
 
-const typeLabel: Record<string, string> = {
-  Checking: 'Conta Corrente', Savings: 'Poupança', Investment: 'Investimento',
+type ImportBankStatementEntryRequest = ImportBankStatementRequest['entries'][number]
+
+const typeLabel: Record<BankAccountType, string> = {
+  [BankAccountType.Checking]:   'Conta Corrente',
+  [BankAccountType.Savings]:    'Poupança',
+  [BankAccountType.Payment]:    'Pagamento',
 }
 
-const statusVariant = (status: string) =>
-  status === 'Imported' || status === 'Reconciled' ? 'success' : 'default'
+const statusVariant = (status: BankStatementStatus) =>
+  status === BankStatementStatus.Imported || status === BankStatementStatus.Reconciled
+    ? 'success'
+    : 'default'
 
-const statusLabel = (status: string) => {
-  const map: Record<string, string> = {
-    Imported:   'Importado',
-    Reconciled: 'Conciliado',
-    Cancelled:  'Cancelado',
+const statusLabel = (status: BankStatementStatus) => {
+  const map: Record<BankStatementStatus, string> = {
+    [BankStatementStatus.Imported]:   'Importado',
+    [BankStatementStatus.Reconciled]: 'Conciliado',
+    [BankStatementStatus.Cancelled]:  'Cancelado',
   }
-  return map[status] ?? status
+  return map[status] ?? String(status)
 }
 
 const entryTypeOptions = [
-  { value: 'Credit', label: 'Crédito' },
-  { value: 'Debit',  label: 'Débito'  },
+  { value: String(BankStatementEntryType.Credit), label: 'Crédito' },
+  { value: String(BankStatementEntryType.Debit),  label: 'Débito'  },
 ]
 
 const emptyEntry = (): ImportBankStatementEntryRequest & { _id: string } => ({
@@ -43,7 +50,7 @@ const emptyEntry = (): ImportBankStatementEntryRequest & { _id: string } => ({
   date:           '',
   description:    '',
   amount:         0,
-  entryType:      'Credit',
+  entryType:      BankStatementEntryType.Credit,
   documentNumber: '',
 })
 
@@ -136,7 +143,7 @@ export default function BankAccountDetailPage() {
     { key: 'closingBalance', header: 'Saldo Final',    render: r => formatCurrency((r as any).closingBalance ?? 0) },
     { key: 'totalEntries',   header: 'Lançamentos',    render: r => (r as any).totalEntries ?? r.entries?.length ?? 0 },
     { key: 'status',         header: 'Status',         render: r => <Badge variant={statusVariant(r.status)} dot>{statusLabel(r.status)}</Badge> },
-    { key: 'actions',        header: '',               render: r => r.status === 'Imported' ? (
+    { key: 'actions',        header: '',               render: r => r.status === BankStatementStatus.Imported ? (
       <Button size="sm" variant="ghost" className="text-red-500 hover:bg-red-50" onClick={() => handleCancel(r.id)}>
         Cancelar
       </Button>
@@ -257,8 +264,8 @@ export default function BankAccountDetailPage() {
                       onChange={e => updateEntry(entry._id, 'date', e.target.value)}
                     />
                     <Select label="Tipo" required options={entryTypeOptions}
-                      value={entry.entryType}
-                      onChange={e => updateEntry(entry._id, 'entryType', e.target.value)}
+                      value={String(entry.entryType)}
+                      onChange={e => updateEntry(entry._id, 'entryType', Number(e.target.value))}
                     />
                     <div className="col-span-2">
                       <Input label="Descrição" required
