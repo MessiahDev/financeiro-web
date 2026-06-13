@@ -479,6 +479,28 @@ export interface ApproveBudgetRequest {
   approvedBy: string
 }
 
+// Budget vs Actual
+
+export interface BudgetVsActualItem {
+  costCenterId:    string
+  costCenterName?: string
+  category:        string
+  plannedAmount:   number
+  actualPaid:      number
+  actualReceived:  number
+  variance:        number
+}
+
+export interface BudgetVsActual {
+  budgetId:            string
+  year:                number
+  name:                string
+  totalPlanned:        number
+  totalActualPaid:     number
+  totalActualReceived: number
+  items:               BudgetVsActualItem[]
+}
+
 // Customer
 
 export interface Customer extends AuditFields {
@@ -702,6 +724,14 @@ export interface ProcessPayrollRequest {
   employeeIds: string[]
 }
 
+export interface ApprovePayrollRequest {
+  payrollId: string
+}
+
+export interface PayPayrollRequest {
+  bankAccountId: string
+}
+
 // Tax Entry
 
 export interface TaxEntry extends AuditFields {
@@ -786,16 +816,21 @@ export interface CancelTaxPaymentRequest {
 // Financial Summary
 
 export interface FinancialSummary {
-  from:              string
-  to:                string
-  totalCredits:      number
-  totalDebits:       number
-  netBalance:        number
-  payrollsProcessed: number
-  totalPayroll:      number
-  activeEmployees:   number
-  breakdown:         CategoryBreakdown[]
-  monthlyTrend:      MonthlyTrend[]
+  from:                string
+  to:                  string
+  totalCredits:        number
+  totalDebits:         number
+  netBalance:          number
+  payrollsProcessed:   number
+  totalPayroll:        number
+  activeEmployees:     number
+  totalPaid:           number
+  totalReceived:       number
+  totalTaxesPaid:      number
+  pendingPayables:     number
+  pendingReceivables:  number
+  breakdown:           CategoryBreakdown[]
+  monthlyTrend:        MonthlyTrend[]
 }
 
 export interface CategoryBreakdown {

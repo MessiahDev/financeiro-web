@@ -1,7 +1,3 @@
-// =============================================================================
-// Pagination.tsx — paginacao generica reutilizavel (fora de tabelas)
-// =============================================================================
-
 import { Button } from '../Button/Button'
 
 interface PaginationProps {

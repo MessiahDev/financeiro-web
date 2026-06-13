@@ -1,7 +1,3 @@
-// =============================================================================
-// FormError.tsx — exibe mensagem de erro de campo de formulario
-// =============================================================================
-
 interface FormErrorProps {
   message?:   string
   className?: string

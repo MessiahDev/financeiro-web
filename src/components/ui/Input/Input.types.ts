@@ -1,7 +1,3 @@
-// =============================================================================
-// Input.types.ts
-// =============================================================================
-
 import type { InputHTMLAttributes } from 'react'
 
 export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {

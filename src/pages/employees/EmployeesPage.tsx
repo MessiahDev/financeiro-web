@@ -26,7 +26,9 @@ export default function EmployeesPage() {
 
   const pagedData: PagedResult<Employee> = { items, totalCount, pageNumber: page, pageSize, totalPages, hasPreviousPage: page > 1, hasNextPage: page < totalPages }
 
-  useEffect(() => { fetchEmployees({ search }); fetchDepts() }, [page])
+  useEffect(() => { fetchEmployees({ search }) }, [page])
+
+  useEffect(() => { fetchDepts({ pageSize: 100 }) }, [])
 
   const handleSearch = useCallback((q: string) => {
     setSearch(q); setPage(1); fetchEmployees({ search: q, pageNumber: 1 })

@@ -1,7 +1,7 @@
 import { get, post, put, del } from './api'
 import { API_ROUTES } from '../utils/constants'
 import { buildQueryString } from '../utils/pagination'
-import type { Budget, CreateBudgetRequest } from '../types/domain.types'
+import type { Budget, CreateBudgetRequest, BudgetVsActual } from '../types/domain.types'
 import type { PagedResult } from '../types/pagination.types'
 
 export type UpdateBudgetRequest = Partial<CreateBudgetRequest>
@@ -16,6 +16,9 @@ export const budgetsService = {
   async getById(id: string): Promise<Budget> {
     return get<Budget>(`${API_ROUTES.BUDGETS}/${id}`)
   },
+  async getVsActual(id: string): Promise<BudgetVsActual> {
+    return get<BudgetVsActual>(`${API_ROUTES.BUDGETS}/${id}/vs-actual`)
+  },
   async create(data: CreateBudgetRequest): Promise<Budget> {
     return post<Budget>(API_ROUTES.BUDGETS, data)
   },
@@ -25,8 +28,8 @@ export const budgetsService = {
   async delete(id: string): Promise<void> {
     return del<void>(`${API_ROUTES.BUDGETS}/${id}`)
   },
-  async approve(id: string): Promise<Budget> {
-    return post<Budget>(`${API_ROUTES.BUDGETS}/${id}/approve`, {})
+  async approve(id: string, approvedBy: string): Promise<Budget> {
+    return post<Budget>(`${API_ROUTES.BUDGETS}/${id}/approve`, { approvedBy })
   },
   async close(id: string): Promise<void> {
     return post<void>(`${API_ROUTES.BUDGETS}/${id}/close`, {})

@@ -2,7 +2,7 @@ import { useCallback } from 'react'
 import { useCrud } from './useCrud'
 import { payrollService } from '../services/payroll.service'
 import { getErrorMessage } from '../utils/errorHandler'
-import type { Payroll, ProcessPayrollRequest } from '../types/domain.types'
+import type { Payroll, ProcessPayrollRequest, PayPayrollRequest } from '../types/domain.types'
 
 export function usePayroll() {
   const crud = useCrud<Payroll, ProcessPayrollRequest, Partial<ProcessPayrollRequest>>(payrollService as never)
@@ -16,10 +16,20 @@ export function usePayroll() {
     catch (e) { throw new Error(getErrorMessage(e)) }
   }, [crud])
 
-  const cancel = useCallback(async (id: string) => {
-    try { await payrollService.cancel(id); await crud.fetchAll() }
+  const approve = useCallback(async (id: string) => {
+    try { await payrollService.approve(id); await crud.fetchAll() }
     catch (e) { throw new Error(getErrorMessage(e)) }
   }, [crud])
 
-  return { ...crud, fetchById, process: process_, cancel }
+  const pay = useCallback(async (id: string, data: PayPayrollRequest) => {
+    try { await payrollService.pay(id, data); await crud.fetchAll() }
+    catch (e) { throw new Error(getErrorMessage(e)) }
+  }, [crud])
+
+  const cancel = useCallback(async (id: string, reason: string) => {
+    try { await payrollService.cancel(id, reason); await crud.fetchAll() }
+    catch (e) { throw new Error(getErrorMessage(e)) }
+  }, [crud])
+
+  return { ...crud, fetchById, process: process_, approve, pay, cancel }
 }

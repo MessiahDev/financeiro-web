@@ -1,7 +1,3 @@
-// =============================================================================
-// CurrencyInput.tsx — input formatado para valores monetarios em BRL
-// =============================================================================
-
 import { forwardRef, useEffect, useState, type InputHTMLAttributes } from 'react'
 
 export interface CurrencyInputProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'onChange' | 'value'> {
