@@ -14,74 +14,130 @@ import type { PagedResult } from '../../types/pagination.types'
 
 export default function EmployeesPage() {
   const { success, error: notifyError } = useNotifications()
-  const { items, isLoading, isSaving, page, pageSize, totalCount, totalPages, setPage, fetchEmployees, create, update, remove, updateSalary } = useEmployees()
-  const { items: departments, fetchAll: fetchDepts } = useDepartments()
+  const {
+    items, isLoading, isSaving,
+    page, pageSize, totalCount, totalPages,
+    setPage, fetchEmployees, create, update, remove, updateSalary,
+  } = useEmployees()
 
-  const [search, setSearch]           = useState('')
-  const [formOpen, setFormOpen]       = useState(false)
-  const [salaryOpen, setSalaryOpen]   = useState(false)
-  const [deleteOpen, setDeleteOpen]   = useState(false)
-  const [editing, setEditing]         = useState<Employee | null>(null)
-  const [target, setTarget]           = useState<Employee | null>(null)
+  const { items: departments, fetchDepartments } = useDepartments()
 
-  const pagedData: PagedResult<Employee> = { items, totalCount, pageNumber: page, pageSize, totalPages, hasPreviousPage: page > 1, hasNextPage: page < totalPages }
+  const [search, setSearch]         = useState('')
+  const [formOpen, setFormOpen]     = useState(false)
+  const [salaryOpen, setSalaryOpen] = useState(false)
+  const [deleteOpen, setDeleteOpen] = useState(false)
+  const [editing, setEditing]       = useState<Employee | null>(null)
+  const [target, setTarget]         = useState<Employee | null>(null)
+
+  const pagedData: PagedResult<Employee> = {
+    items, totalCount, pageNumber: page, pageSize, totalPages,
+    hasPreviousPage: page > 1, hasNextPage: page < totalPages,
+  }
 
   useEffect(() => { fetchEmployees({ search }) }, [page])
 
-  useEffect(() => { fetchDepts({ pageSize: 100 }) }, [])
+  useEffect(() => { fetchDepartments({ pageSize: 100 }) }, [])
 
   const handleSearch = useCallback((q: string) => {
-    setSearch(q); setPage(1); fetchEmployees({ search: q, pageNumber: 1 })
+    setSearch(q)
+    setPage(1)
+    fetchEmployees({ search: q, pageNumber: 1 })
   }, [fetchEmployees, setPage])
 
   async function handleSubmit(data: EmployeeFormData) {
     try {
       editing ? await update(editing.id, data) : await create(data)
-      success(editing ? 'Funcionario atualizado!' : 'Funcionario cadastrado!')
-      setFormOpen(false); setEditing(null); fetchEmployees({ search })
-    } catch { notifyError('Erro ao salvar funcionario.') }
+      success(editing ? 'Funcionário atualizado!' : 'Funcionário cadastrado!')
+      setFormOpen(false)
+      setEditing(null)
+      fetchEmployees({ search })
+    } catch {
+      notifyError('Erro ao salvar funcionário.')
+    }
   }
 
   async function handleSalary(data: UpdateSalaryFormData) {
     if (!target) return
     try {
       await updateSalary(target.id, data)
-      success('Salario atualizado!')
-      setSalaryOpen(false); setTarget(null)
-    } catch { notifyError('Erro ao atualizar salario.') }
+      success('Salário atualizado!')
+      setSalaryOpen(false)
+      setTarget(null)
+      fetchEmployees({ search })
+    } catch {
+      notifyError('Erro ao atualizar salário.')
+    }
   }
 
   async function handleDelete() {
     if (!target) return
     try {
       await remove(target.id)
-      success('Funcionario excluido.')
-      setDeleteOpen(false); setTarget(null)
-    } catch { notifyError('Nao foi possivel excluir.') }
+      success('Funcionário excluído.')
+      setDeleteOpen(false)
+      setTarget(null)
+    } catch {
+      notifyError('Não foi possível excluir.')
+    }
   }
 
   return (
     <div className="flex flex-col gap-6">
-      <PageHeader title="Funcionarios" subtitle={`${totalCount} funcionario${totalCount !== 1 ? 's' : ''} cadastrado${totalCount !== 1 ? 's' : ''}`} />
+      <PageHeader
+        title="Funcionários"
+        subtitle={`${totalCount} funcionário${totalCount !== 1 ? 's' : ''} cadastrado${totalCount !== 1 ? 's' : ''}`}
+      />
 
       <EmployeeList
-        data={pagedData} isLoading={isLoading} searchValue={search}
-        onSearch={handleSearch} onPageChange={setPage}
+        data={pagedData}
+        isLoading={isLoading}
+        searchValue={search}
+        onSearch={handleSearch}
+        onPageChange={setPage}
         onNew={() => { setEditing(null); setFormOpen(true) }}
         onEdit={(e) => { setEditing(e); setFormOpen(true) }}
         onUpdateSalary={(e) => { setTarget(e); setSalaryOpen(true) }}
         onDelete={(e) => { setTarget(e); setDeleteOpen(true) }}
       />
 
-      <Modal isOpen={formOpen} onClose={() => { setFormOpen(false); setEditing(null) }} title={editing ? 'Editar funcionario' : 'Novo funcionario'} size="xl">
-        <EmployeeForm initial={editing ?? undefined} departments={departments} onSubmit={handleSubmit} onCancel={() => { setFormOpen(false); setEditing(null) }} isSaving={isSaving} />
+      <Modal
+        isOpen={formOpen}
+        onClose={() => { setFormOpen(false); setEditing(null) }}
+        title={editing ? 'Editar funcionário' : 'Novo funcionário'}
+        size="xl"
+      >
+        <EmployeeForm
+          initial={editing ?? undefined}
+          departments={departments}
+          onSubmit={handleSubmit}
+          onCancel={() => { setFormOpen(false); setEditing(null) }}
+          isSaving={isSaving}
+        />
       </Modal>
 
-      <Modal isOpen={salaryOpen} onClose={() => { setSalaryOpen(false); setTarget(null) }} title={`Atualizar salario — ${target?.fullName ?? ''}`} size="sm">
-        <UpdateSalaryForm currentSalary={target?.salary ?? 0} onSubmit={handleSalary} onCancel={() => { setSalaryOpen(false); setTarget(null) }} isSaving={isSaving} />
+      <Modal
+        isOpen={salaryOpen}
+        onClose={() => { setSalaryOpen(false); setTarget(null) }}
+        title={`Atualizar salário — ${target?.fullName ?? ''}`}
+        size="sm"
+      >
+        <UpdateSalaryForm
+          currentSalary={target?.salary ?? 0}
+          onSubmit={handleSalary}
+          onCancel={() => { setSalaryOpen(false); setTarget(null) }}
+          isSaving={isSaving}
+        />
       </Modal>
 
-      <ConfirmModal isOpen={deleteOpen} onClose={() => setDeleteOpen(false)} onConfirm={handleDelete} title="Excluir funcionario" message={`Deseja excluir "${target?.fullName}"? Esta acao nao pode ser desfeita.`} confirmLabel="Excluir" isLoading={isSaving} />
+      <ConfirmModal
+        isOpen={deleteOpen}
+        onClose={() => setDeleteOpen(false)}
+        onConfirm={handleDelete}
+        title="Excluir funcionário"
+        message={`Deseja excluir "${target?.fullName}"? Esta ação não pode ser desfeita.`}
+        confirmLabel="Excluir"
+        isLoading={isSaving}
+      />
     </div>
   )
 }

@@ -6,7 +6,7 @@ import { Badge } from '../../components/ui/Badge/Badge'
 import { Spinner } from '../../components/ui/Spinner/Spinner'
 import { useEmployees } from '../../hooks/useEmployees'
 import { formatCurrency, formatCPF, formatDate } from '../../utils/formatters'
-import { EmployeeStatus, Position } from '../../types/enums'
+import { Position } from '../../types/enums'
 import { ROUTES } from '../../router/routes'
 
 const positionMap: Record<number, string> = {
@@ -27,11 +27,10 @@ const positionMap: Record<number, string> = {
   [Position.AtendimentoAoCliente]: 'Atendimento ao Cliente',
 }
 
-const statusMap: Record<EmployeeStatus, { label: string; variant: 'success' | 'warning' | 'default' }> = {
-  [EmployeeStatus.Active]:     { label: 'Ativo',     variant: 'success' },
-  [EmployeeStatus.Inactive]:   { label: 'Inativo',   variant: 'default' },
-  [EmployeeStatus.OnLeave]:    { label: 'Afastado',  variant: 'warning' },
-  [EmployeeStatus.Terminated]: { label: 'Desligado', variant: 'warning' },
+const statusMap: Record<string, { label: string; variant: 'success' | 'warning' | 'default' }> = {
+  Active:     { label: 'Ativo',     variant: 'success' },
+  Inactive:   { label: 'Inativo',   variant: 'default' },
+  Terminated: { label: 'Desligado', variant: 'warning' },
 }
 
 export default function EmployeeDetailPage() {

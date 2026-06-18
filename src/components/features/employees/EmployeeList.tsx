@@ -8,12 +8,6 @@ import { EmployeeStatus } from '../../../types/enums'
 import type { Employee } from '../../../types/domain.types'
 import type { PagedResult } from '../../../types/pagination.types'
 
-const statusMap: Record<string, { label: string; variant: 'success' | 'warning' | 'default' }> = {
-  [EmployeeStatus.Active]:     { label: 'Ativo',     variant: 'success' },
-  [EmployeeStatus.Inactive]:   { label: 'Inativo',   variant: 'default' },
-  [EmployeeStatus.Terminated]: { label: 'Desligado', variant: 'warning' },
-}
-
 interface Props { data: PagedResult<Employee> | null; isLoading: boolean; onEdit: (e: Employee) => void; onDelete: (e: Employee) => void; onUpdateSalary: (e: Employee) => void; onPageChange: (p: number) => void; onSearch: (q: string) => void; searchValue: string; onNew: () => void }
 
 export function EmployeeList({ data, isLoading, onEdit, onDelete, onUpdateSalary, onPageChange, onSearch, searchValue, onNew }: Props) {
@@ -23,7 +17,16 @@ export function EmployeeList({ data, isLoading, onEdit, onDelete, onUpdateSalary
     { key: 'position',       header: 'Cargo' },
     { key: 'departmentName', header: 'Departamento' },
     { key: 'salary',         header: 'Salario',    render: (r) => <span className="font-medium">{formatCurrency(r.salary)}</span> },
-    { key: 'status',         header: 'Status',     render: (r) => { const s = statusMap[r.status] ?? { label: r.status, variant: 'default' as const }; return <Badge variant={s.variant} dot>{s.label}</Badge> } },
+    { key: 'status', header: 'Status', render: (r) => {
+      const map: Record<string, { label: string; variant: 'success' | 'warning' | 'default' }> = {
+        Active:     { label: 'Ativo',      variant: 'success' },
+        Inactive:   { label: 'Inativo',    variant: 'default' },
+        OnLeave:    { label: 'Afastado',   variant: 'warning' },
+        Terminated: { label: 'Desligado',  variant: 'default' },
+      }
+      const s = map[r.status] ?? { label: r.status, variant: 'default' as const }
+      return <Badge variant={s.variant} dot>{s.label}</Badge>
+    }},
     { key: 'actions',        header: '', headerClassName: 'w-40', render: (r) => (
       <div className="flex items-center justify-end gap-1">
         <Button size="sm" variant="ghost" onClick={() => onEdit(r)}>Editar</Button>
