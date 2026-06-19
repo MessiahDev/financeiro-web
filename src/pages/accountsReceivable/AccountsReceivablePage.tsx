@@ -1,16 +1,19 @@
 import { useEffect, useState, useCallback } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { PageHeader } from '../../components/layout/PageHeader/PageHeader'
 import { Table, type Column } from '../../components/ui/Table/Table'
 import { TablePagination } from '../../components/ui/Table/TablePagination'
 import { Button } from '../../components/ui/Button/Button'
 import { Input } from '../../components/ui/Input/Input'
+import { Select } from '../../components/ui/Select/Select'
 import { Modal } from '../../components/ui/Modal/Modal'
 import { ConfirmModal } from '../../components/ui/Modal/ConfirmModal'
 import { AccountReceivableStatusBadge } from '../../components/features/accountsReceivable/ReceivableStatusBadge'
-import { AccountReceivableStatus } from '../../types/enums'
 import { useAccountsReceivable } from '../../hooks/useAccountsReceivable'
 import { useNotifications } from '../../contexts/NotificationContext'
-import { formatCurrency, formatDate } from '../../utils/formatters'
+import { bankAccountsService } from '../../services/bankAccounts.service'
+import { customersService } from '../../services/customers.service'
+import { formatCurrency, formatDate, today } from '../../utils/formatters'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import {
@@ -21,8 +24,10 @@ import {
 } from '../../schemas/accountsReceivable.schema'
 import { DatePicker } from '../../components/ui/DatePicker/DatePicker'
 import { CurrencyInput } from '../../components/ui/CurrencyInput/CurrencyInput'
-import type { AccountReceivable } from '../../types/domain.types'
+import { ROUTES } from '../../router/routes'
+import type { AccountReceivable, BankAccount, Customer } from '../../types/domain.types'
 import type { PagedResult } from '../../types/pagination.types'
+import { AccountReceivableStatus } from '../../types/enums'
 
 function NewForm({
   onSubmit,
@@ -39,10 +44,28 @@ function NewForm({
     })
 
   const amount = watch('amount')
+  const [customers, setCustomers] = useState<Customer[]>([])
+  const [isLoadingCustomers, setIsLoadingCustomers] = useState(true)
+
+  useEffect(() => {
+    customersService.getAll()
+      .then(r => setCustomers(r.items ?? []))
+      .finally(() => setIsLoadingCustomers(false))
+  }, [])
+
+  const customerOptions = customers.map(c => ({ value: c.id, label: c.name }))
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4" noValidate>
-      <Input label="ID do Cliente" required error={errors.customerId?.message} {...register('customerId')} />
+      <Select
+        label="Cliente"
+        required
+        options={customerOptions}
+        placeholder={isLoadingCustomers ? 'Carregando...' : 'Selecione...'}
+        disabled={isLoadingCustomers}
+        error={errors.customerId?.message}
+        {...register('customerId')}
+      />
       <Input label="Descrição" required error={errors.description?.message} {...register('description')} />
 
       <CurrencyInput
@@ -81,10 +104,23 @@ function ReceiveForm({
   const { register, handleSubmit, setValue, watch, formState: { errors } }
     = useForm<ReceivePaymentFormData>({
       resolver: zodResolver(receivePaymentSchema),
-      defaultValues: { amount: item.totalAmount }
+      defaultValues: { amount: item.totalAmount, receiptDate: today() }
     })
 
   const amount = watch('amount')
+  const [bankAccounts, setBankAccounts] = useState<BankAccount[]>([])
+  const [isLoadingAccounts, setIsLoadingAccounts] = useState(true)
+
+  useEffect(() => {
+    bankAccountsService.getAll()
+      .then(r => setBankAccounts((r.items ?? []).filter(a => a.isActive)))
+      .finally(() => setIsLoadingAccounts(false))
+  }, [])
+
+  const bankAccountOptions = bankAccounts.map(a => ({
+    value: a.id,
+    label: `${a.bankName} — ${a.accountNumber} (${formatCurrency(a.balance)})`,
+  }))
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4" noValidate>
@@ -102,7 +138,15 @@ function ReceiveForm({
 
       <DatePicker label="Data do recebimento" required {...register('receiptDate')} error={errors.receiptDate?.message} />
 
-      <Input label="ID da Conta Bancária" required {...register('bankAccountId')} error={errors.bankAccountId?.message} />
+      <Select
+        label="Conta Bancária"
+        required
+        options={bankAccountOptions}
+        placeholder={isLoadingAccounts ? 'Carregando...' : 'Selecione...'}
+        disabled={isLoadingAccounts}
+        error={errors.bankAccountId?.message}
+        {...register('bankAccountId')}
+      />
 
       <div className="flex justify-end gap-3">
         <Button type="button" variant="secondary" onClick={onCancel} disabled={isSaving}>
@@ -117,6 +161,7 @@ function ReceiveForm({
 }
 
 export default function AccountsReceivablePage() {
+  const navigate = useNavigate()
   const { success, error: notifyError } = useNotifications()
   const {
     items,
@@ -168,9 +213,14 @@ export default function AccountsReceivablePage() {
     {
       key: 'actions',
       header: '',
+      headerClassName: 'w-64',
       render: r => (
         <div className="flex justify-end gap-1">
-          {(r.status === AccountReceivableStatus.Pending || r.status === AccountReceivableStatus.Overdue) && (
+          <Button size="sm" variant="ghost" onClick={() => navigate(`${ROUTES.ACCOUNTS_RECEIVABLE}/${r.id}`)}>
+            Ver
+          </Button>
+
+          {(r.status === AccountReceivableStatus.Pending || r.status === AccountReceivableStatus.Overdue || r.status === AccountReceivableStatus.PartiallyReceived) && (
             <Button size="sm" variant="ghost" onClick={() => { setTarget(r); setReceiveOpen(true) }}>
               Receber
             </Button>
@@ -239,6 +289,7 @@ export default function AccountsReceivablePage() {
                 success('Recebimento registrado!')
                 setReceiveOpen(false)
                 setTarget(null)
+                fetch({ search })
               } catch {
                 notifyError('Erro ao registrar.')
               }

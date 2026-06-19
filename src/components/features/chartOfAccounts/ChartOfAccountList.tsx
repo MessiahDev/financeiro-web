@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { useChartOfAccounts } from '../../../hooks/useChartOfAccounts'
 import type { ChartOfAccount } from '../../../types/domain.types'
 import { ChartOfAccountForm } from './ChartOfAccountForm'
+import { AccountNature } from '../../../types/enums'
 
 const ACCOUNT_TYPE_LABEL: Record<string, string> = {
   Asset:       'Ativo',
@@ -79,7 +80,7 @@ export function ChartOfAccountList() {
                       {ACCOUNT_TYPE_LABEL[a.accountType] ?? a.accountType}
                     </span>
                   </td>
-                  <td className="px-4 py-3 text-gray-600">{a.accountNature === 1 ? 'Devedora' : 'Credora'}</td>
+                  <td className="px-4 py-3 text-gray-600">{a.accountNature === AccountNature.Debit ? 'Devedora' : 'Credora'}</td>
                   <td className="px-4 py-3 text-gray-600">{a.acceptsEntries ? 'Sim' : 'Não'}</td>
                   <td className="px-4 py-3">
                     <span className={'inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ' + (a.isActive ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500')}>

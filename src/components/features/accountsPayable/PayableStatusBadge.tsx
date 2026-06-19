@@ -1,7 +1,7 @@
 import { Badge, type BadgeVariant } from '../../ui/Badge/Badge'
 import { AccountPayableStatus } from '../../../types/enums'
 
-const map: Record<number, { label: string; variant: BadgeVariant }> = {
+const map: Record<AccountPayableStatus, { label: string; variant: BadgeVariant }> = {
   [AccountPayableStatus.Pending]:       { label: 'Pendente',          variant: 'warning' },
   [AccountPayableStatus.PartiallyPaid]: { label: 'Pago Parcialmente', variant: 'info'    },
   [AccountPayableStatus.Paid]:          { label: 'Pago',              variant: 'success' },
@@ -9,7 +9,7 @@ const map: Record<number, { label: string; variant: BadgeVariant }> = {
   [AccountPayableStatus.Cancelled]:     { label: 'Cancelado',         variant: 'default' },
 }
 
-export function AccountPayableStatusBadge({ status }: { status: number }) {
+export function AccountPayableStatusBadge({ status }: { status: AccountPayableStatus }) {
   const c = map[status] ?? { label: String(status), variant: 'default' as BadgeVariant }
   return <Badge variant={c.variant} dot>{c.label}</Badge>
 }

@@ -1,16 +1,19 @@
 import { useEffect, useState, useCallback } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { PageHeader } from '../../components/layout/PageHeader/PageHeader'
 import { Table, type Column } from '../../components/ui/Table/Table'
 import { TablePagination } from '../../components/ui/Table/TablePagination'
 import { Button } from '../../components/ui/Button/Button'
 import { Input } from '../../components/ui/Input/Input'
+import { Select } from '../../components/ui/Select/Select'
 import { Modal } from '../../components/ui/Modal/Modal'
 import { ConfirmModal } from '../../components/ui/Modal/ConfirmModal'
 import { AccountPayableStatusBadge } from '../../components/features/accountsPayable/PayableStatusBadge'
 import { useAccountsPayable } from '../../hooks/useAccountsPayable'
 import { useNotifications } from '../../contexts/NotificationContext'
+import { bankAccountsService } from '../../services/bankAccounts.service'
+import { suppliersService } from '../../services/suppliers.service'
 import { formatCurrency, formatDate } from '../../utils/formatters'
-import { AccountPayableStatus } from '../../types/enums'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import {
@@ -21,8 +24,10 @@ import {
 } from '../../schemas/accountsPayable.schema'
 import { DatePicker } from '../../components/ui/DatePicker/DatePicker'
 import { CurrencyInput } from '../../components/ui/CurrencyInput/CurrencyInput'
-import type { AccountPayable } from '../../types/domain.types'
+import { ROUTES } from '../../router/routes'
+import type { AccountPayable, BankAccount, Supplier } from '../../types/domain.types'
 import type { PagedResult } from '../../types/pagination.types'
+import { AccountPayableStatus } from '../../types/enums'
 
 function NewPayableForm({
   onSubmit,
@@ -39,10 +44,28 @@ function NewPayableForm({
     })
 
   const totalAmount = watch('totalAmount')
+  const [suppliers, setSuppliers] = useState<Supplier[]>([])
+  const [isLoadingSuppliers, setIsLoadingSuppliers] = useState(true)
+
+  useEffect(() => {
+    suppliersService.getAll()
+      .then(r => setSuppliers(r.items ?? []))
+      .finally(() => setIsLoadingSuppliers(false))
+  }, [])
+
+  const supplierOptions = suppliers.map(s => ({ value: s.id, label: s.name }))
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4" noValidate>
-      <Input label="ID do Fornecedor" required {...register('supplierId')} error={errors.supplierId?.message} />
+      <Select
+        label="Fornecedor"
+        required
+        options={supplierOptions}
+        placeholder={isLoadingSuppliers ? 'Carregando...' : 'Selecione...'}
+        disabled={isLoadingSuppliers}
+        error={errors.supplierId?.message}
+        {...register('supplierId')}
+      />
       <Input label="Descrição" required {...register('description')} error={errors.description?.message} />
 
       <CurrencyInput
@@ -85,6 +108,19 @@ function PayForm({
     })
 
   const amount = watch('amount')
+  const [bankAccounts, setBankAccounts] = useState<BankAccount[]>([])
+  const [isLoadingAccounts, setIsLoadingAccounts] = useState(true)
+
+  useEffect(() => {
+    bankAccountsService.getAll()
+      .then(r => setBankAccounts((r.items ?? []).filter(a => a.isActive)))
+      .finally(() => setIsLoadingAccounts(false))
+  }, [])
+
+  const bankAccountOptions = bankAccounts.map(a => ({
+    value: a.id,
+    label: `${a.bankName} — ${a.accountNumber} (${formatCurrency(a.balance)})`,
+  }))
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4" noValidate>
@@ -111,11 +147,14 @@ function PayForm({
         error={errors.paymentDate?.message}
       />
 
-      <Input
-        label="ID da Conta Bancária"
+      <Select
+        label="Conta Bancária"
         required
-        {...register('bankAccountId')}
+        options={bankAccountOptions}
+        placeholder={isLoadingAccounts ? 'Carregando...' : 'Selecione...'}
+        disabled={isLoadingAccounts}
         error={errors.bankAccountId?.message}
+        {...register('bankAccountId')}
       />
 
       <div className="flex justify-end gap-3">
@@ -131,6 +170,7 @@ function PayForm({
 }
 
 export default function AccountsPayablePage() {
+  const navigate = useNavigate()
   const { success, error: notifyError } = useNotifications()
 
   const {
@@ -183,9 +223,14 @@ export default function AccountsPayablePage() {
     {
       key: 'actions',
       header: '',
+      headerClassName: 'w-64',
       render: r => (
         <div className="flex items-center justify-end gap-1">
-          {(r.status === AccountPayableStatus.Pending || r.status === AccountPayableStatus.Overdue) && (
+          <Button size="sm" variant="ghost" onClick={() => navigate(`${ROUTES.ACCOUNTS_PAYABLE}/${r.id}`)}>
+            Ver
+          </Button>
+
+          {(r.status === AccountPayableStatus.Pending || r.status === AccountPayableStatus.Overdue || r.status === AccountPayableStatus.PartiallyPaid) && (
             <Button size="sm" variant="ghost" onClick={() => { setTarget(r); setPayOpen(true) }}>
               Pagar
             </Button>
@@ -250,6 +295,7 @@ export default function AccountsPayablePage() {
                 success('Pagamento registrado!')
                 setPayOpen(false)
                 setTarget(null)
+                fetch({ search })
               } catch {
                 notifyError('Erro ao pagar.')
               }

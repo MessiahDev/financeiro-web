@@ -1,15 +1,26 @@
 import { get, post, del } from './api'
 import { API_ROUTES } from '../utils/constants'
-import { buildQueryString } from '../utils/pagination'
 import type { JournalEntry, CreateJournalEntryRequest } from '../types/domain.types'
 import type { PagedResult } from '../types/pagination.types'
 
 export const journalEntriesService = {
-  async getAll(params?: Record<string, unknown>): Promise<PagedResult<JournalEntry>> {
-    return get<PagedResult<JournalEntry>>(
-      API_ROUTES.JOURNAL_ENTRIES +
-      buildQueryString((params ?? {}) as Record<string, string | number | boolean | null | undefined>),
-    )
+  async getAll(params?: { accountingPeriodId?: string }): Promise<PagedResult<JournalEntry>> {
+    if (!params?.accountingPeriodId) {
+      return {
+        items: [], totalCount: 0, totalPages: 1, pageNumber: 1, pageSize: 0,
+        hasPreviousPage: false, hasNextPage: false,
+      }
+    }
+    const data = await get<JournalEntry[]>(API_ROUTES.JOURNAL_ENTRIES, { accountingPeriodId: params.accountingPeriodId })
+    return {
+      items:           data ?? [],
+      totalCount:      data?.length ?? 0,
+      totalPages:      1,
+      pageNumber:      1,
+      pageSize:        data?.length ?? 0,
+      hasPreviousPage: false,
+      hasNextPage:     false,
+    }
   },
   async getById(id: string): Promise<JournalEntry> {
     return get<JournalEntry>(`${API_ROUTES.JOURNAL_ENTRIES}/${id}`)

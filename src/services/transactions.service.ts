@@ -1,4 +1,4 @@
-import { get, post, del } from './api'
+import { get, post, patch, del } from './api'
 import { API_ROUTES } from '../utils/constants'
 import { buildQueryString } from '../utils/pagination'
 import type { Transaction, CreateTransactionRequest } from '../types/domain.types'
@@ -18,10 +18,10 @@ export const transactionsService = {
     return post<Transaction>(API_ROUTES.TRANSACTIONS, data)
   },
   async confirm(id: string): Promise<Transaction> {
-    return post<Transaction>(`${API_ROUTES.TRANSACTIONS}/${id}/confirm`, {})
+    return patch<Transaction>(`${API_ROUTES.TRANSACTIONS}/${id}/confirm`, {})
   },
   async cancel(id: string, reason: string): Promise<void> {
-    return post<void>(`${API_ROUTES.TRANSACTIONS}/${id}/cancel`, { reason })
+    return patch<void>(`${API_ROUTES.TRANSACTIONS}/${id}/cancel`, { reason })
   },
   async delete(id: string): Promise<void> {
     return del<void>(`${API_ROUTES.TRANSACTIONS}/${id}`)

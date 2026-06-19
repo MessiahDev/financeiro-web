@@ -49,7 +49,7 @@ export default function BankReconciliationsPage() {
       const s = statusMap[r.status] ?? { label: String(r.status), variant: 'default' as BadgeVariant }
       return <Badge variant={s.variant} dot>{s.label}</Badge>
     }},
-    { key: 'actions', header: '', render: r => r.status === BankReconciliationStatus.InProgress ? (
+    { key: 'actions', header: '', render: r => r.status === AccountPayableStatus.InProgress ? (
       <div className="flex justify-end gap-1">
         <Button size="sm" variant="ghost" onClick={() => setCompleteTarget(r)}>Concluir</Button>
         <Button size="sm" variant="ghost" onClick={() => setCancelTarget(r)} className="text-red-500 hover:bg-red-50">Cancelar</Button>

@@ -12,8 +12,9 @@ import { Select } from '../../components/ui/Select/Select'
 import { CurrencyInput } from '../../components/ui/CurrencyInput/CurrencyInput'
 import { useBankAccounts } from '../../hooks/useBankAccounts'
 import { bankStatementsService } from '../../services/bankStatements.service'
-import type { ImportBankStatementRequest, BankStatement } from '../../types/domain.types'
-import { BankStatementEntryType, BankAccountType, BankStatementStatus } from '../../types/enums'
+import { transactionsService } from '../../services/transactions.service'
+import type { ImportBankStatementRequest, BankStatement, Transaction } from '../../types/domain.types'
+import { BankStatementEntryType, BankAccountType, BankStatementStatus, TransactionType } from '../../types/enums'
 import { useNotifications } from '../../contexts/NotificationContext'
 import { formatCurrency, formatDate } from '../../utils/formatters'
 import { ROUTES } from '../../router/routes'
@@ -21,9 +22,9 @@ import { ROUTES } from '../../router/routes'
 type ImportBankStatementEntryRequest = ImportBankStatementRequest['entries'][number]
 
 const typeLabel: Record<BankAccountType, string> = {
-  [BankAccountType.Checking]:   'Conta Corrente',
-  [BankAccountType.Savings]:    'Poupança',
-  [BankAccountType.Payment]:    'Pagamento',
+  [BankAccountType.Checking]: 'Conta Corrente',
+  [BankAccountType.Savings]:  'Poupança',
+  [BankAccountType.Payment]:  'Pagamento',
 }
 
 const statusVariant = (status: BankStatementStatus) =>
@@ -41,8 +42,8 @@ const statusLabel = (status: BankStatementStatus) => {
 }
 
 const entryTypeOptions = [
-  { value: String(BankStatementEntryType.Credit), label: 'Crédito' },
-  { value: String(BankStatementEntryType.Debit),  label: 'Débito'  },
+  { value: BankStatementEntryType.Credit, label: 'Crédito' },
+  { value: BankStatementEntryType.Debit,  label: 'Débito'  },
 ]
 
 const emptyEntry = (): ImportBankStatementEntryRequest & { _id: string } => ({
@@ -73,6 +74,8 @@ export default function BankAccountDetailPage() {
 
   const [statements, setStatements]   = useState<BankStatement[]>([])
   const [loadingStmt, setLoadingStmt] = useState(false)
+  const [transactions, setTransactions] = useState<Transaction[]>([])
+  const [loadingTx, setLoadingTx]     = useState(false)
   const [importOpen, setImportOpen]   = useState(false)
   const [isSaving, setIsSaving]       = useState(false)
   const [form, setForm]               = useState<ImportBankStatementRequest>(emptyForm())
@@ -88,8 +91,22 @@ export default function BankAccountDetailPage() {
       .finally(() => setLoadingStmt(false))
   }
 
+  const refreshTransactions = async () => {
+    if (!id) return
+    setLoadingTx(true)
+    try {
+      const result = await transactionsService.getAll({ bankAccountId: id, pageSize: 50 })
+      setTransactions(result.items ?? [])
+    } catch {
+      setTransactions([])
+    } finally {
+      setLoadingTx(false)
+    }
+  }
+
   useEffect(() => { if (id) fetchById(id) }, [id])
   useEffect(() => { refreshStatements() }, [id])
+  useEffect(() => { refreshTransactions() }, [id])
 
   const openImport = () => {
     setForm({ ...emptyForm(), bankAccountId: id! })
@@ -137,7 +154,7 @@ export default function BankAccountDetailPage() {
     }
   }
 
-  const columns: Column<BankStatement>[] = [
+  const statementColumns: Column<BankStatement>[] = [
     { key: 'periodStart',    header: 'Período',        render: r => `${formatDate((r as any).periodStart)} – ${formatDate((r as any).periodEnd)}` },
     { key: 'openingBalance', header: 'Saldo Inicial',  render: r => formatCurrency((r as any).openingBalance ?? 0) },
     { key: 'closingBalance', header: 'Saldo Final',    render: r => formatCurrency((r as any).closingBalance ?? 0) },
@@ -148,6 +165,17 @@ export default function BankAccountDetailPage() {
         Cancelar
       </Button>
     ) : null },
+  ]
+
+  const transactionColumns: Column<Transaction>[] = [
+    { key: 'transactionDate', header: 'Data',        render: r => formatDate(r.transactionDate) },
+    { key: 'description',     header: 'Descrição',   render: r => <span className="font-medium">{r.description}</span> },
+    { key: 'referenceNumber', header: 'Referência',  render: r => r.referenceNumber || '-' },
+    { key: 'amount',          header: 'Valor',       render: r => (
+      <span className={r.type === TransactionType.Debit ? 'text-red-600 font-semibold' : 'text-green-600 font-semibold'}>
+        {r.type === TransactionType.Debit ? '-' : '+'}{formatCurrency(r.amount)}
+      </span>
+    )},
   ]
 
   if (isLoading) return <div className="flex justify-center py-20"><Spinner size="lg" className="text-blue-500" /></div>
@@ -186,13 +214,27 @@ export default function BankAccountDetailPage() {
         </Card>
       </div>
 
-      {/* Extratos */}
+      {/* Movimentações (extrato do sistema) */}
+      <Card padding="none">
+        <div className="px-5 pt-5 pb-4">
+          <CardHeader title="Movimentações" subtitle="Transações registradas pelo sistema" />
+        </div>
+        <Table
+          columns={transactionColumns}
+          data={transactions}
+          keyExtractor={r => r.id}
+          isLoading={loadingTx}
+          emptyMessage="Nenhuma movimentação registrada ainda."
+        />
+      </Card>
+
+      {/* Extratos importados (banco real) */}
       <div className="flex items-center justify-between">
-        <h2 className="font-display font-semibold text-slate-900">Extratos</h2>
+        <h2 className="font-display font-semibold text-slate-900">Extratos Importados</h2>
         <Button onClick={openImport}>+ Importar Extrato</Button>
       </div>
       <Table
-        columns={columns}
+        columns={statementColumns}
         data={statements}
         keyExtractor={r => r.id}
         isLoading={loadingStmt}
@@ -264,8 +306,8 @@ export default function BankAccountDetailPage() {
                       onChange={e => updateEntry(entry._id, 'date', e.target.value)}
                     />
                     <Select label="Tipo" required options={entryTypeOptions}
-                      value={String(entry.entryType)}
-                      onChange={e => updateEntry(entry._id, 'entryType', Number(e.target.value))}
+                      value={entry.entryType}
+                      onChange={e => updateEntry(entry._id, 'entryType', e.target.value)}
                     />
                     <div className="col-span-2">
                       <Input label="Descrição" required

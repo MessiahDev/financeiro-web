@@ -2,10 +2,10 @@ import { Badge, type BadgeVariant } from '../../ui/Badge/Badge'
 import { CustomerStatus } from '../../../types/enums'
 
 interface PersonStatusBadgeProps {
-  status: number
+  status: string
 }
 
-const map: Record<number, { label: string; variant: BadgeVariant }> = {
+const map: Record<string, { label: string; variant: BadgeVariant }> = {
   [CustomerStatus.Active]:   { label: 'Ativo',     variant: 'success'  },
   [CustomerStatus.Inactive]: { label: 'Inativo',   variant: 'default'  },
   [CustomerStatus.Blocked]:  { label: 'Bloqueado', variant: 'danger'   },

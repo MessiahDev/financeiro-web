@@ -1,6 +1,5 @@
 import { get, post, put, del } from './api'
 import { API_ROUTES } from '../utils/constants'
-import { buildQueryString } from '../utils/pagination'
 import type { AccountPayable, CreateAccountPayableRequest, PayAccountPayableRequest } from '../types/domain.types'
 import type { PagedResult } from '../types/pagination.types'
 
@@ -13,8 +12,17 @@ export interface GetAccountsPayableParams {
 }
 
 export const accountsPayableService = {
-  async getAll(params?: GetAccountsPayableParams): Promise<PagedResult<AccountPayable>> {
-    return get<PagedResult<AccountPayable>>(API_ROUTES.ACCOUNTS_PAYABLE + buildQueryString((params ?? {}) as Record<string, string | number | boolean | null | undefined>))
+  async getAll(_params?: GetAccountsPayableParams): Promise<PagedResult<AccountPayable>> {
+    const data = await get<AccountPayable[]>(API_ROUTES.ACCOUNTS_PAYABLE)
+    return {
+      items:           data ?? [],
+      totalCount:      data?.length ?? 0,
+      totalPages:      1,
+      pageNumber:      1,
+      pageSize:        data?.length ?? 0,
+      hasPreviousPage: false,
+      hasNextPage:     false,
+    }
   },
   async getById(id: string): Promise<AccountPayable> {
     return get<AccountPayable>(`${API_ROUTES.ACCOUNTS_PAYABLE}/${id}`)

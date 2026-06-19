@@ -19,28 +19,28 @@ interface Props {
 }
 
 const contractTypeOptions = [
-  { value: String(ContractType.CLT),        label: 'CLT'        },
-  { value: String(ContractType.PJ),         label: 'PJ'         },
-  { value: String(ContractType.Internship), label: 'Estágio'    },
-  { value: String(ContractType.Temporary),  label: 'Temporário' },
+  { value: ContractType.CLT,        label: 'CLT'        },
+  { value: ContractType.PJ,         label: 'PJ'         },
+  { value: ContractType.Internship, label: 'Estágio'    },
+  { value: ContractType.Temporary,  label: 'Temporário' },
 ]
 
 const positionOptions = [
-  { value: String(Position.Estagiario),           label: 'Estagiário'            },
-  { value: String(Position.DesenvolvedorJunior),   label: 'Desenvolvedor Junior'  },
-  { value: String(Position.DesenvolvedorPleno),    label: 'Desenvolvedor Pleno'   },
-  { value: String(Position.DesenvolvedorSenior),   label: 'Desenvolvedor Sênior'  },
-  { value: String(Position.LiderTecnico),          label: 'Líder Técnico'         },
-  { value: String(Position.Gerente),               label: 'Gerente'               },
-  { value: String(Position.Diretor),               label: 'Diretor'               },
-  { value: String(Position.CEO),                   label: 'CEO'                   },
-  { value: String(Position.Analista),              label: 'Analista'              },
-  { value: String(Position.Coordenador),           label: 'Coordenador'           },
-  { value: String(Position.Supervisor),            label: 'Supervisor'            },
-  { value: String(Position.RecursosHumanos),       label: 'Recursos Humanos'      },
-  { value: String(Position.Contador),              label: 'Contador'              },
-  { value: String(Position.Vendedor),              label: 'Vendedor'              },
-  { value: String(Position.AtendimentoAoCliente),  label: 'Atendimento ao Cliente'},
+  { value: Position.Estagiario,           label: 'Estagiário'             },
+  { value: Position.DesenvolvedorJunior,  label: 'Desenvolvedor Junior'   },
+  { value: Position.DesenvolvedorPleno,   label: 'Desenvolvedor Pleno'    },
+  { value: Position.DesenvolvedorSenior,  label: 'Desenvolvedor Sênior'   },
+  { value: Position.LiderTecnico,         label: 'Líder Técnico'          },
+  { value: Position.Gerente,              label: 'Gerente'                },
+  { value: Position.Diretor,              label: 'Diretor'                },
+  { value: Position.CEO,                  label: 'CEO'                    },
+  { value: Position.Analista,             label: 'Analista'               },
+  { value: Position.Coordenador,          label: 'Coordenador'            },
+  { value: Position.Supervisor,           label: 'Supervisor'             },
+  { value: Position.RecursosHumanos,      label: 'Recursos Humanos'       },
+  { value: Position.Contador,             label: 'Contador'               },
+  { value: Position.Vendedor,             label: 'Vendedor'               },
+  { value: Position.AtendimentoAoCliente, label: 'Atendimento ao Cliente' },
 ]
 
 export function EmployeeForm({ initial, departments, onSubmit, onCancel, isSaving }: Props) {
@@ -78,14 +78,14 @@ export function EmployeeForm({ initial, departments, onSubmit, onCancel, isSavin
           options={positionOptions}
           placeholder="Selecione..."
           error={errors.position?.message}
-          {...register('position', { valueAsNumber: true })}
+          {...register('position')}
         />
         <Select
           label="Tipo de contrato" required
           options={contractTypeOptions}
           placeholder="Selecione..."
           error={errors.contractType?.message}
-          {...register('contractType', { valueAsNumber: true })}
+          {...register('contractType')}
         />
         <Select
           label="Departamento" required

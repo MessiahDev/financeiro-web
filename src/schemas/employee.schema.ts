@@ -5,11 +5,11 @@ export const employeeSchema = z.object({
   lastName:     z.string().min(2, 'Sobrenome obrigatório').max(75),
   email:        z.email('E-mail inválido'),
   cpf:          z.string().length(11, 'CPF deve ter 11 dígitos').regex(/^\d+$/, 'Apenas números'),
-  position:     z.number({ message: 'Cargo obrigatório' }),
+  position:     z.string({ message: 'Cargo obrigatório' }),
   departmentId: z.uuid({ message: 'Departamento obrigatório' }),
   salary:       z.number().min(0.01, 'Salário deve ser maior que zero'),
   hireDate:     z.string().min(1, 'Data de admissão obrigatória'),
-  contractType: z.number({ message: 'Tipo de contrato obrigatório' }),
+  contractType: z.string({ message: 'Tipo de contrato obrigatório' }),
 })
 
 export const updateSalarySchema = z.object({

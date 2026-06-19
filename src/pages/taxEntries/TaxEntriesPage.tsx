@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { PageHeader } from '../../components/layout/PageHeader/PageHeader'
 import { Table, type Column } from '../../components/ui/Table/Table'
 import { TablePagination } from '../../components/ui/Table/TablePagination'
@@ -16,8 +17,10 @@ import { Input } from '../../components/ui/Input/Input'
 import { Select } from '../../components/ui/Select/Select'
 import { DatePicker } from '../../components/ui/DatePicker/DatePicker'
 import { CurrencyInput } from '../../components/ui/CurrencyInput/CurrencyInput'
-import { TaxType, TaxEntryStatus } from '../../types/enums'
-import type { TaxEntry, CreateTaxEntryRequest } from '../../types/domain.types'
+import { TaxEntryStatus, TaxType } from '../../types/enums'
+import { ROUTES } from '../../router/routes'
+import { bankAccountsService } from '../../services/bankAccounts.service'
+import type { TaxEntry, CreateTaxEntryRequest, BankAccount } from '../../types/domain.types'
 import type { PagedResult } from '../../types/pagination.types'
 
 const taxTypeOptions = [
@@ -31,18 +34,18 @@ const taxTypeOptions = [
   { value: String(TaxType.Other),  label: 'Outro'  },
 ]
 
-const taxTypeLabel: Record<TaxType, string> = {
-  [TaxType.ICMS]:   'ICMS',
-  [TaxType.ISS]:    'ISS',
-  [TaxType.PIS]:    'PIS',
-  [TaxType.COFINS]: 'COFINS',
-  [TaxType.CSLL]:   'CSLL',
-  [TaxType.IRPJ]:   'IRPJ',
-  [TaxType.IPI]:    'IPI',
-  [TaxType.IOF]:    'IOF',
-  [TaxType.INSS]:   'INSS',
-  [TaxType.FGTS]:   'FGTS',
-  [TaxType.Other]:  'Outro',
+const taxTypeLabel: Record<string, string> = {
+  ICMS:   'ICMS',
+  ISS:    'ISS',
+  PIS:    'PIS',
+  COFINS: 'COFINS',
+  CSLL:   'CSLL',
+  IRPJ:   'IRPJ',
+  IPI:    'IPI',
+  IOF:    'IOF',
+  INSS:   'INSS',
+  FGTS:   'FGTS',
+  Other:  'Outro',
 }
 
 function TaxEntryForm({ onSubmit, onCancel, isSaving }: { onSubmit: (d: TaxEntryFormData) => Promise<void>; onCancel: () => void; isSaving: boolean }) {
@@ -74,15 +77,38 @@ function TaxEntryForm({ onSubmit, onCancel, isSaving }: { onSubmit: (d: TaxEntry
 function TaxPaymentForm({ entry, onSubmit, onCancel, isSaving }: { entry: TaxEntry; onSubmit: (d: TaxPaymentFormData) => Promise<void>; onCancel: () => void; isSaving: boolean }) {
   const { register, handleSubmit, setValue, watch, formState: { errors } } = useForm<TaxPaymentFormData>({ resolver: zodResolver(taxPaymentSchema), defaultValues: { amount: entry.taxAmount } })
   const amount = watch('amount')
+
+  const [bankAccounts, setBankAccounts] = useState<BankAccount[]>([])
+  const [isLoadingAccounts, setIsLoadingAccounts] = useState(true)
+
+  useEffect(() => {
+    bankAccountsService.getAll()
+      .then(r => setBankAccounts((r.items ?? []).filter(a => a.isActive)))
+      .finally(() => setIsLoadingAccounts(false))
+  }, [])
+
+  const bankAccountOptions = bankAccounts.map(a => ({
+    value: a.id,
+    label: `${a.bankName} — ${a.accountNumber} (${formatCurrency(a.balance)})`,
+  }))
+
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4" noValidate>
-      <p className="text-sm text-slate-500">Tributo: <strong>{taxTypeLabel[entry.taxType]} — {formatCurrency(entry.taxAmount)}</strong></p>
+      <p className="text-sm text-slate-500">Tributo: <strong>{taxTypeLabel[entry.taxType] ?? entry.taxType} — {formatCurrency(entry.taxAmount)}</strong></p>
       <CurrencyInput label="Valor pago" required
         value={amount}
         onChange={v => setValue('amount', v, { shouldValidate: true })}
         error={errors.amount?.message} />
       <DatePicker label="Data do pagamento" required error={errors.paymentDate?.message} {...register('paymentDate')} />
-      <Input label="ID da Conta Bancária" required error={errors.bankAccountId?.message} {...register('bankAccountId')} />
+      <Select
+        label="Conta Bancária"
+        required
+        options={bankAccountOptions}
+        placeholder={isLoadingAccounts ? 'Carregando...' : 'Selecione...'}
+        disabled={isLoadingAccounts}
+        error={errors.bankAccountId?.message}
+        {...register('bankAccountId')}
+      />
       <Input label="Código do recibo" error={errors.receiptCode?.message} {...register('receiptCode')} />
       <div className="flex justify-end gap-3">
         <Button type="button" variant="secondary" onClick={onCancel} disabled={isSaving}>Cancelar</Button>
@@ -93,6 +119,7 @@ function TaxPaymentForm({ entry, onSubmit, onCancel, isSaving }: { entry: TaxEnt
 }
 
 export default function TaxEntriesPage() {
+  const navigate = useNavigate()
   const { success, error: notifyError } = useNotifications()
   const { items, isLoading, isSaving, page, pageSize, totalCount, totalPages, setPage, fetchAll, create, cancel, pay } = useTaxEntries()
   const [newOpen, setNewOpen]           = useState(false)
@@ -104,14 +131,15 @@ export default function TaxEntriesPage() {
   useEffect(() => { fetchAll() }, [page])
 
   const columns: Column<TaxEntry>[] = [
-    { key: 'taxType',     header: 'Tributo',     render: r => <span className="font-mono text-xs bg-slate-100 px-2 py-0.5 rounded">{taxTypeLabel[r.taxType]}</span> },
+    { key: 'taxType',     header: 'Tributo',     render: r => <span className="font-mono text-xs bg-slate-100 px-2 py-0.5 rounded">{taxTypeLabel[r.taxType] ?? r.taxType}</span> },
     { key: 'description', header: 'Descrição',   render: r => <span className="font-medium">{r.description}</span> },
     { key: 'competence',  header: 'Competência', render: r => formatDate(r.competence) },
     { key: 'dueDate',     header: 'Vencimento',  render: r => formatDate(r.dueDate) },
     { key: 'taxAmount',   header: 'Valor',       render: r => formatCurrency(r.taxAmount) },
     { key: 'status',      header: 'Status',      render: r => <TaxEntryStatusBadge status={r.status} /> },
-    { key: 'actions',     header: '', render: r => (
+    { key: 'actions',     header: '', headerClassName: 'w-52', render: r => (
       <div className="flex justify-end gap-1">
+        <Button size="sm" variant="ghost" onClick={() => navigate(`${ROUTES.TAX_ENTRIES}/${r.id}`)}>Ver</Button>
         {(r.status === TaxEntryStatus.Pending || r.status === TaxEntryStatus.Calculated) && <Button size="sm" variant="ghost" onClick={() => { setPayTarget(r); setPayOpen(true) }}>Pagar</Button>}
         {r.status !== TaxEntryStatus.Cancelled && r.status !== TaxEntryStatus.Paid && <Button size="sm" variant="ghost" onClick={() => setCancelTarget(r)} className="text-red-500 hover:bg-red-50">Cancelar</Button>}
       </div>
@@ -128,7 +156,7 @@ export default function TaxEntriesPage() {
         <TaxEntryForm isSaving={isSaving} onCancel={() => setNewOpen(false)}
           onSubmit={async d => { try { await create(d as unknown as CreateTaxEntryRequest); success('Obrigação cadastrada!'); setNewOpen(false); fetchAll() } catch { notifyError('Erro.') } }} />
       </Modal>
-      <Modal isOpen={payOpen} onClose={() => { setPayOpen(false); setPayTarget(null) }} title={`Pagar — ${payTarget ? taxTypeLabel[payTarget.taxType] : ''}`} size="sm">
+      <Modal isOpen={payOpen} onClose={() => { setPayOpen(false); setPayTarget(null) }} title={`Pagar — ${payTarget ? (taxTypeLabel[payTarget.taxType] ?? payTarget.taxType) : ''}`} size="sm">
         {payTarget && <TaxPaymentForm entry={payTarget} isSaving={isSaving} onCancel={() => { setPayOpen(false); setPayTarget(null) }}
           onSubmit={async d => { try { await pay(payTarget.id, { ...d, taxEntryId: payTarget.id }); success('Pagamento registrado!'); setPayOpen(false); setPayTarget(null) } catch { notifyError('Erro.') } }} />}
       </Modal>

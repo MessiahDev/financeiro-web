@@ -37,7 +37,7 @@ export default function BankReconciliationDetailPage() {
     { key: 'amount',           header: 'Valor',         render: i => formatCurrency(i.amount) },
     { key: 'entryType',        header: 'Tipo',          render: i => i.entryType === BankStatementEntryType.Credit ? 'Crédito' : 'Débito' },
     { key: 'transactionId',    header: 'ID Transação',  render: i => i.transactionId ? <span className="font-mono text-xs">{i.transactionId}</span> : '-' },
-    { key: 'status',           header: 'Status',        render: i => <Badge variant={i.status === ReconciliationItemStatus.Matched ? 'success' : 'warning'}>{i.status === ReconciliationItemStatus.Matched ? 'Conciliado' : 'Pendente'}</Badge> },
+    { key: 'status',           header: 'Status',        render: i => <Badge variant={i.status === AccountPayableStatus.Matched ? 'success' : 'warning'}>{i.status === AccountPayableStatus.Matched ? 'Conciliado' : 'Pendente'}</Badge> },
   ]
 
   return (

@@ -9,7 +9,7 @@ export function useReports() {
   const [isLoading, setIsLoading]     = useState(false)
   const [error, setError]             = useState<string | null>(null)
 
-  const fetchSummary = useCallback(async (params?: { startDate?: string; endDate?: string }) => {
+  const fetchSummary = useCallback(async (params: { periodStart: string; periodEnd: string }) => {
     setIsLoading(true)
     setError(null)
     try {

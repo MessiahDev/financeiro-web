@@ -4,11 +4,11 @@ export interface LoginRequest {
 }
 
 export interface RegisterRequest {
-  name: string
-  email: string
-  password: string
+  name:            string
+  email:           string
+  password:        string
   confirmPassword: string
-  role: 3
+  role:            number
 }
 
 export interface MeResponse {
@@ -18,22 +18,23 @@ export interface MeResponse {
 }
 
 export interface AuthResponse {
-  token: string
-  refreshToken?: string
+  token:     string
+  name:      string
+  email:     string
+  role:      string
   expiresAt: string
-  user: AuthUser
 }
 
 export interface AuthUser {
-  id: string
-  name: string
+  id:    string
+  name:  string
   email: string
   roles: string[]
 }
 
 export interface AuthState {
-  user: AuthUser | null
-  token: string | null
+  user:            AuthUser | null
+  token:           string | null
   isAuthenticated: boolean
-  isLoading: boolean
+  isLoading:       boolean
 }

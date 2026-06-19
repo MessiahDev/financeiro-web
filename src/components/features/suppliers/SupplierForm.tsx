@@ -5,13 +5,14 @@ import { supplierSchema, type SupplierFormData } from '../../../schemas/supplier
 import { Input } from '../../ui/Input/Input'
 import { Select } from '../../ui/Select/Select'
 import { Button } from '../../ui/Button/Button'
+import { PersonType } from '../../../types/enums'
 import type { Supplier } from '../../../types/domain.types'
 
 interface Props { initial?: Supplier; onSubmit: (d: SupplierFormData) => Promise<void>; onCancel: () => void; isSaving: boolean }
 
 const personTypeOptions = [
-  { value: '1', label: 'Pessoa Física'   },
-  { value: '2', label: 'Pessoa Jurídica' },
+  { value: PersonType.Individual, label: 'Pessoa Física'   },
+  { value: PersonType.Company,    label: 'Pessoa Jurídica' },
 ]
 
 export function SupplierForm({ initial, onSubmit, onCancel, isSaving }: Props) {
@@ -36,7 +37,7 @@ export function SupplierForm({ initial, onSubmit, onCancel, isSaving }: Props) {
         <Input label="Telefone"            error={errors.phone?.message} {...register('phone')} />
         <Input label="CPF / CNPJ" required error={errors.taxId?.message} {...register('taxId')} />
         <Select label="Tipo de pessoa" required options={personTypeOptions} placeholder="Selecione..."
-          error={errors.personType?.message} {...register('personType', { valueAsNumber: true })} />
+          error={errors.personType?.message} {...register('personType')} />
         <Input label="Contato"             error={errors.contactName?.message} {...register('contactName')} />
       </div>
       <div className="flex justify-end gap-3 pt-2">

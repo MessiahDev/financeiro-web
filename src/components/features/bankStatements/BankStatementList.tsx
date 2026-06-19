@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { useBankStatements } from '../../../hooks/useBankStatements'
 import type { BankStatement } from '../../../types/domain.types'
 import { BankStatementImportForm } from './BankStatementImportForm'
+import { BankStatementEntryType } from '../../../types/enums'
 
 const STATUS_CLS: Record<string, string> = {
   Imported:   'bg-blue-100   text-blue-700',
@@ -112,11 +113,11 @@ export function BankStatementList() {
                       <td className="py-2 text-gray-600">{fmtDate(e.date)}</td>
                       <td className="py-2 text-gray-900">{e.description}</td>
                       <td className="py-2">
-                        <span className={'inline-flex rounded-full px-2 py-0.5 text-xs font-medium ' + (e.entryType === 1 ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700')}>
-                          {e.entryType === 1 ? 'Crédito' : 'Débito'}
+                        <span className={'inline-flex rounded-full px-2 py-0.5 text-xs font-medium ' + (e.entryType === BankStatementEntryType.Credit ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700')}>
+                          {e.entryType === BankStatementEntryType.Credit ? 'Crédito' : 'Débito'}
                         </span>
                       </td>
-                      <td className={'py-2 font-medium ' + (e.entryType === 1 ? 'text-green-600' : 'text-red-600')}>
+                      <td className={'py-2 font-medium ' + (e.entryType === BankStatementEntryType.Credit ? 'text-green-600' : 'text-red-600')}>
                         {fmt.format(e.amount)}
                       </td>
                       <td className="py-2 text-gray-500">{e.isReconciled ? '✓' : '—'}</td>

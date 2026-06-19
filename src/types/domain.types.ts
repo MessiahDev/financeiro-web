@@ -410,6 +410,7 @@ export interface Transaction extends AuditFields {
   transactionDate: string
   employeeId?:     string
   payrollId?:      string
+  bankAccountId?:  string
   referenceNumber?: string
 }
 

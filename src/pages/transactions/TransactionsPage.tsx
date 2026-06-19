@@ -9,7 +9,7 @@ import { ConfirmModal } from '../../components/ui/Modal/ConfirmModal'
 import { TransactionStatusBadge } from '../../components/features/transactions/TransactionStatusBadge'
 import { useTransactions } from '../../hooks/useTransactions'
 import { useNotifications } from '../../contexts/NotificationContext'
-import { formatCurrency, formatDate } from '../../utils/formatters'
+import { formatCurrency, formatDate, today } from '../../utils/formatters'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { transactionSchema, type TransactionFormData } from '../../schemas/transaction.schema'
@@ -21,44 +21,47 @@ import type { Transaction } from '../../types/domain.types'
 import type { PagedResult } from '../../types/pagination.types'
 
 const typeOptions = [
-  { value: String(TransactionType.Credit), label: 'Crédito' },
-  { value: String(TransactionType.Debit),  label: 'Débito'  },
+  { value: TransactionType.Credit, label: 'Crédito' },
+  { value: TransactionType.Debit,  label: 'Débito'  },
 ]
 
 const categoryOptions = [
-  { value: String(TransactionCategory.Salary),        label: 'Salário'   },
-  { value: String(TransactionCategory.Bonus),         label: 'Bônus'     },
-  { value: String(TransactionCategory.Deduction),     label: 'Dedução'   },
-  { value: String(TransactionCategory.Tax),           label: 'Imposto'   },
-  { value: String(TransactionCategory.Benefit),       label: 'Benefício' },
-  { value: String(TransactionCategory.Reimbursement), label: 'Reembolso' },
-  { value: String(TransactionCategory.Other),         label: 'Outro'     },
+  { value: TransactionCategory.Salary,        label: 'Salário'   },
+  { value: TransactionCategory.Bonus,         label: 'Bônus'     },
+  { value: TransactionCategory.Deduction,     label: 'Dedução'   },
+  { value: TransactionCategory.Tax,           label: 'Imposto'   },
+  { value: TransactionCategory.Benefit,       label: 'Benefício' },
+  { value: TransactionCategory.Reimbursement, label: 'Reembolso' },
+  { value: TransactionCategory.Other,         label: 'Outro'     },
 ]
 
-const typeLabel: Record<number, string> = {
-  [TransactionType.Credit]: 'Crédito',
-  [TransactionType.Debit]:  'Débito',
+const typeLabel: Record<string, string> = {
+  Credit: 'Crédito',
+  Debit:  'Débito',
 }
 
-const categoryLabel: Record<number, string> = {
-  [TransactionCategory.Salary]:        'Salário',
-  [TransactionCategory.Bonus]:         'Bônus',
-  [TransactionCategory.Deduction]:     'Dedução',
-  [TransactionCategory.Tax]:           'Imposto',
-  [TransactionCategory.Benefit]:       'Benefício',
-  [TransactionCategory.Reimbursement]: 'Reembolso',
-  [TransactionCategory.Other]:         'Outro',
+const categoryLabel: Record<string, string> = {
+  Salary:        'Salário',
+  Bonus:         'Bônus',
+  Deduction:     'Dedução',
+  Tax:           'Imposto',
+  Benefit:       'Benefício',
+  Reimbursement: 'Reembolso',
+  Other:         'Outro',
 }
 
 function TransactionForm({ onSubmit, onCancel, isSaving }: { onSubmit: (d: TransactionFormData) => Promise<void>; onCancel: () => void; isSaving: boolean }) {
-  const { register, handleSubmit, setValue, watch, formState: { errors } } = useForm<TransactionFormData>({ resolver: zodResolver(transactionSchema) })
+  const { register, handleSubmit, setValue, watch, formState: { errors } } = useForm<TransactionFormData>({
+    resolver: zodResolver(transactionSchema),
+    defaultValues: { transactionDate: today() },
+  })
   const amount = watch('amount')
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4" noValidate>
       <Select label="Tipo" required options={typeOptions} placeholder="Selecione..."
-        error={errors.type?.message} {...register('type', { valueAsNumber: true })} />
+        error={errors.type?.message} {...register('type')} />
       <Select label="Categoria" required options={categoryOptions} placeholder="Selecione..."
-        error={errors.category?.message} {...register('category', { valueAsNumber: true })} />
+        error={errors.category?.message} {...register('category')} />
       <Input label="Descrição" required error={errors.description?.message} {...register('description')} />
       <CurrencyInput label="Valor" required value={amount}
         onChange={v => setValue('amount', v, { shouldValidate: true })} error={errors.amount?.message} />
@@ -88,8 +91,8 @@ export default function TransactionsPage() {
   const columns: Column<Transaction>[] = [
     { key: 'transactionDate', header: 'Data',      render: r => formatDate(r.transactionDate) },
     { key: 'description',     header: 'Descrição', render: r => <span className="font-medium">{r.description}</span> },
-    { key: 'type',            header: 'Tipo',      render: r => typeLabel[r.type] ?? String(r.type) },
-    { key: 'category',        header: 'Categoria', render: r => categoryLabel[r.category] ?? String(r.category) },
+    { key: 'type',            header: 'Tipo',      render: r => typeLabel[r.type] ?? r.type },
+    { key: 'category',        header: 'Categoria', render: r => categoryLabel[r.category] ?? r.category },
     { key: 'amount',          header: 'Valor',     render: r => (
       <span className={r.type === TransactionType.Debit ? 'text-red-600 font-medium' : 'text-green-600 font-medium'}>
         {formatCurrency(r.amount)}

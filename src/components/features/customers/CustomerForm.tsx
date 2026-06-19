@@ -5,6 +5,7 @@ import { customerSchema, type CustomerFormData } from '../../../schemas/customer
 import { Input } from '../../ui/Input/Input'
 import { Select } from '../../ui/Select/Select'
 import { Button } from '../../ui/Button/Button'
+import { PersonType } from '../../../types/enums'
 import type { Customer } from '../../../types/domain.types'
 
 interface CustomerFormProps {
@@ -15,8 +16,8 @@ interface CustomerFormProps {
 }
 
 const personTypeOptions = [
-  { value: '1', label: 'Pessoa Física' },
-  { value: '2', label: 'Pessoa Jurídica' },
+  { value: PersonType.Individual, label: 'Pessoa Física'    },
+  { value: PersonType.Company,    label: 'Pessoa Jurídica'  },
 ]
 
 export function CustomerForm({ initial, onSubmit, onCancel, isSaving }: CustomerFormProps) {
@@ -50,7 +51,7 @@ export function CustomerForm({ initial, onSubmit, onCancel, isSaving }: Customer
           options={personTypeOptions}
           placeholder="Selecione..."
           error={errors.personType?.message}
-          {...register('personType', { valueAsNumber: true })}
+          {...register('personType')}
         />
         <Input
           label="Limite de crédito (R$)"

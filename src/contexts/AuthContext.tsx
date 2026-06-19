@@ -30,36 +30,24 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const login = useCallback(async (data: LoginRequest) => {
     const response = await authService.login(data)
     const payload = decodeJwt(response.token)
-
-    const user: AuthUser = response.user ?? {
+    const user: AuthUser = {
       id: payload?.sub ?? '',
-      name: payload?.name ?? '',
-      email: payload?.email ?? '',
-      roles: Array.isArray(payload?.roles)
-        ? payload.roles
-        : payload?.roles
-          ? [payload.roles]
-          : [],
+      name: response.name,
+      email: response.email,
+      roles: [response.role],
     }
-
     dispatch({ type: 'LOGIN', payload: { user, token: response.token } })
   }, [])
 
   const register = useCallback(async (data: RegisterRequest) => {
     const response = await authService.register(data)
     const payload = decodeJwt(response.token)
-
-    const user: AuthUser = response.user ?? {
+    const user: AuthUser = {
       id: payload?.sub ?? '',
-      name: payload?.name ?? '',
-      email: payload?.email ?? '',
-      roles: Array.isArray(payload?.roles)
-        ? payload.roles
-        : payload?.roles
-          ? [payload.roles]
-          : [],
+      name: response.name,
+      email: response.email,
+      roles: [response.role],
     }
-
     dispatch({ type: 'LOGIN', payload: { user, token: response.token } })
   }, [])
 
