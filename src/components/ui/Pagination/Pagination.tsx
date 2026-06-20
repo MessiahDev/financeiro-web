@@ -17,7 +17,6 @@ export function Pagination({
 }: PaginationProps) {
   if (totalPages <= 1) return null
 
-  // Gera range de paginas visiveis ao redor da atual
   function getPages(): (number | '...')[] {
     const delta = 2
     const range: number[] = []

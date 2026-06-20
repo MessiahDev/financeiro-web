@@ -20,6 +20,7 @@ interface AuthContextValue extends AuthStoreState {
   register: (data: RegisterRequest) => Promise<void>
   logout: () => void
   hasRole: (role: string) => boolean
+  updateUserName: (name: string) => void
 }
 
 const AuthContext = createContext<AuthContextValue | null>(null)
@@ -60,8 +61,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     [state.user],
   )
 
+  const updateUserName = useCallback((name: string) => {
+    if (!state.user || !state.token) return
+    const updatedUser: AuthUser = { ...state.user, name }
+    dispatch({ type: 'LOGIN', payload: { user: updatedUser, token: state.token } })
+  }, [state.user, state.token])
+
   return (
-    <AuthContext.Provider value={{ ...state, login, register, logout, hasRole }}>
+    <AuthContext.Provider value={{ ...state, login, register, logout, hasRole, updateUserName }}>
       {children}
     </AuthContext.Provider>
   )

@@ -1,4 +1,5 @@
 import { Outlet } from 'react-router-dom'
+import { ArrowLeftRight, BookText, Wallet, TrendingUp } from 'lucide-react'
 
 export default function AuthLayout() {
   return (
@@ -24,16 +25,19 @@ export default function AuthLayout() {
 
           <div className="mt-10 grid grid-cols-2 gap-4">
             {[
-              { label: 'Contas a pagar/receber', icon: '⇄' },
-              { label: 'Lancamentos contabeis',  icon: '📒' },
-              { label: 'Folha de pagamento',     icon: '💰' },
-              { label: 'Relatorios gerenciais',  icon: '📈' },
-            ].map((f) => (
-              <div key={f.label} className="flex items-center gap-2 rounded-lg bg-white/5 px-3 py-2.5">
-                <span className="text-base">{f.icon}</span>
-                <span className="text-xs text-slate-300">{f.label}</span>
-              </div>
-            ))}
+              { label: 'Contas a pagar/receber', icon: ArrowLeftRight },
+              { label: 'Lancamentos contabeis',  icon: BookText },
+              { label: 'Folha de pagamento',     icon: Wallet },
+              { label: 'Relatorios gerenciais',  icon: TrendingUp },
+            ].map((f) => {
+              const Icon = f.icon
+              return (
+                <div key={f.label} className="flex items-center gap-2 rounded-lg bg-white/5 px-3 py-2.5">
+                  <Icon size={16} className="text-blue-400 shrink-0" />
+                  <span className="text-xs text-slate-300">{f.label}</span>
+                </div>
+              )
+            })}
           </div>
         </div>
 

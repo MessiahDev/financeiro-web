@@ -146,3 +146,25 @@ code, pre, kbd { font-family: var(--font-mono); }
   animation: shimmer 1.5s infinite;
   border-radius: var(--radius-md);
 }
+
+.dark body {
+  background-color: #020617;
+  color: #f1f5f9;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: #475569;
+}
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: #64748b;
+}
+
+.dark .skeleton {
+  background: linear-gradient(
+    90deg,
+    #1e293b 25%,
+    #334155 50%,
+    #1e293b 75%
+  );
+  background-size: 200% 100%;
+}

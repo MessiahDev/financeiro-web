@@ -25,6 +25,7 @@ export function Card({ children, className = '', padding = 'md', onClick }: Card
       onClick={onClick}
       className={[
         'rounded-xl border border-slate-200 bg-white shadow-sm',
+        'dark:border-slate-800 dark:bg-slate-900',
         paddings[padding],
         onClick ? 'cursor-pointer hover:shadow-md transition-shadow duration-150' : '',
         className,
@@ -41,8 +42,8 @@ export function CardHeader({ title, subtitle, action, className = '' }: CardHead
   return (
     <div className={['flex items-start justify-between gap-4', className].join(' ')}>
       <div>
-        <h3 className="font-display text-base font-semibold text-slate-900">{title}</h3>
-        {subtitle && <p className="mt-0.5 text-sm text-slate-500">{subtitle}</p>}
+        <h3 className="font-display text-base font-semibold text-slate-900 dark:text-slate-100">{title}</h3>
+        {subtitle && <p className="mt-0.5 text-sm text-slate-500 dark:text-slate-400">{subtitle}</p>}
       </div>
       {action && <div className="shrink-0">{action}</div>}
     </div>
@@ -50,5 +51,5 @@ export function CardHeader({ title, subtitle, action, className = '' }: CardHead
 }
 
 export function CardDivider() {
-  return <hr className="-mx-5 my-4 border-slate-100" />
+  return <hr className="-mx-5 my-4 border-slate-100 dark:border-slate-800" />
 }

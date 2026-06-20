@@ -6,6 +6,7 @@ export const API_ROUTES = {
   AUTH_LOGIN: '/auth/login',
   AUTH_REGISTER: '/auth/register',
   AUTH_ME:       '/auth/me',
+  USERS:         '/users',
   BANK_ACCOUNTS: '/bank-accounts',
   BANK_STATEMENTS: '/bank-statements',
   BANK_RECONCILIATIONS: '/bank-reconciliations',

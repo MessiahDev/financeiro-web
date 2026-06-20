@@ -6,7 +6,7 @@ import { Header } from '../Header/Header'
 export default function MainLayout() {
   const [collapsed, setCollapsed] = useState(false)
   return (
-    <div className="flex h-screen overflow-hidden bg-slate-50">
+    <div className="flex h-screen overflow-hidden bg-slate-50 dark:bg-slate-950">
       {/* Sidebar */}
       <Sidebar collapsed={collapsed} />
       {/* Main */}

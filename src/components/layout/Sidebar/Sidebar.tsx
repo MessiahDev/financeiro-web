@@ -1,10 +1,18 @@
 import { NavLink, useLocation } from 'react-router-dom'
+import {
+  LayoutDashboard, Landmark, FileText, Scale,
+  Calendar, FolderTree, Target, BookText,
+  ArrowUpCircle, ArrowDownCircle, ArrowLeftRight, PieChart,
+  UserCircle, Factory, Building2, Users, Wallet,
+  ClipboardList, TrendingUp, LineChart,
+  type LucideIcon,
+} from 'lucide-react'
 import { ROUTES } from '../../../router/routes'
 
 interface NavItem {
   label: string
   path: string
-  icon: string
+  icon: LucideIcon
 }
 
 interface NavGroup {
@@ -16,62 +24,62 @@ const NAV: NavGroup[] = [
   {
     group: 'Geral',
     items: [
-      { label: 'Dashboard',        path: ROUTES.DASHBOARD,        icon: '⬡' },
+      { label: 'Dashboard', path: ROUTES.DASHBOARD, icon: LayoutDashboard },
     ],
   },
   {
     group: 'Banco',
     items: [
-      { label: 'Contas Bancarias', path: ROUTES.BANK_ACCOUNTS,        icon: '🏦' },
-      { label: 'Extratos',         path: ROUTES.BANK_STATEMENTS,       icon: '📄' },
-      { label: 'Conciliacoes',     path: ROUTES.BANK_RECONCILIATIONS,  icon: '⚖' },
+      { label: 'Contas Bancarias', path: ROUTES.BANK_ACCOUNTS,       icon: Landmark },
+      { label: 'Extratos',         path: ROUTES.BANK_STATEMENTS,      icon: FileText },
+      { label: 'Conciliacoes',     path: ROUTES.BANK_RECONCILIATIONS, icon: Scale },
     ],
   },
   {
     group: 'Contabilidade',
     items: [
-      { label: 'Periodos',         path: ROUTES.ACCOUNTING_PERIODS, icon: '📅' },
-      { label: 'Plano de Contas',  path: ROUTES.CHART_OF_ACCOUNTS,  icon: '🗂' },
-      { label: 'Centros de Custo', path: ROUTES.COST_CENTERS,       icon: '🎯' },
-      { label: 'Lancamentos',      path: ROUTES.JOURNAL_ENTRIES,    icon: '📒' },
+      { label: 'Periodos',         path: ROUTES.ACCOUNTING_PERIODS, icon: Calendar },
+      { label: 'Plano de Contas',  path: ROUTES.CHART_OF_ACCOUNTS,  icon: FolderTree },
+      { label: 'Centros de Custo', path: ROUTES.COST_CENTERS,       icon: Target },
+      { label: 'Lancamentos',      path: ROUTES.JOURNAL_ENTRIES,    icon: BookText },
     ],
   },
   {
     group: 'Financeiro',
     items: [
-      { label: 'Contas a Pagar',   path: ROUTES.ACCOUNTS_PAYABLE,    icon: '↑' },
-      { label: 'Contas a Receber', path: ROUTES.ACCOUNTS_RECEIVABLE,  icon: '↓' },
-      { label: 'Transacoes',       path: ROUTES.TRANSACTIONS,         icon: '⇄' },
-      { label: 'Orcamentos',       path: ROUTES.BUDGETS,              icon: '📊' },
+      { label: 'Contas a Pagar',   path: ROUTES.ACCOUNTS_PAYABLE,   icon: ArrowUpCircle },
+      { label: 'Contas a Receber', path: ROUTES.ACCOUNTS_RECEIVABLE, icon: ArrowDownCircle },
+      { label: 'Transacoes',       path: ROUTES.TRANSACTIONS,        icon: ArrowLeftRight },
+      { label: 'Orcamentos',       path: ROUTES.BUDGETS,             icon: PieChart },
     ],
   },
   {
     group: 'Cadastros',
     items: [
-      { label: 'Clientes',         path: ROUTES.CUSTOMERS,  icon: '👤' },
-      { label: 'Fornecedores',     path: ROUTES.SUPPLIERS,  icon: '🏭' },
+      { label: 'Clientes',     path: ROUTES.CUSTOMERS, icon: UserCircle },
+      { label: 'Fornecedores', path: ROUTES.SUPPLIERS, icon: Factory },
     ],
   },
   {
     group: 'RH',
     items: [
-      { label: 'Departamentos',    path: ROUTES.DEPARTMENTS, icon: '🏢' },
-      { label: 'Funcionarios',     path: ROUTES.EMPLOYEES,   icon: '👥' },
-      { label: 'Folha de Pag.',    path: ROUTES.PAYROLL,     icon: '💰' },
+      { label: 'Departamentos', path: ROUTES.DEPARTMENTS, icon: Building2 },
+      { label: 'Funcionarios',  path: ROUTES.EMPLOYEES,   icon: Users },
+      { label: 'Folha de Pag.', path: ROUTES.PAYROLL,     icon: Wallet },
     ],
   },
   {
     group: 'Fiscal',
     items: [
-      { label: 'Obrigacoes',       path: ROUTES.TAX_ENTRIES, icon: '📋' },
+      { label: 'Obrigacoes', path: ROUTES.TAX_ENTRIES, icon: ClipboardList },
     ],
   },
   {
     group: 'Relatorios',
     items: [
-      { label: 'Relatorios',       path: ROUTES.REPORTS,                   icon: '📈' },
-      { label: 'Balancete',        path: ROUTES.REPORTS_TRIAL_BALANCE,     icon: '⚖' },
-      { label: 'Resumo Financeiro',path: ROUTES.REPORTS_FINANCIAL_SUMMARY, icon: '💹' },
+      { label: 'Relatorios',        path: ROUTES.REPORTS,                   icon: TrendingUp },
+      { label: 'Balancete',         path: ROUTES.REPORTS_TRIAL_BALANCE,     icon: Scale },
+      { label: 'Resumo Financeiro', path: ROUTES.REPORTS_FINANCIAL_SUMMARY, icon: LineChart },
     ],
   },
 ]
@@ -115,6 +123,8 @@ export function Sidebar({ collapsed = false }: SidebarProps) {
                   ? location.pathname === '/'
                   : location.pathname.startsWith(item.path)
 
+              const Icon = item.icon
+
               return (
                 <NavLink
                   key={item.path}
@@ -127,7 +137,7 @@ export function Sidebar({ collapsed = false }: SidebarProps) {
                       : 'text-slate-400 hover:bg-white/5 hover:text-white',
                   ].join(' ')}
                 >
-                  <span className="shrink-0 text-base leading-none">{item.icon}</span>
+                  <Icon size={17} className="shrink-0" strokeWidth={2} />
                   {!collapsed && <span className="truncate">{item.label}</span>}
                 </NavLink>
               )

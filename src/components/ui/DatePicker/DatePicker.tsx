@@ -1,4 +1,5 @@
 import { forwardRef, type InputHTMLAttributes } from 'react'
+import { Calendar } from 'lucide-react'
 
 export interface DatePickerProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'type'> {
   label?: string
@@ -13,20 +14,15 @@ export const DatePicker = forwardRef<HTMLInputElement, DatePickerProps>(
     return (
       <div className="flex flex-col gap-1.5">
         {label && (
-          <label htmlFor={inputId} className="text-sm font-medium text-slate-700">
+          <label htmlFor={inputId} className="text-sm font-medium text-slate-700 dark:text-slate-300">
             {label}
             {props.required && <span className="ml-1 text-red-500">*</span>}
           </label>
         )}
 
         <div className="relative">
-          <span className="pointer-events-none absolute inset-y-0 left-3 flex items-center text-slate-400">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
-              <line x1="16" y1="2" x2="16" y2="6" />
-              <line x1="8"  y1="2" x2="8"  y2="6" />
-              <line x1="3"  y1="10" x2="21" y2="10" />
-            </svg>
+          <span className="pointer-events-none absolute inset-y-0 left-3 flex items-center text-slate-400 dark:text-slate-500">
+            <Calendar size={15} />
           </span>
 
           <input
@@ -35,20 +31,21 @@ export const DatePicker = forwardRef<HTMLInputElement, DatePickerProps>(
             type="date"
             className={[
               'w-full rounded-lg border bg-white py-2 pl-9 pr-3 text-sm text-slate-900',
+              'dark:bg-slate-900 dark:text-slate-100 dark:[color-scheme:dark]',
               'transition-colors duration-150',
               'focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500',
-              'disabled:bg-slate-50 disabled:cursor-not-allowed',
+              'disabled:bg-slate-50 disabled:cursor-not-allowed dark:disabled:bg-slate-800',
               error
                 ? 'border-red-400 focus:ring-red-400'
-                : 'border-slate-300 hover:border-slate-400',
+                : 'border-slate-300 hover:border-slate-400 dark:border-slate-700 dark:hover:border-slate-600',
               className,
             ].filter(Boolean).join(' ')}
             {...props}
           />
         </div>
 
-        {error  && <p className="text-xs text-red-600">{error}</p>}
-        {!error && hint && <p className="text-xs text-slate-500">{hint}</p>}
+        {error  && <p className="text-xs text-red-600 dark:text-red-400">{error}</p>}
+        {!error && hint && <p className="text-xs text-slate-500 dark:text-slate-400">{hint}</p>}
       </div>
     )
   },

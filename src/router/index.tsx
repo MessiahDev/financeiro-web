@@ -45,6 +45,8 @@ const ReportsPage                 = lazy(() => import('../pages/reports/ReportsP
 const FinancialSummaryPage        = lazy(() => import('../pages/reports/FinancialSummaryPage'))
 const TrialBalancePage            = lazy(() => import('../pages/reports/TrialBalancePage'))
 
+const SettingsPage                = lazy(() => import('../pages/settings/SettingsPage'))
+
 const NotFoundPage                = lazy(() => import('../pages/errors/NotFoundPage'))
 const UnauthorizedPage            = lazy(() => import('../pages/errors/UnauthorizedPage'))
 
@@ -121,6 +123,8 @@ const router = createBrowserRouter([
           { path: ROUTES.REPORTS,                   element: withSuspense(ReportsPage) },
           { path: ROUTES.REPORTS_FINANCIAL_SUMMARY,  element: withSuspense(FinancialSummaryPage) },
           { path: ROUTES.REPORTS_TRIAL_BALANCE,      element: withSuspense(TrialBalancePage) },
+
+          { path: ROUTES.SETTINGS, element: withSuspense(SettingsPage) },
         ],
       },
     ],

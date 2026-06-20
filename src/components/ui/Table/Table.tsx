@@ -29,15 +29,15 @@ export function Table<T>({
   className = '',
 }: TableProps<T>) {
   return (
-    <div className={['w-full overflow-x-auto rounded-xl border border-slate-200 bg-white', className].join(' ')}>
+    <div className={['w-full overflow-x-auto rounded-xl border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900', className].join(' ')}>
       <table className="w-full text-sm">
         <thead>
-          <tr className="border-b border-slate-200 bg-slate-50">
+          <tr className="border-b border-slate-200 bg-slate-50 dark:border-slate-800 dark:bg-slate-800/50">
             {columns.map((col) => (
               <th
                 key={col.key}
                 className={[
-                  'px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500',
+                  'px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400',
                   col.headerClassName ?? '',
                 ].join(' ')}
               >
@@ -51,7 +51,7 @@ export function Table<T>({
           {isLoading ? (
             <tr>
               <td colSpan={columns.length} className="py-16 text-center">
-                <div className="flex flex-col items-center gap-3 text-slate-400">
+                <div className="flex flex-col items-center gap-3 text-slate-400 dark:text-slate-500">
                   <Spinner size="lg" className="text-blue-500" />
                   <span className="text-sm">Carregando...</span>
                 </div>
@@ -69,15 +69,15 @@ export function Table<T>({
                 key={keyExtractor(row)}
                 onClick={() => onRowClick?.(row)}
                 className={[
-                  'border-b border-slate-100 last:border-0',
+                  'border-b border-slate-100 last:border-0 dark:border-slate-800',
                   'transition-colors duration-100',
-                  onRowClick ? 'cursor-pointer hover:bg-slate-50' : '',
+                  onRowClick ? 'cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800/50' : '',
                 ].join(' ')}
               >
                 {columns.map((col) => (
                   <td
                     key={col.key}
-                    className={['px-4 py-3 text-slate-700', col.className ?? ''].join(' ')}
+                    className={['px-4 py-3 text-slate-700 dark:text-slate-300', col.className ?? ''].join(' ')}
                   >
                     {col.render
                       ? col.render(row)

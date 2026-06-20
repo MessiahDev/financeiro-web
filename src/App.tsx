@@ -1,13 +1,18 @@
 import { AuthProvider } from './contexts/AuthContext'
 import { NotificationProvider } from './contexts/NotificationContext'
+import { PreferencesProvider } from './contexts/PreferencesContext'
 import { AppRouter } from './router'
 
-export default function App() {
+function App() {
   return (
     <AuthProvider>
-      <NotificationProvider>
-        <AppRouter />
-      </NotificationProvider>
+      <PreferencesProvider>
+        <NotificationProvider>
+          <AppRouter />
+        </NotificationProvider>
+      </PreferencesProvider>
     </AuthProvider>
   )
 }
+
+export default App
