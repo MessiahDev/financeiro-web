@@ -74,7 +74,7 @@ export default function PayrollDetailPage() {
   }
 
   if (isLoading) return <div className="flex justify-center py-20"><Spinner size="lg" className="text-blue-500" /></div>
-  if (!selected) return <p className="text-sm text-slate-400 p-6">Folha não encontrada.</p>
+  if (!selected) return <p className="text-sm text-slate-400 dark:text-slate-500 p-6">Folha não encontrada.</p>
 
   const p = selected
 
@@ -116,17 +116,17 @@ export default function PayrollDetailPage() {
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
         {[
-          { label: 'Total Bruto',   value: p.totalGross,     color: 'text-slate-900' },
+          { label: 'Total Bruto',   value: p.totalGross,     color: 'text-slate-900 dark:text-slate-100' },
           { label: 'INSS + IRRF',   value: p.totalDiscounts, color: 'text-red-600'   },
           { label: 'Total Líquido', value: p.totalNet,       color: 'text-green-600' },
         ].map(m => (
           <Card key={m.label}>
-            <p className="text-xs text-slate-400">{m.label}</p>
+            <p className="text-xs text-slate-400 dark:text-slate-500">{m.label}</p>
             <p className={`font-display text-xl font-bold mt-1 ${m.color}`}>{formatCurrency(m.value)}</p>
           </Card>
         ))}
         <Card>
-          <p className="text-xs text-slate-400">Status</p>
+          <p className="text-xs text-slate-400 dark:text-slate-500">Status</p>
           <div className="mt-2"><PayrollStatusBadge status={p.status} /></div>
         </Card>
       </div>
@@ -152,8 +152,8 @@ export default function PayrollDetailPage() {
         }
       >
         <div className="flex flex-col gap-4">
-          <p className="text-sm text-slate-600">
-            Valor total a debitar: <span className="font-semibold text-slate-900">{formatCurrency(p.totalNet)}</span>
+          <p className="text-sm text-slate-600 dark:text-slate-400">
+            Valor total a debitar: <span className="font-semibold text-slate-900 dark:text-slate-100">{formatCurrency(p.totalNet)}</span>
           </p>
           <Select
             label="Conta Bancária"

@@ -131,7 +131,7 @@ export default function BudgetsPage() {
           </>
         }
       >
-        <p className="text-sm text-slate-600">
+        <p className="text-sm text-slate-600 dark:text-slate-400">
           Aprovar o orçamento <strong>"{approveTarget?.name}"</strong>? Esta ação não pode ser desfeita.
         </p>
       </Modal>

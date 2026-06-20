@@ -25,7 +25,7 @@ export function CustomerList({
 }: CustomerListProps) {
 
   const columns: Column<Customer>[] = [
-    { key: 'name',     header: 'Nome',      render: (r) => <span className="font-medium text-slate-900">{r.name}</span> },
+    { key: 'name',     header: 'Nome',      render: (r) => <span className="font-medium text-slate-900 dark:text-slate-100">{r.name}</span> },
     { key: 'taxId', header: 'CPF/CNPJ', render: (r) => formatDocument(r.taxId) },
     { key: 'email',    header: 'E-mail' },
     { key: 'phone',    header: 'Telefone',  render: (r) => r.phone ? formatPhone(r.phone) : '-' },

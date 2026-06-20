@@ -66,17 +66,17 @@ function AccountCard({ account }: { account: BankAccount }) {
     >
       <div className="flex items-start justify-between">
         <div>
-          <p className="font-display font-semibold text-slate-900">{account.bankName}</p>
-          <p className="text-sm text-slate-500">Ag. {account.agency} · Cc. {account.accountNumber}</p>
-          <p className="text-xs text-slate-400">{typeLabel[account.accountType] ?? account.accountType}</p>
+          <p className="font-display font-semibold text-slate-900 dark:text-slate-100">{account.bankName}</p>
+          <p className="text-sm text-slate-500 dark:text-slate-400">Ag. {account.agency} · Cc. {account.accountNumber}</p>
+          <p className="text-xs text-slate-400 dark:text-slate-500">{typeLabel[account.accountType] ?? account.accountType}</p>
         </div>
         <Badge variant={account.isActive ? 'success' : 'default'} dot>
           {account.isActive ? 'Ativa' : 'Inativa'}
         </Badge>
       </div>
-      <div className="mt-4 border-t border-slate-100 pt-4">
-        <p className="text-xs text-slate-400">Saldo atual</p>
-        <p className={`font-display text-xl font-semibold ${account.balance >= 0 ? 'text-slate-900' : 'text-red-600'}`}>
+      <div className="mt-4 border-t border-slate-100 dark:border-slate-800 pt-4">
+        <p className="text-xs text-slate-400 dark:text-slate-500">Saldo atual</p>
+        <p className={`font-display text-xl font-semibold ${account.balance >= 0 ? 'text-slate-900 dark:text-slate-100' : 'text-red-600'}`}>
           {formatCurrency(account.balance)}
         </p>
       </div>
@@ -100,7 +100,7 @@ export default function BankAccountsPage() {
       {isLoading ? (
         <div className="flex justify-center py-16"><Spinner size="lg" className="text-blue-500" /></div>
       ) : safeItems.length === 0 ? (
-        <div className="text-center text-slate-500 py-10">Nenhuma conta bancária cadastrada</div>
+        <div className="text-center text-slate-500 dark:text-slate-400 py-10">Nenhuma conta bancária cadastrada</div>
       ) : (
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
           {safeItems.map(a => <AccountCard key={a.id} account={a} />)}

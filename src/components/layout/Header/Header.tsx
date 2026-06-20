@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Menu, ChevronDown, Settings, LogOut } from 'lucide-react'
 import { useAuthContext } from '../../../contexts/AuthContext'
+import { Badge } from '../../ui/Badge/Badge'
 import { ROUTES } from '../../../router/routes'
 
 interface HeaderProps {
@@ -9,10 +10,30 @@ interface HeaderProps {
   sidebarCollapsed: boolean
 }
 
+const roleLabel: Record<string, string> = {
+  Admin: 'Administrador',
+  Manager: 'Gerente',
+  Employee: 'Funcionário',
+}
+
+const roleVariant: Record<string, 'purple' | 'info' | 'default'> = {
+  Admin: 'purple',
+  Manager: 'info',
+  Employee: 'default',
+}
+
 export function Header({ onToggleSidebar, sidebarCollapsed }: HeaderProps) {
   const { user, logout } = useAuthContext()
   const navigate = useNavigate()
   const [menuOpen, setMenuOpen] = useState(false)
+
+  const userRole = user?.roles[0] ?? ''
+
+  function handleLogout() {
+    setMenuOpen(false)
+    logout()
+    navigate(ROUTES.LOGIN, { replace: true })
+  }
 
   return (
     <header className="flex h-16 shrink-0 items-center justify-between border-b border-slate-200 bg-white px-4 shadow-sm dark:border-slate-800 dark:bg-slate-900">
@@ -47,6 +68,11 @@ export function Header({ onToggleSidebar, sidebarCollapsed }: HeaderProps) {
               <div className="border-b border-slate-100 px-4 py-2.5 dark:border-slate-800">
                 <p className="text-xs font-medium text-slate-900 truncate dark:text-slate-100">{user?.name}</p>
                 <p className="text-xs text-slate-500 truncate dark:text-slate-400">{user?.email}</p>
+                <div className="mt-1.5">
+                  <Badge variant={roleVariant[userRole] ?? 'default'}>
+                    {roleLabel[userRole] ?? userRole}
+                  </Badge>
+                </div>
               </div>
               <button
                 onClick={() => { setMenuOpen(false); navigate(ROUTES.SETTINGS) }}
@@ -56,7 +82,7 @@ export function Header({ onToggleSidebar, sidebarCollapsed }: HeaderProps) {
                 Configurações
               </button>
               <button
-                onClick={() => { setMenuOpen(false); logout() }}
+                onClick={handleLogout}
                 className="flex w-full items-center gap-2 px-4 py-2 text-sm text-red-600 transition-colors hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-900/20"
               >
                 <LogOut size={14} />

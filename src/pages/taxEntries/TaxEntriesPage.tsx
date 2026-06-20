@@ -94,7 +94,7 @@ function TaxPaymentForm({ entry, onSubmit, onCancel, isSaving }: { entry: TaxEnt
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4" noValidate>
-      <p className="text-sm text-slate-500">Tributo: <strong>{taxTypeLabel[entry.taxType] ?? entry.taxType} — {formatCurrency(entry.taxAmount)}</strong></p>
+      <p className="text-sm text-slate-500 dark:text-slate-400">Tributo: <strong>{taxTypeLabel[entry.taxType] ?? entry.taxType} — {formatCurrency(entry.taxAmount)}</strong></p>
       <CurrencyInput label="Valor pago" required
         value={amount}
         onChange={v => setValue('amount', v, { shouldValidate: true })}
@@ -131,7 +131,7 @@ export default function TaxEntriesPage() {
   useEffect(() => { fetchAll() }, [page])
 
   const columns: Column<TaxEntry>[] = [
-    { key: 'taxType',     header: 'Tributo',     render: r => <span className="font-mono text-xs bg-slate-100 px-2 py-0.5 rounded">{taxTypeLabel[r.taxType] ?? r.taxType}</span> },
+    { key: 'taxType',     header: 'Tributo',     render: r => <span className="font-mono text-xs bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded">{taxTypeLabel[r.taxType] ?? r.taxType}</span> },
     { key: 'description', header: 'Descrição',   render: r => <span className="font-medium">{r.description}</span> },
     { key: 'competence',  header: 'Competência', render: r => formatDate(r.competence) },
     { key: 'dueDate',     header: 'Vencimento',  render: r => formatDate(r.dueDate) },

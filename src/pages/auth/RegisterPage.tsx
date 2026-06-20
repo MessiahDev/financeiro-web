@@ -35,11 +35,11 @@ export default function RegisterPage() {
           F
         </div>
 
-        <h1 className="font-display text-2xl font-semibold text-slate-900">
+        <h1 className="font-display text-2xl font-semibold text-slate-900 dark:text-slate-100">
           Criar conta
         </h1>
 
-        <p className="mt-1 text-sm text-slate-500">
+        <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
           Preencha os dados para criar sua conta
         </p>
       </div>
@@ -50,7 +50,7 @@ export default function RegisterPage() {
         onSubmit={handleRegister}
       />
 
-      <p className="mt-6 text-center text-sm text-slate-500">
+      <p className="mt-6 text-center text-sm text-slate-500 dark:text-slate-400">
         Ja tem conta?{' '}
         <Link
           to={ROUTES.LOGIN}

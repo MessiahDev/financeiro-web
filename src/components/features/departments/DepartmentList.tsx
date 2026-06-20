@@ -10,7 +10,7 @@ interface Props { data: PagedResult<Department> | null; isLoading: boolean; onEd
 
 export function DepartmentList({ data, isLoading, onEdit, onDelete, onPageChange, onSearch, searchValue, onNew }: Props) {
   const columns: Column<Department>[] = [
-  { key: 'name',          header: 'Nome',           render: (r) => <span className="font-medium text-slate-900">{r.name}</span> },
+  { key: 'name',          header: 'Nome',           render: (r) => <span className="font-medium text-slate-900 dark:text-slate-100">{r.name}</span> },
   { key: 'costCenter',    header: 'Centro de Custo', render: (r) => r.costCenter ?? '-' },
   { key: 'description',  header: 'Descrição',       render: (r) => r.description ?? '-' },
   { key: 'employeeCount', header: 'Funcionários',   render: (r) => r.employeeCount },

@@ -46,11 +46,11 @@ export function CashFlowChart({ data, isLoading = false }: CashFlowChartProps) {
   if (isLoading) {
     return (
       <Card padding="none">
-        <div className="px-5 pt-5 pb-2 border-b border-slate-100">
+        <div className="px-5 pt-5 pb-2 border-b border-slate-100 dark:border-slate-800">
           <CardHeader title="Fluxo de Caixa" subtitle="Últimos 6 meses" />
         </div>
         <div className="px-5 pt-4 pb-5">
-          <div className="h-64 animate-pulse rounded-lg bg-slate-100" />
+          <div className="h-64 animate-pulse rounded-lg bg-slate-100 dark:bg-slate-800" />
         </div>
       </Card>
     )
@@ -59,7 +59,7 @@ export function CashFlowChart({ data, isLoading = false }: CashFlowChartProps) {
   if (data.length === 0) {
     return (
       <Card padding="none">
-        <div className="px-5 pt-5 pb-2 border-b border-slate-100">
+        <div className="px-5 pt-5 pb-2 border-b border-slate-100 dark:border-slate-800">
           <CardHeader title="Fluxo de Caixa" subtitle="Últimos 6 meses" />
         </div>
         <div className="py-10">
@@ -92,7 +92,7 @@ export function CashFlowChart({ data, isLoading = false }: CashFlowChartProps) {
 
   return (
     <Card padding="none">
-      <div className="px-5 pt-5 pb-2 border-b border-slate-100">
+      <div className="px-5 pt-5 pb-2 border-b border-slate-100 dark:border-slate-800">
         <div className="flex flex-wrap items-center justify-between gap-2">
           <CardHeader title="Fluxo de Caixa" subtitle="Últimos 6 meses" />
           {trendPct !== null && (
@@ -108,10 +108,10 @@ export function CashFlowChart({ data, isLoading = false }: CashFlowChartProps) {
 
       <div className="px-5 pt-4 pb-5">
         <div className="mb-4 flex items-center gap-4">
-          <span className="flex items-center gap-1.5 text-xs text-slate-500">
+          <span className="flex items-center gap-1.5 text-xs text-slate-500 dark:text-slate-400">
             <span className="h-2.5 w-2.5 rounded-full bg-blue-600" />Receitas
           </span>
-          <span className="flex items-center gap-1.5 text-xs text-slate-500">
+          <span className="flex items-center gap-1.5 text-xs text-slate-500 dark:text-slate-400">
             <span className="h-2.5 w-2.5 rounded-full bg-rose-500" />Despesas
           </span>
         </div>

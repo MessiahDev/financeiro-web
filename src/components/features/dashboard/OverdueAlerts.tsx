@@ -31,7 +31,7 @@ const typeVariant: Record<OverdueItem['type'], 'danger' | 'warning' | 'purple'> 
 export function OverdueAlerts({ items, isLoading = false }: OverdueAlertsProps) {
   return (
     <Card padding="none">
-      <div className="px-5 pt-5 pb-4 border-b border-slate-100">
+      <div className="px-5 pt-5 pb-4 border-b border-slate-100 dark:border-slate-800">
         <CardHeader
           title="Vencimentos em Atraso"
           subtitle={!isLoading && items.length > 0 ? `${items.length} ${items.length === 1 ? 'item pendente' : 'itens pendentes'}` : undefined}
@@ -41,7 +41,7 @@ export function OverdueAlerts({ items, isLoading = false }: OverdueAlertsProps) 
       {isLoading ? (
         <div className="flex flex-col gap-2 px-5 py-4">
           {Array.from({ length: 4 }).map((_, i) => (
-            <div key={i} className="h-14 animate-pulse rounded-lg bg-slate-100" />
+            <div key={i} className="h-14 animate-pulse rounded-lg bg-slate-100 dark:bg-slate-800" />
           ))}
         </div>
       ) : items.length === 0 ? (
@@ -59,7 +59,7 @@ export function OverdueAlerts({ items, isLoading = false }: OverdueAlertsProps) 
             <li key={item.id} className="flex items-center justify-between gap-4 px-5 py-3">
               <div className="min-w-0">
                 <p className="truncate text-sm font-medium text-slate-800">{item.name}</p>
-                <p className="text-xs text-slate-400">Venceu em {formatDate(item.dueDate)}</p>
+                <p className="text-xs text-slate-400 dark:text-slate-500">Venceu em {formatDate(item.dueDate)}</p>
               </div>
               <div className="flex shrink-0 items-center gap-3">
                 <Badge variant={typeVariant[item.type]}>{typeLabel[item.type]}</Badge>

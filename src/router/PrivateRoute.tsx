@@ -7,14 +7,14 @@ interface PrivateRouteProps {
 }
 
 export function PrivateRoute({ requiredRole }: PrivateRouteProps) {
-  const { isAuthenticated, hasRole } = useAuthContext()
+  const { isAuthenticated, hasMinimumRole } = useAuthContext()
   const location = useLocation()
 
   if (!isAuthenticated) {
     return <Navigate to={ROUTES.LOGIN} state={{ from: location }} replace />
   }
 
-  if (requiredRole && !hasRole(requiredRole)) {
+  if (requiredRole && !hasMinimumRole(requiredRole)) {
     return <Navigate to={ROUTES.UNAUTHORIZED} replace />
   }
 

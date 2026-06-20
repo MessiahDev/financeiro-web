@@ -19,7 +19,7 @@ const statusMap: Record<EmployeeStatus, { label: string; variant: 'success' | 'w
 
 export function EmployeeList({ data, isLoading, onEdit, onDelete, onUpdateSalary, onPageChange, onSearch, searchValue, onNew }: Props) {
   const columns: Column<Employee>[] = [
-    { key: 'name',           header: 'Nome',       render: (r) => <span className="font-medium text-slate-900">{r.fullName}</span> },
+    { key: 'name',           header: 'Nome',       render: (r) => <span className="font-medium text-slate-900 dark:text-slate-100">{r.fullName}</span> },
     { key: 'cpf',            header: 'CPF',        render: (r) => formatCPF(r.cpf) },
     { key: 'position',       header: 'Cargo' },
     { key: 'departmentName', header: 'Departamento' },

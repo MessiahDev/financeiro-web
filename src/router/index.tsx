@@ -6,6 +6,7 @@ import { ROUTES } from './routes'
 const LoginPage                   = lazy(() => import('../pages/auth/LoginPage'))
 const RegisterPage                = lazy(() => import('../pages/auth/RegisterPage'))
 const DashboardPage               = lazy(() => import('../pages/dashboard/DashboardPage'))
+const UserManagementPage          = lazy(() => import('../pages/userManagement/UserManagementPage'))
 
 const BankAccountsPage            = lazy(() => import('../pages/bankAccounts/BankAccountsPage'))
 const BankAccountDetailPage       = lazy(() => import('../pages/bankAccounts/BankAccountDetailPage'))
@@ -111,11 +112,16 @@ const router = createBrowserRouter([
           { path: ROUTES.SUPPLIERS,       element: withSuspense(SuppliersPage) },
           { path: ROUTES.SUPPLIER_DETAIL, element: withSuspense(SupplierDetailPage) },
 
-          { path: ROUTES.DEPARTMENTS,    element: withSuspense(DepartmentsPage) },
-          { path: ROUTES.EMPLOYEES,      element: withSuspense(EmployeesPage) },
-          { path: ROUTES.EMPLOYEE_DETAIL, element: withSuspense(EmployeeDetailPage) },
-          { path: ROUTES.PAYROLL,        element: withSuspense(PayrollPage) },
-          { path: ROUTES.PAYROLL_DETAIL, element: withSuspense(PayrollDetailPage) },
+          {
+            element: <PrivateRoute requiredRole="Manager" />,
+            children: [
+              { path: ROUTES.DEPARTMENTS,     element: withSuspense(DepartmentsPage) },
+              { path: ROUTES.EMPLOYEES,       element: withSuspense(EmployeesPage) },
+              { path: ROUTES.EMPLOYEE_DETAIL, element: withSuspense(EmployeeDetailPage) },
+              { path: ROUTES.PAYROLL,         element: withSuspense(PayrollPage) },
+              { path: ROUTES.PAYROLL_DETAIL,  element: withSuspense(PayrollDetailPage) },
+            ],
+          },
 
           { path: ROUTES.TAX_ENTRIES,      element: withSuspense(TaxEntriesPage) },
           { path: ROUTES.TAX_ENTRY_DETAIL, element: withSuspense(TaxEntryDetailPage) },
@@ -125,6 +131,13 @@ const router = createBrowserRouter([
           { path: ROUTES.REPORTS_TRIAL_BALANCE,      element: withSuspense(TrialBalancePage) },
 
           { path: ROUTES.SETTINGS, element: withSuspense(SettingsPage) },
+
+          {
+            element: <PrivateRoute requiredRole="Admin" />,
+            children: [
+              { path: ROUTES.USER_MANAGEMENT, element: withSuspense(UserManagementPage) },
+            ],
+          },
         ],
       },
     ],

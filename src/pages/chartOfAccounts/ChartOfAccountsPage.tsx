@@ -39,7 +39,7 @@ function AccountForm({ onSubmit, onCancel, isSaving }: { onSubmit: (d: ChartOfAc
         <Select label="Tipo" required options={typeOptions} placeholder="Selecione..." error={errors.accountType?.message} {...register('accountType')} />
         <Select label="Natureza" required options={natureOptions} placeholder="Selecione..." error={errors.nature?.message} {...register('nature')} />
       </div>
-      <label className="flex items-center gap-2 text-sm text-slate-700 cursor-pointer">
+      <label className="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-300 cursor-pointer">
         <input type="checkbox" {...register('isAnalytical')} className="rounded" />
         Conta analitica (aceita lancamentos)
       </label>
@@ -61,7 +61,7 @@ export default function ChartOfAccountsPage() {
   useEffect(() => { fetchAll() }, [page])
 
   const columns: Column<ChartOfAccount>[] = [
-    { key: 'code',        header: 'Codigo',    render: r => <span className="font-mono text-xs bg-slate-100 px-2 py-0.5 rounded">{r.code}</span> },
+    { key: 'code',        header: 'Codigo',    render: r => <span className="font-mono text-xs bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded">{r.code}</span> },
     { key: 'name',        header: 'Nome',      render: r => <span className="font-medium">{r.name}</span> },
     { key: 'accountType', header: 'Tipo',      render: r => typeLabels[r.accountType] ?? r.accountType },
     { key: 'nature',      header: 'Natureza',  render: r => r.nature === 'Debit' ? 'Devedora' : 'Credora' },

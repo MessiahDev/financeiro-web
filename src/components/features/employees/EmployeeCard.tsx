@@ -20,17 +20,17 @@ export function EmployeeCard({ employee }: { employee: Employee }) {
             {employee.fullName.charAt(0).toUpperCase()}
           </div>
           <div>
-            <p className="font-medium text-slate-900">{employee.fullName}</p>
-            <p className="text-sm text-slate-500">{employee.departmentName}</p>
+            <p className="font-medium text-slate-900 dark:text-slate-100">{employee.fullName}</p>
+            <p className="text-sm text-slate-500 dark:text-slate-400">{employee.departmentName}</p>
           </div>
         </div>
         <Badge variant={s.variant} dot>{s.label}</Badge>
       </div>
       <div className="mt-4 grid grid-cols-2 gap-3 text-sm">
-        <div><p className="text-xs text-slate-400">CPF</p><p className="text-slate-700">{formatCPF(employee.cpf)}</p></div>
-        <div><p className="text-xs text-slate-400">Salário</p><p className="font-medium text-slate-900">{formatCurrency(employee.salary)}</p></div>
-        <div><p className="text-xs text-slate-400">Admissão</p><p className="text-slate-700">{formatDate(employee.hireDate)}</p></div>
-        <div><p className="text-xs text-slate-400">E-mail</p><p className="truncate text-slate-700">{employee.email}</p></div>
+        <div><p className="text-xs text-slate-400 dark:text-slate-500">CPF</p><p className="text-slate-700 dark:text-slate-300">{formatCPF(employee.cpf)}</p></div>
+        <div><p className="text-xs text-slate-400 dark:text-slate-500">Salário</p><p className="font-medium text-slate-900 dark:text-slate-100">{formatCurrency(employee.salary)}</p></div>
+        <div><p className="text-xs text-slate-400 dark:text-slate-500">Admissão</p><p className="text-slate-700 dark:text-slate-300">{formatDate(employee.hireDate)}</p></div>
+        <div><p className="text-xs text-slate-400 dark:text-slate-500">E-mail</p><p className="truncate text-slate-700 dark:text-slate-300">{employee.email}</p></div>
       </div>
     </Card>
   )

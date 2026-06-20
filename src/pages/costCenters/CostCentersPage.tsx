@@ -44,7 +44,7 @@ export default function CostCentersPage() {
   useEffect(() => { fetchAll() }, [page])
 
   const columns: Column<CostCenter>[] = [
-    { key: 'code',        header: 'Codigo',    render: r => <span className="font-mono text-xs bg-slate-100 px-2 py-0.5 rounded">{r.code}</span> },
+    { key: 'code',        header: 'Codigo',    render: r => <span className="font-mono text-xs bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded">{r.code}</span> },
     { key: 'name',        header: 'Nome',      render: r => <span className="font-medium">{r.name}</span> },
     { key: 'description', header: 'Descricao', render: r => r.description ?? '-' },
     { key: 'status', header: 'Status', render: r => <Badge variant={r.status === 'Active' ? 'success' : 'default'} dot>{r.status === 'Active' ? 'Ativo' : 'Inativo'}</Badge> },

@@ -7,7 +7,7 @@ export const reportsService = {
     return get<FinancialSummary>(API_ROUTES.REPORTS + '/financial-summary', params)
   },
 
-  async getTrialBalance(periodId: string): Promise<TrialBalance> {
-    return get<TrialBalance>(API_ROUTES.REPORTS + '/trial-balance', { periodId })
+  async getTrialBalance(accountingPeriodId: string): Promise<TrialBalance> {
+    return get<TrialBalance>(API_ROUTES.JOURNAL_ENTRIES + '/trial-balance', { accountingPeriodId })
   },
 }

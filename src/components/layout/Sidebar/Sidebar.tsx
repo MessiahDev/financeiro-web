@@ -4,10 +4,11 @@ import {
   Calendar, FolderTree, Target, BookText,
   ArrowUpCircle, ArrowDownCircle, ArrowLeftRight, PieChart,
   UserCircle, Factory, Building2, Users, Wallet,
-  ClipboardList, TrendingUp, LineChart,
+  ClipboardList, TrendingUp, LineChart, ShieldCheck,
   type LucideIcon,
 } from 'lucide-react'
 import { ROUTES } from '../../../router/routes'
+import { useAuthContext } from '../../../contexts/AuthContext'
 
 interface NavItem {
   label: string
@@ -18,6 +19,7 @@ interface NavItem {
 interface NavGroup {
   group: string
   items: NavItem[]
+  requiredRole?: string
 }
 
 const NAV: NavGroup[] = [
@@ -62,6 +64,7 @@ const NAV: NavGroup[] = [
   },
   {
     group: 'RH',
+    requiredRole: 'Manager',
     items: [
       { label: 'Departamentos', path: ROUTES.DEPARTMENTS, icon: Building2 },
       { label: 'Funcionarios',  path: ROUTES.EMPLOYEES,   icon: Users },
@@ -82,6 +85,13 @@ const NAV: NavGroup[] = [
       { label: 'Resumo Financeiro', path: ROUTES.REPORTS_FINANCIAL_SUMMARY, icon: LineChart },
     ],
   },
+  {
+    group: 'Administracao',
+    requiredRole: 'Admin',
+    items: [
+      { label: 'Gerenciar Usuarios', path: ROUTES.USER_MANAGEMENT, icon: ShieldCheck },
+    ],
+  },
 ]
 
 interface SidebarProps {
@@ -90,6 +100,9 @@ interface SidebarProps {
 
 export function Sidebar({ collapsed = false }: SidebarProps) {
   const location = useLocation()
+  const { hasMinimumRole } = useAuthContext()
+
+  const visibleNav = NAV.filter(group => !group.requiredRole || hasMinimumRole(group.requiredRole))
 
   return (
     <aside
@@ -110,7 +123,7 @@ export function Sidebar({ collapsed = false }: SidebarProps) {
 
       {/* Nav */}
       <nav className="flex-1 overflow-y-auto px-2 py-3">
-        {NAV.map((group) => (
+        {visibleNav.map((group) => (
           <div key={group.group} className="mb-4">
             {!collapsed && (
               <p className="mb-1 px-3 text-[10px] font-semibold uppercase tracking-widest text-slate-500">

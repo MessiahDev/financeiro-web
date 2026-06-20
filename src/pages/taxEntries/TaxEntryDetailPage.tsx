@@ -40,7 +40,7 @@ export default function TaxEntryDetailPage() {
   useEffect(() => { if (id) fetchById(id) }, [id])
 
   if (isLoading) return <div className="flex justify-center py-20"><Spinner size="lg" className="text-blue-500" /></div>
-  if (!selected) return <p className="text-sm text-slate-400 p-6">Obrigação não encontrada.</p>
+  if (!selected) return <p className="text-sm text-slate-400 dark:text-slate-500 p-6">Obrigação não encontrada.</p>
 
   const t = selected
 
@@ -64,20 +64,20 @@ export default function TaxEntryDetailPage() {
           <CardHeader title="Dados da Obrigação" />
           <CardDivider />
           <dl className="grid grid-cols-2 gap-4 text-sm">
-            <div><dt className="text-slate-400">Tipo</dt><dd className="font-mono text-xs bg-slate-100 px-2 py-0.5 rounded inline-block">{taxTypeLabel[t.taxType] ?? t.taxType}</dd></div>
-            <div><dt className="text-slate-400">Status</dt><dd><TaxEntryStatusBadge status={t.status} /></dd></div>
-            <div><dt className="text-slate-400">Competência</dt><dd>{formatDate(t.competence)}</dd></div>
-            <div><dt className="text-slate-400">Vencimento</dt><dd>{formatDate(t.dueDate)}</dd></div>
-            <div><dt className="text-slate-400">Base de Cálculo</dt><dd className="font-semibold">{formatCurrency(t.baseAmount)}</dd></div>
-            <div><dt className="text-slate-400">Taxa</dt><dd>{t.rate}%</dd></div>
-            <div><dt className="text-slate-400">Valor do Tributo</dt><dd className="font-semibold">{formatCurrency(t.taxAmount)}</dd></div>
+            <div><dt className="text-slate-400 dark:text-slate-500">Tipo</dt><dd className="font-mono text-xs bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded inline-block">{taxTypeLabel[t.taxType] ?? t.taxType}</dd></div>
+            <div><dt className="text-slate-400 dark:text-slate-500">Status</dt><dd><TaxEntryStatusBadge status={t.status} /></dd></div>
+            <div><dt className="text-slate-400 dark:text-slate-500">Competência</dt><dd>{formatDate(t.competence)}</dd></div>
+            <div><dt className="text-slate-400 dark:text-slate-500">Vencimento</dt><dd>{formatDate(t.dueDate)}</dd></div>
+            <div><dt className="text-slate-400 dark:text-slate-500">Base de Cálculo</dt><dd className="font-semibold">{formatCurrency(t.baseAmount)}</dd></div>
+            <div><dt className="text-slate-400 dark:text-slate-500">Taxa</dt><dd>{t.rate}%</dd></div>
+            <div><dt className="text-slate-400 dark:text-slate-500">Valor do Tributo</dt><dd className="font-semibold">{formatCurrency(t.taxAmount)}</dd></div>
           </dl>
         </Card>
         <Card>
           <CardHeader title="Valor do Tributo" />
           <CardDivider />
           <p className="font-display text-3xl font-bold mt-2 text-red-600">{formatCurrency(t.taxAmount)}</p>
-          <p className="mt-1 text-xs text-slate-400">{t.status === TaxEntryStatus.Paid ? 'Pago' : 'Pendente'}</p>
+          <p className="mt-1 text-xs text-slate-400 dark:text-slate-500">{t.status === TaxEntryStatus.Paid ? 'Pago' : 'Pendente'}</p>
         </Card>
       </div>
       <Card padding="none">

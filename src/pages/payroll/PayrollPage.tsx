@@ -80,7 +80,7 @@ function ProcessForm({ onSubmit, onCancel, isSaving }: {
 
       <div className="flex flex-col gap-2">
         <div className="flex items-center justify-between">
-          <label className="text-sm font-medium text-slate-700">
+          <label className="text-sm font-medium text-slate-700 dark:text-slate-300">
             Funcionários <span className="text-red-500">*</span>
           </label>
           <button
@@ -97,19 +97,19 @@ function ProcessForm({ onSubmit, onCancel, isSaving }: {
             <Spinner size="sm" className="text-blue-500" />
           </div>
         ) : (
-          <div className="max-h-48 overflow-y-auto rounded-lg border border-slate-200 divide-y divide-slate-100">
+          <div className="max-h-48 overflow-y-auto rounded-lg border border-slate-200 dark:border-slate-800 divide-y divide-slate-100">
             {employees.length === 0 ? (
-              <p className="text-xs text-slate-400 p-3">Nenhum funcionário ativo encontrado.</p>
+              <p className="text-xs text-slate-400 dark:text-slate-500 p-3">Nenhum funcionário ativo encontrado.</p>
             ) : employees.map(e => (
-              <label key={e.id} className="flex items-center gap-3 px-3 py-2 hover:bg-slate-50 cursor-pointer">
+              <label key={e.id} className="flex items-center gap-3 px-3 py-2 hover:bg-slate-50 dark:bg-slate-800/50 cursor-pointer">
                 <input
                   type="checkbox"
                   checked={selectedIds.includes(e.id)}
                   onChange={() => toggleEmployee(e.id)}
                   className="rounded border-slate-300 text-blue-600"
                 />
-                <span className="text-sm text-slate-700">{e.fullName}</span>
-                <span className="ml-auto text-xs text-slate-400">{formatCurrency(e.salary)}</span>
+                <span className="text-sm text-slate-700 dark:text-slate-300">{e.fullName}</span>
+                <span className="ml-auto text-xs text-slate-400 dark:text-slate-500">{formatCurrency(e.salary)}</span>
               </label>
             ))}
           </div>
@@ -249,7 +249,7 @@ export default function PayrollPage() {
         }
       >
         <div className="flex flex-col gap-3">
-          <p className="text-sm text-slate-600">
+          <p className="text-sm text-slate-600 dark:text-slate-400">
             Cancelar a folha de{' '}
             <strong>
               {cancelTarget ? `${MONTHS[cancelTarget.month - 1]}/${cancelTarget.year}` : ''}

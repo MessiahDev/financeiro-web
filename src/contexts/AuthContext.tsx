@@ -20,7 +20,14 @@ interface AuthContextValue extends AuthStoreState {
   register: (data: RegisterRequest) => Promise<void>
   logout: () => void
   hasRole: (role: string) => boolean
+  hasMinimumRole: (minRole: string) => boolean
   updateUserName: (name: string) => void
+}
+
+const ROLE_HIERARCHY: Record<string, number> = {
+  Employee: 1,
+  Manager: 2,
+  Admin: 3,
 }
 
 const AuthContext = createContext<AuthContextValue | null>(null)
@@ -61,6 +68,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     [state.user],
   )
 
+  const hasMinimumRole = useCallback(
+    (minRole: string) => {
+      const userRole = state.user?.roles[0]
+      if (!userRole) return false
+      return (ROLE_HIERARCHY[userRole] ?? 0) >= (ROLE_HIERARCHY[minRole] ?? 0)
+    },
+    [state.user],
+  )
+
   const updateUserName = useCallback((name: string) => {
     if (!state.user || !state.token) return
     const updatedUser: AuthUser = { ...state.user, name }
@@ -68,7 +84,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [state.user, state.token])
 
   return (
-    <AuthContext.Provider value={{ ...state, login, register, logout, hasRole, updateUserName }}>
+    <AuthContext.Provider value={{ ...state, login, register, logout, hasRole, hasMinimumRole, updateUserName }}>
       {children}
     </AuthContext.Provider>
   )

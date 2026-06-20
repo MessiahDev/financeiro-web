@@ -179,7 +179,7 @@ export default function BankAccountDetailPage() {
   ]
 
   if (isLoading) return <div className="flex justify-center py-20"><Spinner size="lg" className="text-blue-500" /></div>
-  if (!selected) return <p className="text-sm text-slate-400 p-6">Conta não encontrada.</p>
+  if (!selected) return <p className="text-sm text-slate-400 dark:text-slate-500 p-6">Conta não encontrada.</p>
 
   const a = selected
 
@@ -197,18 +197,18 @@ export default function BankAccountDetailPage() {
           <CardHeader title="Dados da Conta" />
           <CardDivider />
           <dl className="grid grid-cols-2 gap-4 text-sm">
-            <div><dt className="text-slate-400">Banco</dt><dd className="font-medium text-slate-900">{a.bankName}</dd></div>
-            <div><dt className="text-slate-400">Tipo</dt><dd>{typeLabel[a.accountType] ?? a.accountType}</dd></div>
-            <div><dt className="text-slate-400">Agência</dt><dd>{a.agency}</dd></div>
-            <div><dt className="text-slate-400">Conta</dt><dd>{a.accountNumber}</dd></div>
-            <div><dt className="text-slate-400">Status</dt><dd><Badge variant={a.isActive ? 'success' : 'default'} dot>{a.isActive ? 'Ativa' : 'Inativa'}</Badge></dd></div>
-            <div><dt className="text-slate-400">Cadastrado em</dt><dd>{formatDate(a.createdAt)}</dd></div>
+            <div><dt className="text-slate-400 dark:text-slate-500">Banco</dt><dd className="font-medium text-slate-900 dark:text-slate-100">{a.bankName}</dd></div>
+            <div><dt className="text-slate-400 dark:text-slate-500">Tipo</dt><dd>{typeLabel[a.accountType] ?? a.accountType}</dd></div>
+            <div><dt className="text-slate-400 dark:text-slate-500">Agência</dt><dd>{a.agency}</dd></div>
+            <div><dt className="text-slate-400 dark:text-slate-500">Conta</dt><dd>{a.accountNumber}</dd></div>
+            <div><dt className="text-slate-400 dark:text-slate-500">Status</dt><dd><Badge variant={a.isActive ? 'success' : 'default'} dot>{a.isActive ? 'Ativa' : 'Inativa'}</Badge></dd></div>
+            <div><dt className="text-slate-400 dark:text-slate-500">Cadastrado em</dt><dd>{formatDate(a.createdAt)}</dd></div>
           </dl>
         </Card>
         <Card>
           <CardHeader title="Saldo Atual" />
           <CardDivider />
-          <p className={`font-display text-3xl font-bold mt-2 ${a.balance >= 0 ? 'text-slate-900' : 'text-red-600'}`}>
+          <p className={`font-display text-3xl font-bold mt-2 ${a.balance >= 0 ? 'text-slate-900 dark:text-slate-100' : 'text-red-600'}`}>
             {formatCurrency(a.balance)}
           </p>
         </Card>
@@ -230,7 +230,7 @@ export default function BankAccountDetailPage() {
 
       {/* Extratos importados (banco real) */}
       <div className="flex items-center justify-between">
-        <h2 className="font-display font-semibold text-slate-900">Extratos Importados</h2>
+        <h2 className="font-display font-semibold text-slate-900 dark:text-slate-100">Extratos Importados</h2>
         <Button onClick={openImport}>+ Importar Extrato</Button>
       </div>
       <Table
@@ -282,7 +282,7 @@ export default function BankAccountDetailPage() {
           {/* Lançamentos */}
           <div>
             <div className="flex items-center justify-between mb-2">
-              <p className="text-sm font-semibold text-slate-700">
+              <p className="text-sm font-semibold text-slate-700 dark:text-slate-300">
                 Lançamentos <span className="text-red-500">*</span>
               </p>
               <Button size="sm" variant="secondary" onClick={addEntry}>+ Adicionar</Button>
@@ -290,9 +290,9 @@ export default function BankAccountDetailPage() {
 
             <div className="flex flex-col gap-3">
               {entries.map((entry, i) => (
-                <div key={entry._id} className="rounded-lg border border-slate-200 p-3 flex flex-col gap-3">
+                <div key={entry._id} className="rounded-lg border border-slate-200 dark:border-slate-800 p-3 flex flex-col gap-3">
                   <div className="flex items-center justify-between">
-                    <span className="text-xs font-medium text-slate-400">Lançamento {i + 1}</span>
+                    <span className="text-xs font-medium text-slate-400 dark:text-slate-500">Lançamento {i + 1}</span>
                     {entries.length > 1 && (
                       <button onClick={() => removeEntry(entry._id)}
                         className="text-xs text-red-400 hover:text-red-600">

@@ -10,18 +10,18 @@ export default function LoginPage() {
           F
         </div>
 
-        <h1 className="font-display text-2xl font-semibold text-slate-900">
+        <h1 className="font-display text-2xl font-semibold text-slate-900 dark:text-slate-100">
           Bem-vindo de volta
         </h1>
 
-        <p className="mt-1 text-sm text-slate-500">
+        <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
           Entre com suas credenciais para continuar
         </p>
       </div>
 
       <LoginForm />
 
-      <p className="mt-6 text-center text-sm text-slate-500">
+      <p className="mt-6 text-center text-sm text-slate-500 dark:text-slate-400">
         Nao tem conta?{' '}
         <Link
           to={ROUTES.REGISTER}

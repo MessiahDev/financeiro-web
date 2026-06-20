@@ -179,7 +179,7 @@ export default function DashboardPage() {
           <button
             onClick={refreshAll}
             disabled={isRefreshing}
-            className="flex h-9 items-center gap-2 rounded-lg border border-slate-200 px-3 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50 disabled:opacity-50"
+            className="flex h-9 items-center gap-2 rounded-lg border border-slate-200 dark:border-slate-800 px-3 text-sm font-medium text-slate-600 dark:text-slate-400 transition-colors hover:bg-slate-50 dark:bg-slate-800/50 disabled:opacity-50"
           >
             <RefreshIcon spinning={isRefreshing} />
             Atualizar

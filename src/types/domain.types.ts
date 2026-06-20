@@ -892,3 +892,24 @@ export interface AccountLedger {
   closingBalance:   number
   entries:          LedgerEntry[]
 }
+
+export interface UserSummary {
+  id:        string
+  name:      string
+  email:     string
+  role:      string
+  isActive:  boolean
+  createdAt: string
+}
+
+export interface UserAuditLog {
+  id:                string
+  targetUserId:      string
+  targetUserName:    string
+  changedByUserId:   string
+  changedByUserName: string
+  action:            string
+  oldValue?:         string
+  newValue?:          string
+  createdAt:         string
+}
