@@ -1,20 +1,15 @@
 import { get, post, put, del } from './api'
+import { buildQueryString } from '../utils/pagination'
 import { API_ROUTES } from '../utils/constants'
 import type { AccountReceivable, CreateAccountReceivableRequest, ReceivePaymentRequest } from '../types/domain.types'
 import type { PagedResult } from '../types/pagination.types'
 
 export const accountsReceivableService = {
-  async getAll(_params?: Record<string, unknown>): Promise<PagedResult<AccountReceivable>> {
-    const data = await get<AccountReceivable[]>(API_ROUTES.ACCOUNTS_RECEIVABLE)
-    return {
-      items:           data ?? [],
-      totalCount:      data?.length ?? 0,
-      totalPages:      1,
-      pageNumber:      1,
-      pageSize:        data?.length ?? 0,
-      hasPreviousPage: false,
-      hasNextPage:     false,
-    }
+  async getAll(params?: Record<string, unknown>): Promise<PagedResult<AccountReceivable>> {
+    return get<PagedResult<AccountReceivable>>(
+      API_ROUTES.ACCOUNTS_RECEIVABLE +
+      buildQueryString((params ?? {}) as Record<string, string | number | boolean | null | undefined>),
+    )
   },
   async getById(id: string): Promise<AccountReceivable> {
     return get<AccountReceivable>(`${API_ROUTES.ACCOUNTS_RECEIVABLE}/${id}`)

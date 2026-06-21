@@ -1,5 +1,6 @@
 import { get, post, put, del } from './api'
 import { API_ROUTES } from '../utils/constants'
+import { buildQueryString } from '../utils/pagination'
 import type { Customer, CreateCustomerRequest, UpdateCustomerRequest } from '../types/domain.types'
 import type { PagedResult } from '../types/pagination.types'
 
@@ -12,17 +13,11 @@ export interface GetCustomersParams {
 }
 
 export const customersService = {
-  async getAll(_params?: GetCustomersParams): Promise<PagedResult<Customer>> {
-    const data = await get<Customer[]>(API_ROUTES.CUSTOMERS)
-    return {
-      items:           data ?? [],
-      totalCount:      data?.length ?? 0,
-      totalPages:      1,
-      pageNumber:      1,
-      pageSize:        data?.length ?? 0,
-      hasPreviousPage: false,
-      hasNextPage:     false,
-    }
+  async getAll(params?: GetCustomersParams): Promise<PagedResult<Customer>> {
+    return get<PagedResult<Customer>>(
+      API_ROUTES.CUSTOMERS +
+      buildQueryString((params ?? {}) as Record<string, string | number | boolean | null | undefined>),
+    )
   },
   async getById(id: string): Promise<Customer> {
     return get<Customer>(`${API_ROUTES.CUSTOMERS}/${id}`)

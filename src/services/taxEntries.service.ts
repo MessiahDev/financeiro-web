@@ -1,4 +1,5 @@
 import { get, post, del } from './api'
+import { buildQueryString } from '../utils/pagination'
 import { API_ROUTES } from '../utils/constants'
 import type {
   TaxEntry,
@@ -9,17 +10,11 @@ import type {
 import type { PagedResult } from '../types/pagination.types'
 
 export const taxEntriesService = {
-  async getAll(_params?: Record<string, unknown>): Promise<PagedResult<TaxEntry>> {
-    const data = await get<TaxEntry[]>(API_ROUTES.TAX_ENTRIES)
-    return {
-      items:           data ?? [],
-      totalCount:      data?.length ?? 0,
-      totalPages:      1,
-      pageNumber:      1,
-      pageSize:        data?.length ?? 0,
-      hasPreviousPage: false,
-      hasNextPage:     false,
-    }
+  async getAll(params?: Record<string, unknown>): Promise<PagedResult<TaxEntry>> {
+    return get<PagedResult<TaxEntry>>(
+      API_ROUTES.TAX_ENTRIES +
+      buildQueryString((params ?? {}) as Record<string, string | number | boolean | null | undefined>),
+    )
   },
   async getById(id: string): Promise<TaxEntry> {
     return get<TaxEntry>(`${API_ROUTES.TAX_ENTRIES}/${id}`)

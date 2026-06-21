@@ -15,19 +15,20 @@ import { Select } from '../../components/ui/Select/Select'
 import { CurrencyInput } from '../../components/ui/CurrencyInput/CurrencyInput'
 import { Spinner } from '../../components/ui/Spinner/Spinner'
 import type { BankAccount } from '../../types/domain.types'
+import { BankAccountType } from '../../types/enums'
 import { ROUTES } from '../../router/routes'
 import { useNavigate } from 'react-router-dom'
 
 const typeOptions = [
-  { value: 'Checking', label: 'Conta Corrente' },
-  { value: 'Savings', label: 'Poupança' },
-  { value: 'Investment', label: 'Investimento' }
+  { value: BankAccountType.Checking, label: 'Conta Corrente' },
+  { value: BankAccountType.Savings,  label: 'Poupança' },
+  { value: BankAccountType.Payment,  label: 'Conta Pagamento' },
 ]
 
 const typeLabel: Record<string, string> = {
-  Checking: 'Conta Corrente',
-  Savings: 'Poupança',
-  Investment: 'Investimento'
+  [BankAccountType.Checking]: 'Conta Corrente',
+  [BankAccountType.Savings]:  'Poupança',
+  [BankAccountType.Payment]:  'Conta Pagamento',
 }
 
 function BankAccountForm({ onSubmit, onCancel, isSaving }: { onSubmit: (d: BankAccountFormData) => Promise<void>; onCancel: () => void; isSaving: boolean }) {

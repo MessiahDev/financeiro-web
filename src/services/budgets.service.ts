@@ -1,4 +1,5 @@
 import { get, post, put, del } from './api'
+import { buildQueryString } from '../utils/pagination'
 import { API_ROUTES } from '../utils/constants'
 import type { Budget, CreateBudgetRequest, BudgetVsActual } from '../types/domain.types'
 import type { PagedResult } from '../types/pagination.types'
@@ -6,17 +7,11 @@ import type { PagedResult } from '../types/pagination.types'
 export type UpdateBudgetRequest = Partial<CreateBudgetRequest>
 
 export const budgetsService = {
-  async getAll(_params?: Record<string, unknown>): Promise<PagedResult<Budget>> {
-    const data = await get<Budget[]>(API_ROUTES.BUDGETS)
-    return {
-      items:           data ?? [],
-      totalCount:      data?.length ?? 0,
-      totalPages:      1,
-      pageNumber:      1,
-      pageSize:        data?.length ?? 0,
-      hasPreviousPage: false,
-      hasNextPage:     false,
-    }
+  async getAll(params?: Record<string, unknown>): Promise<PagedResult<Budget>> {
+    return get<PagedResult<Budget>>(
+      API_ROUTES.BUDGETS +
+      buildQueryString((params ?? {}) as Record<string, string | number | boolean | null | undefined>),
+    )
   },
   async getById(id: string): Promise<Budget> {
     return get<Budget>(`${API_ROUTES.BUDGETS}/${id}`)

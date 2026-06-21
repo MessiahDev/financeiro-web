@@ -1,22 +1,17 @@
 import { get, post, put, del } from './api'
 import { API_ROUTES } from '../utils/constants'
+import { buildQueryString } from '../utils/pagination'
 import type { Department, CreateDepartmentRequest, UpdateDepartmentRequest } from '../types/domain.types'
 import type { PagedResult } from '../types/pagination.types'
 
 export type { CreateDepartmentRequest, UpdateDepartmentRequest }
 
 export const departmentsService = {
-  async getAll(_params?: Record<string, unknown>): Promise<PagedResult<Department>> {
-    const data = await get<Department[]>(API_ROUTES.DEPARTMENTS)
-    return {
-      items:           data ?? [],
-      totalCount:      data?.length ?? 0,
-      totalPages:      1,
-      pageNumber:      1,
-      pageSize:        data?.length ?? 0,
-      hasPreviousPage: false,
-      hasNextPage:     false,
-    }
+  async getAll(params?: Record<string, unknown>): Promise<PagedResult<Department>> {
+    return get<PagedResult<Department>>(
+      API_ROUTES.DEPARTMENTS +
+      buildQueryString((params ?? {}) as Record<string, string | number | boolean | null | undefined>),
+    )
   },
   async getById(id: string): Promise<Department> {
     return get<Department>(`${API_ROUTES.DEPARTMENTS}/${id}`)
