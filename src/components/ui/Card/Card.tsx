@@ -24,10 +24,11 @@ export function Card({ children, className = '', padding = 'md', onClick }: Card
     <div
       onClick={onClick}
       className={[
-        'rounded-xl border border-slate-200 bg-white shadow-sm',
-        'dark:border-slate-800 dark:bg-slate-900',
+        'rounded-xl border border-slate-200/70 bg-white',
+        'shadow-[0_1px_2px_rgba(15,23,42,0.04),0_8px_20px_-8px_rgba(15,23,42,0.12)]',
+        'dark:border-slate-800 dark:bg-slate-900 dark:shadow-none',
         paddings[padding],
-        onClick ? 'cursor-pointer hover:shadow-md transition-shadow duration-150' : '',
+        onClick ? 'cursor-pointer hover:shadow-[0_2px_4px_rgba(15,23,42,0.06),0_12px_28px_-8px_rgba(15,23,42,0.16)] hover:-translate-y-0.5 transition-all duration-200' : '',
         className,
       ]
         .filter(Boolean)

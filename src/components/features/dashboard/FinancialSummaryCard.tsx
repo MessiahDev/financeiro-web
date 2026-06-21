@@ -12,17 +12,23 @@ interface MetricCardProps {
 }
 
 const variants = {
-  default: { bg: 'bg-slate-100 dark:bg-slate-800',     text: 'text-slate-600 dark:text-slate-400' },
-  success: { bg: 'bg-green-100 dark:bg-green-900/30',  text: 'text-green-600 dark:text-green-400' },
-  danger:  { bg: 'bg-red-100 dark:bg-red-900/30',      text: 'text-red-600 dark:text-red-400' },
-  warning: { bg: 'bg-amber-100 dark:bg-amber-900/30',  text: 'text-amber-600 dark:text-amber-400' },
-  info:    { bg: 'bg-blue-100 dark:bg-blue-900/30',    text: 'text-blue-600 dark:text-blue-400' },
+  default: { badge: 'bg-gradient-to-br from-slate-400 to-slate-600',  accent: 'before:bg-slate-400 dark:before:bg-slate-600' },
+  success: { badge: 'bg-gradient-to-br from-green-400 to-green-600',  accent: 'before:bg-green-500' },
+  danger:  { badge: 'bg-gradient-to-br from-red-400 to-red-600',      accent: 'before:bg-red-500' },
+  warning: { badge: 'bg-gradient-to-br from-amber-400 to-amber-600',  accent: 'before:bg-amber-500' },
+  info:    { badge: 'bg-gradient-to-br from-blue-400 to-blue-600',    accent: 'before:bg-blue-500' },
 }
 
 export function MetricCard({ title, value, icon, variant = 'default', subtitle, isLoading = false }: MetricCardProps) {
   const v = variants[variant]
   return (
-    <Card>
+    <Card
+      className={[
+        'relative overflow-hidden',
+        'before:absolute before:inset-x-0 before:top-0 before:h-[3px]',
+        v.accent,
+      ].join(' ')}
+    >
       <div className="flex items-start justify-between gap-4">
         <div className="min-w-0">
           <p className="text-sm text-slate-500 dark:text-slate-400">{title}</p>
@@ -35,7 +41,7 @@ export function MetricCard({ title, value, icon, variant = 'default', subtitle, 
           )}
           {subtitle && <p className="mt-0.5 text-xs text-slate-400 dark:text-slate-500">{subtitle}</p>}
         </div>
-        <div className={['flex h-11 w-11 shrink-0 items-center justify-center rounded-xl', v.bg, v.text].join(' ')}>
+        <div className={['flex h-11 w-11 shrink-0 items-center justify-center rounded-xl text-white shadow-md', v.badge].join(' ')}>
           {icon}
         </div>
       </div>
@@ -75,26 +81,33 @@ interface SecondaryStatsProps {
   totalTaxesPaid:    number
 }
 
+const secondaryVariants = {
+  blue:   'bg-blue-50 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400',
+  violet: 'bg-violet-50 text-violet-600 dark:bg-violet-900/30 dark:text-violet-400',
+  green:  'bg-green-50 text-green-600 dark:bg-green-900/30 dark:text-green-400',
+  amber:  'bg-amber-50 text-amber-600 dark:bg-amber-900/30 dark:text-amber-400',
+}
+
 export function SecondaryStats({ activeEmployees, payrollsProcessed, totalReceived, totalTaxesPaid }: SecondaryStatsProps) {
   const stats = [
-    { label: 'Funcionários Ativos',  value: activeEmployees.toLocaleString('pt-BR'),   icon: <Users size={18} strokeWidth={1.75} /> },
-    { label: 'Folhas Processadas',   value: payrollsProcessed.toLocaleString('pt-BR'), icon: <Receipt size={18} strokeWidth={1.75} /> },
-    { label: 'Total Recebido',       value: formatCurrency(totalReceived),             icon: <CheckCircle2 size={18} strokeWidth={1.75} /> },
-    { label: 'Impostos Pagos',       value: formatCurrency(totalTaxesPaid),            icon: <Landmark size={18} strokeWidth={1.75} /> },
+    { label: 'Funcionários Ativos',  value: activeEmployees.toLocaleString('pt-BR'),   icon: <Users size={18} strokeWidth={1.75} />,        color: secondaryVariants.blue },
+    { label: 'Folhas Processadas',   value: payrollsProcessed.toLocaleString('pt-BR'), icon: <Receipt size={18} strokeWidth={1.75} />,       color: secondaryVariants.violet },
+    { label: 'Total Recebido',       value: formatCurrency(totalReceived),             icon: <CheckCircle2 size={18} strokeWidth={1.75} />,  color: secondaryVariants.green },
+    { label: 'Impostos Pagos',       value: formatCurrency(totalTaxesPaid),            icon: <Landmark size={18} strokeWidth={1.75} />,      color: secondaryVariants.amber },
   ]
 
   return (
     <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
       {stats.map((s) => (
-        <div key={s.label} className="flex items-center gap-3 rounded-xl border border-slate-200 bg-white px-4 py-3 dark:border-slate-800 dark:bg-slate-900">
-          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-slate-50 text-slate-500 dark:bg-slate-800 dark:text-slate-400">
+        <Card key={s.label} padding="sm" className="flex items-center gap-3">
+          <div className={['flex h-9 w-9 shrink-0 items-center justify-center rounded-lg', s.color].join(' ')}>
             {s.icon}
           </div>
           <div className="min-w-0">
             <p className="truncate text-xs text-slate-500 dark:text-slate-400">{s.label}</p>
             <p className="truncate text-sm font-semibold tabular-nums text-slate-900 dark:text-slate-100">{s.value}</p>
           </div>
-        </div>
+        </Card>
       ))}
     </div>
   )

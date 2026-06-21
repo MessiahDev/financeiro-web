@@ -48,15 +48,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [])
 
   const register = useCallback(async (data: RegisterRequest) => {
-    const response = await authService.register(data)
-    const payload = decodeJwt(response.token)
-    const user: AuthUser = {
-      id: payload?.sub ?? '',
-      name: response.name,
-      email: response.email,
-      roles: [response.role],
-    }
-    dispatch({ type: 'LOGIN', payload: { user, token: response.token } })
+    await authService.register(data)
   }, [])
 
   const logout = useCallback(() => {

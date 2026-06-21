@@ -8,7 +8,7 @@ import { Select } from '../../components/ui/Select/Select'
 import { Button } from '../../components/ui/Button/Button'
 import { useAuthContext } from '../../contexts/AuthContext'
 import { useNotifications } from '../../contexts/NotificationContext'
-import { usePreferences, type ThemeMode, type CurrencyOption } from '../../contexts/PreferencesContext'
+import { usePreferences, type ThemeMode } from '../../contexts/PreferencesContext'
 import { usersService } from '../../services/users.service'
 import {
   updateNameSchema,
@@ -20,12 +20,6 @@ import {
 const themeOptions = [
   { value: 'light', label: 'Claro' },
   { value: 'dark',  label: 'Escuro' },
-]
-
-const currencyOptions = [
-  { value: 'BRL', label: 'Real (R$)' },
-  { value: 'USD', label: 'Dólar (US$)' },
-  { value: 'EUR', label: 'Euro (€)' },
 ]
 
 function ProfileForm({ name, onSubmit, isSaving }: { name: string; onSubmit: (d: UpdateNameFormData) => Promise<void>; isSaving: boolean }) {
@@ -66,7 +60,7 @@ function PasswordForm({ onSubmit, isSaving }: { onSubmit: (d: ChangePasswordForm
 export default function SettingsPage() {
   const { user, updateUserName } = useAuthContext()
   const { success, error: notifyError } = useNotifications()
-  const { theme, currency, setTheme, setCurrency } = usePreferences()
+  const { theme, setTheme } = usePreferences()
 
   const [isSavingName, setIsSavingName]         = useState(false)
   const [isSavingPassword, setIsSavingPassword] = useState(false)
@@ -117,24 +111,18 @@ export default function SettingsPage() {
         </Card>
 
         <Card className="lg:col-span-2">
-          <CardHeader title="Preferências do Sistema" subtitle="Personalize a aparência e formato de exibição" />
+          <CardHeader title="Preferências do Sistema" subtitle="Personalize a aparência do sistema" />
           <CardDivider />
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:max-w-md">
+          <div className="max-w-xs">
             <Select
               label="Tema"
               options={themeOptions}
               value={theme}
               onChange={e => setTheme(e.target.value as ThemeMode)}
             />
-            <Select
-              label="Moeda padrão"
-              options={currencyOptions}
-              value={currency}
-              onChange={e => setCurrency(e.target.value as CurrencyOption)}
-            />
           </div>
           <p className="mt-3 text-xs text-slate-400">
-            As preferências são salvas localmente neste navegador.
+            A preferência é salva localmente neste navegador.
           </p>
         </Card>
       </div>

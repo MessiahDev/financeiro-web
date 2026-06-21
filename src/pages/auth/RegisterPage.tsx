@@ -18,9 +18,9 @@ export default function RegisterPage() {
     try {
       await registerUser(data)
 
-      success('Conta criada com sucesso!')
+      success('Conta criada com sucesso! Faça login para continuar.')
 
-      navigate(ROUTES.DASHBOARD, {
+      navigate(ROUTES.LOGIN, {
         replace: true,
       })
     } catch {

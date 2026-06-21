@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useNavigate, useLocation } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { Sparkles } from 'lucide-react'
 import { loginSchema, type LoginFormData } from '../../../schemas/auth.schema'
 import { useAuth } from '../../../hooks/useAuth'
@@ -17,10 +17,6 @@ export function LoginForm() {
   const { login, isLoading } = useAuth()
   const { error: notifyError } = useNotifications()
   const navigate = useNavigate()
-  const location = useLocation()
-  const from =
-    (location.state as { from?: Location })?.from?.pathname ??
-    ROUTES.DASHBOARD
   const [showPassword, setShowPassword] = useState(false)
   const [isDemoLoading, setIsDemoLoading] = useState(false)
 
@@ -36,7 +32,7 @@ export function LoginForm() {
   async function onSubmit(data: LoginFormData) {
     try {
       await login(data)
-      navigate(from, { replace: true })
+      navigate(ROUTES.DASHBOARD, { replace: true })
     } catch {
       notifyError('E-mail ou senha invalidos.')
     }
@@ -48,7 +44,7 @@ export function LoginForm() {
     setIsDemoLoading(true)
     try {
       await login({ email: DEMO_EMAIL, password: DEMO_PASSWORD })
-      navigate(from, { replace: true })
+      navigate(ROUTES.DASHBOARD, { replace: true })
     } catch {
       notifyError('Conta demo indisponível no momento.')
     } finally {

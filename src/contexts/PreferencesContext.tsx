@@ -1,16 +1,13 @@
 import { createContext, useContext, useState, useCallback, useEffect, type ReactNode } from 'react'
 
 export type ThemeMode = 'light' | 'dark'
-export type CurrencyOption = 'BRL' | 'USD' | 'EUR'
 
 interface PreferencesState {
   theme: ThemeMode
-  currency: CurrencyOption
 }
 
 interface PreferencesContextValue extends PreferencesState {
   setTheme: (theme: ThemeMode) => void
-  setCurrency: (currency: CurrencyOption) => void
 }
 
 const STORAGE_KEY = '@financeiro:preferences'
@@ -22,7 +19,7 @@ function loadPreferences(): PreferencesState {
   } catch {
     // ignore
   }
-  return { theme: 'light', currency: 'BRL' }
+  return { theme: 'light' }
 }
 
 const PreferencesContext = createContext<PreferencesContextValue | null>(null)
@@ -39,12 +36,8 @@ export function PreferencesProvider({ children }: { children: ReactNode }) {
     setPreferences(p => ({ ...p, theme }))
   }, [])
 
-  const setCurrency = useCallback((currency: CurrencyOption) => {
-    setPreferences(p => ({ ...p, currency }))
-  }, [])
-
   return (
-    <PreferencesContext.Provider value={{ ...preferences, setTheme, setCurrency }}>
+    <PreferencesContext.Provider value={{ ...preferences, setTheme }}>
       {children}
     </PreferencesContext.Provider>
   )
