@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { PageHeader } from '../../components/layout/PageHeader/PageHeader'
 import { Table, type Column } from '../../components/ui/Table/Table'
 import { TablePagination } from '../../components/ui/Table/TablePagination'
@@ -10,11 +11,12 @@ import { useNotifications } from '../../contexts/NotificationContext'
 import { useAuth } from '../../hooks/useAuth'
 import { formatCurrency, formatDate } from '../../utils/formatters'
 import { Badge, type BadgeVariant } from '../../components/ui/Badge/Badge'
+import { ROUTES } from '../../router/routes'
 import type { BankReconciliation } from '../../types/domain.types'
 import type { PagedResult } from '../../types/pagination.types'
 import { BankReconciliationStatus } from '../../types/enums'
 
-const statusMap: Record<number, { label: string; variant: BadgeVariant }> = {
+const statusMap: Record<string, { label: string; variant: BadgeVariant }> = {
   [BankReconciliationStatus.Open]:       { label: 'Aberta',       variant: 'info'    },
   [BankReconciliationStatus.InProgress]: { label: 'Em andamento', variant: 'warning' },
   [BankReconciliationStatus.Completed]:  { label: 'Concluída',    variant: 'success' },
@@ -22,6 +24,7 @@ const statusMap: Record<number, { label: string; variant: BadgeVariant }> = {
 }
 
 export default function BankReconciliationsPage() {
+  const navigate = useNavigate()
   const { user } = useAuth()
   const { success, error: notifyError } = useNotifications()
   const { items, isLoading, isSaving, page, pageSize, totalCount, totalPages, setPage, fetchAll } =
@@ -49,19 +52,31 @@ export default function BankReconciliationsPage() {
       const s = statusMap[r.status] ?? { label: String(r.status), variant: 'default' as BadgeVariant }
       return <Badge variant={s.variant} dot>{s.label}</Badge>
     }},
-    { key: 'actions', header: '', render: r => r.status === AccountPayableStatus.InProgress ? (
+    { key: 'actions', header: '', headerClassName: 'w-56', render: r => (
       <div className="flex justify-end gap-1">
-        <Button size="sm" variant="ghost" onClick={() => setCompleteTarget(r)}>Concluir</Button>
-        <Button size="sm" variant="ghost" onClick={() => setCancelTarget(r)} className="text-red-500 hover:bg-red-50">Cancelar</Button>
+        <Button size="sm" variant="ghost" onClick={() => navigate(`${ROUTES.BANK_RECONCILIATIONS}/${r.id}`)}>Ver</Button>
+        {r.status === BankReconciliationStatus.InProgress && (
+          <>
+            <Button size="sm" variant="ghost" onClick={() => setCompleteTarget(r)}>Concluir</Button>
+            <Button size="sm" variant="ghost" onClick={() => setCancelTarget(r)} className="text-red-500 hover:bg-red-50">Cancelar</Button>
+          </>
+        )}
       </div>
-    ) : null },
+    )},
   ]
 
   return (
     <div className="flex flex-col gap-6">
-      <PageHeader title="Conciliações Bancárias" subtitle={`${totalCount} conciliação${totalCount !== 1 ? 'es' : ''}`} />
+      <PageHeader title="Conciliações Bancárias" subtitle={`${totalCount} conciliação${totalCount !== 1 ? 'ões' : ''}`} />
 
-      <Table columns={columns} data={safeItems} keyExtractor={r => r.id} isLoading={isLoading} emptyMessage="Nenhuma conciliação encontrada." />
+      <Table
+        columns={columns}
+        data={safeItems}
+        keyExtractor={r => r.id}
+        isLoading={isLoading}
+        emptyMessage="Nenhuma conciliação encontrada."
+        onRowClick={r => navigate(`${ROUTES.BANK_RECONCILIATIONS}/${r.id}`)}
+      />
 
       {pagedData.totalPages > 1 && <TablePagination pagination={pagedData} onPageChange={setPage} />}
 

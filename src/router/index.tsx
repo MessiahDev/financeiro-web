@@ -48,6 +48,7 @@ const TrialBalancePage            = lazy(() => import('../pages/reports/TrialBal
 
 const SettingsPage                = lazy(() => import('../pages/settings/SettingsPage'))
 
+const ErrorBoundaryPage           = lazy(() => import('../pages/errors/ErrorBoundaryPage'))
 const NotFoundPage                = lazy(() => import('../pages/errors/NotFoundPage'))
 const UnauthorizedPage            = lazy(() => import('../pages/errors/UnauthorizedPage'))
 
@@ -72,80 +73,85 @@ function withSuspense(Component: React.ComponentType) {
 
 const router = createBrowserRouter([
   {
-    element: <Suspense fallback={<PageLoader />}><AuthLayout /></Suspense>,
-    children: [
-      { path: ROUTES.LOGIN,    element: withSuspense(LoginPage) },
-      { path: ROUTES.REGISTER, element: withSuspense(RegisterPage) },
-    ],
-  },
-
-  {
-    element: <PrivateRoute />,
+    errorElement: withSuspense(ErrorBoundaryPage),
     children: [
       {
-        element: <Suspense fallback={<PageLoader />}><MainLayout /></Suspense>,
+        element: <Suspense fallback={<PageLoader />}><AuthLayout /></Suspense>,
         children: [
-          { path: ROUTES.DASHBOARD, element: withSuspense(DashboardPage) },
+          { path: ROUTES.LOGIN,    element: withSuspense(LoginPage) },
+          { path: ROUTES.REGISTER, element: withSuspense(RegisterPage) },
+        ],
+      },
 
-          { path: ROUTES.BANK_ACCOUNTS,              element: withSuspense(BankAccountsPage) },
-          { path: ROUTES.BANK_ACCOUNT_DETAIL,        element: withSuspense(BankAccountDetailPage) },
-          { path: ROUTES.BANK_STATEMENTS,            element: withSuspense(BankStatementsPage) },
-          { path: ROUTES.BANK_RECONCILIATIONS,       element: withSuspense(BankReconciliationsPage) },
-          { path: ROUTES.BANK_RECONCILIATION_DETAIL, element: withSuspense(BankReconciliationDetailPage) },
-
-          { path: ROUTES.ACCOUNTING_PERIODS,    element: withSuspense(AccountingPeriodsPage) },
-          { path: ROUTES.CHART_OF_ACCOUNTS,     element: withSuspense(ChartOfAccountsPage) },
-          { path: ROUTES.COST_CENTERS,          element: withSuspense(CostCentersPage) },
-          { path: ROUTES.JOURNAL_ENTRIES,       element: withSuspense(JournalEntriesPage) },
-          { path: ROUTES.JOURNAL_ENTRY_DETAIL,  element: withSuspense(JournalEntryDetailPage) },
-
-          { path: ROUTES.ACCOUNTS_PAYABLE,          element: withSuspense(AccountsPayablePage) },
-          { path: ROUTES.ACCOUNT_PAYABLE_DETAIL,    element: withSuspense(AccountPayableDetailPage) },
-          { path: ROUTES.ACCOUNTS_RECEIVABLE,       element: withSuspense(AccountsReceivablePage) },
-          { path: ROUTES.ACCOUNT_RECEIVABLE_DETAIL, element: withSuspense(AccountReceivableDetailPage) },
-          { path: ROUTES.TRANSACTIONS,              element: withSuspense(TransactionsPage) },
-          { path: ROUTES.BUDGETS,                   element: withSuspense(BudgetsPage) },
-          { path: ROUTES.BUDGET_DETAIL,             element: withSuspense(BudgetDetailPage) },
-
-          { path: ROUTES.CUSTOMERS,       element: withSuspense(CustomersPage) },
-          { path: ROUTES.CUSTOMER_DETAIL, element: withSuspense(CustomerDetailPage) },
-          { path: ROUTES.SUPPLIERS,       element: withSuspense(SuppliersPage) },
-          { path: ROUTES.SUPPLIER_DETAIL, element: withSuspense(SupplierDetailPage) },
-
+      {
+        element: <PrivateRoute />,
+        children: [
           {
-            element: <PrivateRoute requiredRole="Manager" />,
+            element: <Suspense fallback={<PageLoader />}><MainLayout /></Suspense>,
             children: [
-              { path: ROUTES.DEPARTMENTS,     element: withSuspense(DepartmentsPage) },
-              { path: ROUTES.EMPLOYEES,       element: withSuspense(EmployeesPage) },
-              { path: ROUTES.EMPLOYEE_DETAIL, element: withSuspense(EmployeeDetailPage) },
-              { path: ROUTES.PAYROLL,         element: withSuspense(PayrollPage) },
-              { path: ROUTES.PAYROLL_DETAIL,  element: withSuspense(PayrollDetailPage) },
-            ],
-          },
+              { path: ROUTES.DASHBOARD, element: withSuspense(DashboardPage) },
 
-          { path: ROUTES.TAX_ENTRIES,      element: withSuspense(TaxEntriesPage) },
-          { path: ROUTES.TAX_ENTRY_DETAIL, element: withSuspense(TaxEntryDetailPage) },
+              { path: ROUTES.BANK_ACCOUNTS,              element: withSuspense(BankAccountsPage) },
+              { path: ROUTES.BANK_ACCOUNT_DETAIL,        element: withSuspense(BankAccountDetailPage) },
+              { path: ROUTES.BANK_STATEMENTS,            element: withSuspense(BankStatementsPage) },
+              { path: ROUTES.BANK_RECONCILIATIONS,       element: withSuspense(BankReconciliationsPage) },
+              { path: ROUTES.BANK_RECONCILIATION_DETAIL, element: withSuspense(BankReconciliationDetailPage) },
 
-          { path: ROUTES.REPORTS,                   element: withSuspense(ReportsPage) },
-          { path: ROUTES.REPORTS_FINANCIAL_SUMMARY,  element: withSuspense(FinancialSummaryPage) },
-          { path: ROUTES.REPORTS_TRIAL_BALANCE,      element: withSuspense(TrialBalancePage) },
+              { path: ROUTES.ACCOUNTING_PERIODS,    element: withSuspense(AccountingPeriodsPage) },
+              { path: ROUTES.CHART_OF_ACCOUNTS,     element: withSuspense(ChartOfAccountsPage) },
+              { path: ROUTES.COST_CENTERS,          element: withSuspense(CostCentersPage) },
+              { path: ROUTES.JOURNAL_ENTRIES,       element: withSuspense(JournalEntriesPage) },
+              { path: ROUTES.JOURNAL_ENTRY_DETAIL,  element: withSuspense(JournalEntryDetailPage) },
 
-          { path: ROUTES.SETTINGS, element: withSuspense(SettingsPage) },
+              { path: ROUTES.ACCOUNTS_PAYABLE,          element: withSuspense(AccountsPayablePage) },
+              { path: ROUTES.ACCOUNT_PAYABLE_DETAIL,    element: withSuspense(AccountPayableDetailPage) },
+              { path: ROUTES.ACCOUNTS_RECEIVABLE,       element: withSuspense(AccountsReceivablePage) },
+              { path: ROUTES.ACCOUNT_RECEIVABLE_DETAIL, element: withSuspense(AccountReceivableDetailPage) },
+              { path: ROUTES.TRANSACTIONS,              element: withSuspense(TransactionsPage) },
+              { path: ROUTES.BUDGETS,                   element: withSuspense(BudgetsPage) },
+              { path: ROUTES.BUDGET_DETAIL,             element: withSuspense(BudgetDetailPage) },
 
-          {
-            element: <PrivateRoute requiredRole="Admin" />,
-            children: [
-              { path: ROUTES.USER_MANAGEMENT, element: withSuspense(UserManagementPage) },
+              { path: ROUTES.CUSTOMERS,       element: withSuspense(CustomersPage) },
+              { path: ROUTES.CUSTOMER_DETAIL, element: withSuspense(CustomerDetailPage) },
+              { path: ROUTES.SUPPLIERS,       element: withSuspense(SuppliersPage) },
+              { path: ROUTES.SUPPLIER_DETAIL, element: withSuspense(SupplierDetailPage) },
+
+              {
+                element: <PrivateRoute requiredRole="Manager" />,
+                children: [
+                  { path: ROUTES.DEPARTMENTS,     element: withSuspense(DepartmentsPage) },
+                  { path: ROUTES.EMPLOYEES,       element: withSuspense(EmployeesPage) },
+                  { path: ROUTES.EMPLOYEE_DETAIL, element: withSuspense(EmployeeDetailPage) },
+                  { path: ROUTES.PAYROLL,         element: withSuspense(PayrollPage) },
+                  { path: ROUTES.PAYROLL_DETAIL,  element: withSuspense(PayrollDetailPage) },
+                ],
+              },
+
+              { path: ROUTES.TAX_ENTRIES,      element: withSuspense(TaxEntriesPage) },
+              { path: ROUTES.TAX_ENTRY_DETAIL, element: withSuspense(TaxEntryDetailPage) },
+
+              { path: ROUTES.REPORTS,                   element: withSuspense(ReportsPage) },
+              { path: ROUTES.REPORTS_FINANCIAL_SUMMARY,  element: withSuspense(FinancialSummaryPage) },
+              { path: ROUTES.REPORTS_TRIAL_BALANCE,      element: withSuspense(TrialBalancePage) },
+
+              { path: ROUTES.SETTINGS, element: withSuspense(SettingsPage) },
+
+              {
+                element: <PrivateRoute requiredRole="Admin" />,
+                children: [
+                  { path: ROUTES.USER_MANAGEMENT, element: withSuspense(UserManagementPage) },
+                ],
+              },
             ],
           },
         ],
       },
+
+      { path: ROUTES.UNAUTHORIZED, element: withSuspense(UnauthorizedPage) },
+      { path: ROUTES.NOT_FOUND,    element: withSuspense(NotFoundPage) },
+      { path: '*',                 element: withSuspense(NotFoundPage) },
     ],
   },
-
-  { path: ROUTES.UNAUTHORIZED, element: withSuspense(UnauthorizedPage) },
-  { path: ROUTES.NOT_FOUND,    element: withSuspense(NotFoundPage) },
-  { path: '*',                 element: withSuspense(NotFoundPage) },
 ])
 
 export function AppRouter() {

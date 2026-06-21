@@ -9,6 +9,7 @@ interface MetricCardProps {
   variant?:   'default' | 'success' | 'danger' | 'warning' | 'info'
   subtitle?:  string
   isLoading?: boolean
+  onClick?:   () => void
 }
 
 const variants = {
@@ -19,10 +20,11 @@ const variants = {
   info:    { badge: 'bg-gradient-to-br from-blue-400 to-blue-600',    accent: 'before:bg-blue-500' },
 }
 
-export function MetricCard({ title, value, icon, variant = 'default', subtitle, isLoading = false }: MetricCardProps) {
+export function MetricCard({ title, value, icon, variant = 'default', subtitle, isLoading = false, onClick }: MetricCardProps) {
   const v = variants[variant]
   return (
     <Card
+      onClick={onClick}
       className={[
         'relative overflow-hidden',
         'before:absolute before:inset-x-0 before:top-0 before:h-[3px]',
@@ -57,28 +59,41 @@ interface FinancialSummaryCardsProps {
   pendingReceivables:  number
   pendingPayables:     number
   isLoadingCash?:      boolean
+  onRevenueClick?:     () => void
+  onExpensesClick?:    () => void
+  onNetResultClick?:   () => void
+  onCashClick?:        () => void
+  onReceivablesClick?: () => void
+  onPayablesClick?:    () => void
 }
 
 export function FinancialSummaryCards(props: FinancialSummaryCardsProps) {
-  const { totalRevenue, totalExpenses, netResult, cashBalance, pendingReceivables, pendingPayables, isLoadingCash } = props
+  const {
+    totalRevenue, totalExpenses, netResult, cashBalance, pendingReceivables, pendingPayables, isLoadingCash,
+    onRevenueClick, onExpensesClick, onNetResultClick, onCashClick, onReceivablesClick, onPayablesClick,
+  } = props
 
   return (
     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
-      <MetricCard title="Receitas (mês)"     value={totalRevenue}       icon={<TrendingUp size={20} strokeWidth={1.75} />}   variant="success" />
-      <MetricCard title="Despesas (mês)"     value={totalExpenses}      icon={<TrendingDown size={20} strokeWidth={1.75} />} variant="danger" />
-      <MetricCard title="Resultado Líquido"  value={netResult}          icon={netResult >= 0 ? <TrendingUp size={20} strokeWidth={1.75} /> : <TrendingDown size={20} strokeWidth={1.75} />} variant={netResult >= 0 ? 'success' : 'danger'} />
-      <MetricCard title="Saldo em Caixa"     value={cashBalance}        icon={<Wallet size={20} strokeWidth={1.75} />}    variant="default" isLoading={isLoadingCash} subtitle="Soma de todas as contas ativas" />
-      <MetricCard title="A Receber"          value={pendingReceivables} icon={<ArrowDownToLine size={20} strokeWidth={1.75} />} variant="info"    subtitle="Pendente no período" />
-      <MetricCard title="A Pagar"            value={pendingPayables}    icon={<ArrowUpFromLine size={20} strokeWidth={1.75} />}   variant="warning" subtitle="Pendente no período" />
+      <MetricCard title="Receitas (mês)"     value={totalRevenue}       icon={<TrendingUp size={20} strokeWidth={1.75} />}   variant="success" onClick={onRevenueClick} />
+      <MetricCard title="Despesas (mês)"     value={totalExpenses}      icon={<TrendingDown size={20} strokeWidth={1.75} />} variant="danger" onClick={onExpensesClick} />
+      <MetricCard title="Resultado Líquido"  value={netResult}          icon={netResult >= 0 ? <TrendingUp size={20} strokeWidth={1.75} /> : <TrendingDown size={20} strokeWidth={1.75} />} variant={netResult >= 0 ? 'success' : 'danger'} onClick={onNetResultClick} />
+      <MetricCard title="Saldo em Caixa"     value={cashBalance}        icon={<Wallet size={20} strokeWidth={1.75} />}    variant="default" isLoading={isLoadingCash} subtitle="Soma de todas as contas ativas" onClick={onCashClick} />
+      <MetricCard title="A Receber"          value={pendingReceivables} icon={<ArrowDownToLine size={20} strokeWidth={1.75} />} variant="info"    subtitle="Pendente no período" onClick={onReceivablesClick} />
+      <MetricCard title="A Pagar"            value={pendingPayables}    icon={<ArrowUpFromLine size={20} strokeWidth={1.75} />}   variant="warning" subtitle="Pendente no período" onClick={onPayablesClick} />
     </div>
   )
 }
 
 interface SecondaryStatsProps {
-  activeEmployees:   number
-  payrollsProcessed: number
-  totalReceived:     number
-  totalTaxesPaid:    number
+  activeEmployees:     number
+  payrollsProcessed:   number
+  totalReceived:       number
+  totalTaxesPaid:      number
+  onEmployeesClick?:   () => void
+  onPayrollClick?:     () => void
+  onReceivedClick?:    () => void
+  onTaxesClick?:       () => void
 }
 
 const secondaryVariants = {
@@ -88,18 +103,21 @@ const secondaryVariants = {
   amber:  'bg-amber-50 text-amber-600 dark:bg-amber-900/30 dark:text-amber-400',
 }
 
-export function SecondaryStats({ activeEmployees, payrollsProcessed, totalReceived, totalTaxesPaid }: SecondaryStatsProps) {
+export function SecondaryStats({
+  activeEmployees, payrollsProcessed, totalReceived, totalTaxesPaid,
+  onEmployeesClick, onPayrollClick, onReceivedClick, onTaxesClick,
+}: SecondaryStatsProps) {
   const stats = [
-    { label: 'Funcionários Ativos',  value: activeEmployees.toLocaleString('pt-BR'),   icon: <Users size={18} strokeWidth={1.75} />,        color: secondaryVariants.blue },
-    { label: 'Folhas Processadas',   value: payrollsProcessed.toLocaleString('pt-BR'), icon: <Receipt size={18} strokeWidth={1.75} />,       color: secondaryVariants.violet },
-    { label: 'Total Recebido',       value: formatCurrency(totalReceived),             icon: <CheckCircle2 size={18} strokeWidth={1.75} />,  color: secondaryVariants.green },
-    { label: 'Impostos Pagos',       value: formatCurrency(totalTaxesPaid),            icon: <Landmark size={18} strokeWidth={1.75} />,      color: secondaryVariants.amber },
+    { label: 'Funcionários Ativos',  value: activeEmployees.toLocaleString('pt-BR'),   icon: <Users size={18} strokeWidth={1.75} />,        color: secondaryVariants.blue,   onClick: onEmployeesClick },
+    { label: 'Folhas Processadas',   value: payrollsProcessed.toLocaleString('pt-BR'), icon: <Receipt size={18} strokeWidth={1.75} />,       color: secondaryVariants.violet, onClick: onPayrollClick },
+    { label: 'Total Recebido',       value: formatCurrency(totalReceived),             icon: <CheckCircle2 size={18} strokeWidth={1.75} />,  color: secondaryVariants.green,  onClick: onReceivedClick },
+    { label: 'Impostos Pagos',       value: formatCurrency(totalTaxesPaid),            icon: <Landmark size={18} strokeWidth={1.75} />,      color: secondaryVariants.amber,  onClick: onTaxesClick },
   ]
 
   return (
     <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
       {stats.map((s) => (
-        <Card key={s.label} padding="sm" className="flex items-center gap-3">
+        <Card key={s.label} padding="sm" className="flex items-center gap-3" onClick={s.onClick}>
           <div className={['flex h-9 w-9 shrink-0 items-center justify-center rounded-lg', s.color].join(' ')}>
             {s.icon}
           </div>

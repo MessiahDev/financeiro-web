@@ -14,9 +14,10 @@ export function parseCurrency(value: string): number {
 
 export function formatDate(dateStr: string | null | undefined): string {
   if (!dateStr) return '-'
-  const date = new Date(dateStr)
-  if (isNaN(date.getTime())) return '-'
-  return date.toLocaleDateString('pt-BR')
+  const datePart = dateStr.split('T')[0]
+  const [year, month, day] = datePart.split('-').map(Number)
+  if (!year || !month || !day) return '-'
+  return `${String(day).padStart(2, '0')}/${String(month).padStart(2, '0')}/${year}`
 }
 
 export function formatDateTime(dateStr: string | null | undefined): string {

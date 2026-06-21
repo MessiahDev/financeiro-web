@@ -39,7 +39,7 @@ export default function JournalEntriesPage() {
   }, [])
 
   useEffect(() => {
-    accountingPeriodsService.getAll().then(r => {
+    accountingPeriodsService.getAll({ pageSize: 100 }).then(r => {
       const list = r.items ?? []
       setPeriods(list)
       if (list.length > 0) {

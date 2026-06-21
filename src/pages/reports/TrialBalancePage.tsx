@@ -27,7 +27,7 @@ export default function TrialBalancePage() {
   const [isLoadingPeriods, setIsLoadingPeriods] = useState(true)
 
   useEffect(() => {
-    accountingPeriodsService.getAll()
+    accountingPeriodsService.getAll({ pageSize: 100 })
       .then(r => {
         const list = r.items ?? []
         setPeriods(list)

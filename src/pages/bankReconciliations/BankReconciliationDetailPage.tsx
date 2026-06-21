@@ -12,7 +12,7 @@ import { ROUTES } from '../../router/routes'
 import { BankReconciliationStatus, ReconciliationItemStatus, BankStatementEntryType } from '../../types/enums'
 import type { BankReconciliation, BankReconciliationItem } from '../../types/domain.types'
 
-const statusMap: Record<BankReconciliationStatus, { label: string; variant: BadgeVariant }> = {
+const statusMap: Record<string, { label: string; variant: BadgeVariant }> = {
   [BankReconciliationStatus.Open]:       { label: 'Aberta',        variant: 'info'    },
   [BankReconciliationStatus.InProgress]: { label: 'Em andamento',  variant: 'warning' },
   [BankReconciliationStatus.Completed]:  { label: 'Concluída',     variant: 'success' },
@@ -26,7 +26,7 @@ export default function BankReconciliationDetailPage() {
   useEffect(() => { if (id) fetchById(id) }, [id])
 
   if (isLoading) return <div className="flex justify-center py-20"><Spinner size="lg" className="text-blue-500" /></div>
-  if (!selected) return <p className="text-sm text-slate-400 p-6">Conciliacao nao encontrada.</p>
+  if (!selected) return <p className="text-sm text-slate-400 dark:text-slate-500 p-6">Conciliação não encontrada.</p>
 
   const r = selected
   const s = statusMap[r.status] ?? { label: r.status, variant: 'default' as BadgeVariant }
@@ -36,37 +36,37 @@ export default function BankReconciliationDetailPage() {
     { key: 'entryDate',        header: 'Data',          render: i => formatDate(i.entryDate) },
     { key: 'amount',           header: 'Valor',         render: i => formatCurrency(i.amount) },
     { key: 'entryType',        header: 'Tipo',          render: i => i.entryType === BankStatementEntryType.Credit ? 'Crédito' : 'Débito' },
-    { key: 'transactionId',    header: 'ID Transação',  render: i => i.transactionId ? <span className="font-mono text-xs">{i.transactionId}</span> : '-' },
-    { key: 'status',           header: 'Status',        render: i => <Badge variant={i.status === AccountPayableStatus.Matched ? 'success' : 'warning'}>{i.status === AccountPayableStatus.Matched ? 'Conciliado' : 'Pendente'}</Badge> },
+    { key: 'notes',            header: 'Observações',   render: i => i.notes ? i.notes : '-' },
+    { key: 'status',           header: 'Status',        render: i => <Badge variant={i.status === ReconciliationItemStatus.Matched ? 'success' : 'warning'}>{i.status === ReconciliationItemStatus.Matched ? 'Conciliado' : 'Pendente'}</Badge> },
   ]
 
   return (
     <div className="flex flex-col gap-6">
-      <PageHeader title="Detalhe da Conciliacao" subtitle={r.bankAccountName} backTo={ROUTES.BANK_RECONCILIATIONS} />
+      <PageHeader title="Detalhe da Conciliação" subtitle={r.bankAccountName} backTo={ROUTES.BANK_RECONCILIATIONS} />
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
         <Card className="lg:col-span-2">
-          <CardHeader title="Informacoes" />
+          <CardHeader title="Informações" />
           <CardDivider />
           <dl className="grid grid-cols-2 gap-4 text-sm">
-            <div><dt className="text-slate-400">Período</dt><dd>{formatDate(r.periodStart)} – {formatDate(r.periodEnd)}</dd></div>
-            <div><dt className="text-slate-400">Saldo Inicial</dt><dd>{formatCurrency(r.statementOpeningBalance)}</dd></div>
-            <div><dt className="text-slate-400">Saldo Final</dt><dd>{formatCurrency(r.statementClosingBalance)}</dd></div>
-            <div><dt className="text-slate-400">Diferença</dt><dd>{formatCurrency(r.difference)}</dd></div>
-            <div><dt className="text-slate-400">Status</dt><dd><Badge variant={s.variant} dot>{s.label}</Badge></dd></div>
-            <div><dt className="text-slate-400">Itens</dt><dd>{r.totalItems} ({r.matchedItems} conciliados)</dd></div>
+            <div><dt className="text-slate-400 dark:text-slate-500">Período</dt><dd className="text-slate-700 dark:text-slate-300">{formatDate(r.periodStart)} – {formatDate(r.periodEnd)}</dd></div>
+            <div><dt className="text-slate-400 dark:text-slate-500">Saldo Inicial</dt><dd className="text-slate-700 dark:text-slate-300">{formatCurrency(r.statementOpeningBalance)}</dd></div>
+            <div><dt className="text-slate-400 dark:text-slate-500">Saldo Final</dt><dd className="text-slate-700 dark:text-slate-300">{formatCurrency(r.statementClosingBalance)}</dd></div>
+            <div><dt className="text-slate-400 dark:text-slate-500">Diferença</dt><dd className="text-slate-700 dark:text-slate-300">{formatCurrency(r.difference)}</dd></div>
+            <div><dt className="text-slate-400 dark:text-slate-500">Status</dt><dd><Badge variant={s.variant} dot>{s.label}</Badge></dd></div>
+            <div><dt className="text-slate-400 dark:text-slate-500">Itens</dt><dd className="text-slate-700 dark:text-slate-300">{r.totalItems} ({r.matchedItems} conciliados)</dd></div>
           </dl>
         </Card>
         <Card>
-          <CardHeader title="Variacao" />
+          <CardHeader title="Variação" />
           <CardDivider />
-          <p className={`... ${r.difference === 0 ? 'text-green-600' : 'text-red-600'}`}>
+          <p className={`font-display text-2xl font-bold ${r.difference === 0 ? 'text-green-600' : 'text-red-600'}`}>
             {formatCurrency(r.difference)}
           </p>
         </Card>
       </div>
       <Card padding="none">
         <div className="px-5 pt-5 pb-4">
-          <CardHeader title="Itens da Conciliacao" subtitle={`${r.items?.length ?? 0} registros`} />
+          <CardHeader title="Itens da Conciliação" subtitle={`${r.items?.length ?? 0} registros`} />
         </div>
         <Table columns={columns} data={r.items ?? []} keyExtractor={i => i.id} emptyMessage="Nenhum item adicionado." />
       </Card>

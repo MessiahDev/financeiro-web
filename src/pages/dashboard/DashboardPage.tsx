@@ -1,4 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { RefreshCw } from 'lucide-react'
 import { PageHeader } from '../../components/layout/PageHeader/PageHeader'
 import { FinancialSummaryCards, SecondaryStats } from '../../components/features/dashboard/FinancialSummaryCard'
 import { OverdueAlerts, type OverdueItem } from '../../components/features/dashboard/OverdueAlerts'
@@ -11,6 +13,7 @@ import { accountsPayableService } from '../../services/accountsPayable.service'
 import { accountsReceivableService } from '../../services/accountsReceivable.service'
 import { taxEntriesService } from '../../services/taxEntries.service'
 import { toISODate, today } from '../../utils/formatters'
+import { ROUTES } from '../../router/routes'
 import type { FinancialSummary } from '../../types/domain.types'
 import { AccountPayableStatus, AccountReceivableStatus, TaxEntryStatus } from '../../types/enums'
 
@@ -22,21 +25,9 @@ function monthsAgo(d: Date, n: number): Date {
   return new Date(d.getFullYear(), d.getMonth() - n, 1)
 }
 
-function RefreshIcon({ spinning }: { spinning?: boolean }) {
-  return (
-    <svg
-      width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
-      strokeLinecap="round" strokeLinejoin="round"
-      className={spinning ? 'animate-spin' : ''}
-    >
-      <path d="M21 12a9 9 0 1 1-3-6.7" />
-      <polyline points="21 3 21 9 15 9" />
-    </svg>
-  )
-}
-
 export default function DashboardPage() {
   const { user } = useAuthContext()
+  const navigate = useNavigate()
 
   const [monthSummary, setMonthSummary] = useState<FinancialSummary | null>(null)
   const [trendSummary, setTrendSummary] = useState<FinancialSummary | null>(null)
@@ -122,7 +113,7 @@ export default function DashboardPage() {
       }
 
       for (const r of receivables.items ?? []) {
-        const isOpen = r.status !== AccountPayableStatus.Received && r.status !== AccountPayableStatus.Cancelled
+        const isOpen = r.status !== AccountReceivableStatus.Received && r.status !== AccountReceivableStatus.Cancelled
         if (isOpen) receivablesTotal += r.remainingAmount
         if (isOpen && r.dueDate < todayStr) {
           items.push({ id: r.id, name: r.customerName || r.description, amount: r.remainingAmount, dueDate: r.dueDate, type: 'receivable' })
@@ -130,7 +121,7 @@ export default function DashboardPage() {
       }
 
       for (const t of taxes.items ?? []) {
-        if (t.dueDate < todayStr && t.status !== AccountPayableStatus.Paid && t.status !== AccountPayableStatus.Cancelled) {
+        if (t.dueDate < todayStr && t.status !== TaxEntryStatus.Paid && t.status !== TaxEntryStatus.Cancelled) {
           items.push({ id: t.id, name: t.description, amount: t.taxAmount, dueDate: t.dueDate, type: 'tax' })
         }
       }
@@ -181,7 +172,7 @@ export default function DashboardPage() {
             disabled={isRefreshing}
             className="flex h-9 items-center gap-2 rounded-lg border border-slate-200 dark:border-slate-800 px-3 text-sm font-medium text-slate-600 dark:text-slate-400 transition-colors hover:bg-slate-50 dark:bg-slate-800/50 disabled:opacity-50"
           >
-            <RefreshIcon spinning={isRefreshing} />
+            <RefreshCw size={16} className={isRefreshing ? 'animate-spin' : ''} />
             Atualizar
           </button>
         }
@@ -201,6 +192,12 @@ export default function DashboardPage() {
             pendingReceivables={pendingReceivablesTotal}
             pendingPayables={pendingPayablesTotal}
             isLoadingCash={isLoadingCash}
+            onRevenueClick={() => navigate(ROUTES.TRANSACTIONS)}
+            onExpensesClick={() => navigate(ROUTES.TRANSACTIONS)}
+            onNetResultClick={() => navigate(ROUTES.REPORTS_FINANCIAL_SUMMARY)}
+            onCashClick={() => navigate(ROUTES.BANK_ACCOUNTS)}
+            onReceivablesClick={() => navigate(ROUTES.ACCOUNTS_RECEIVABLE)}
+            onPayablesClick={() => navigate(ROUTES.ACCOUNTS_PAYABLE)}
           />
 
           <SecondaryStats
@@ -208,6 +205,10 @@ export default function DashboardPage() {
             payrollsProcessed={monthSummary?.payrollsProcessed ?? 0}
             totalReceived={monthSummary?.totalReceived ?? 0}
             totalTaxesPaid={monthSummary?.totalTaxesPaid ?? 0}
+            onEmployeesClick={() => navigate(ROUTES.EMPLOYEES)}
+            onPayrollClick={() => navigate(ROUTES.PAYROLL)}
+            onReceivedClick={() => navigate(ROUTES.ACCOUNTS_RECEIVABLE)}
+            onTaxesClick={() => navigate(ROUTES.TAX_ENTRIES)}
           />
 
           <div className="grid grid-cols-1 gap-6 xl:grid-cols-[1fr_380px]">
