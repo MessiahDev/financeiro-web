@@ -8,9 +8,9 @@ export default function AuthLayout() {
       <div className="hidden lg:flex lg:w-[480px] lg:flex-col lg:justify-between bg-slate-900 p-10">
         <div className="flex items-center gap-3">
           <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-blue-600 font-display text-base font-bold text-white">
-            F
+            K
           </div>
-          <span className="font-display text-lg font-semibold text-white">Financeiro</span>
+          <span className="font-display text-lg font-semibold text-white">Kyros</span>
         </div>
 
         <div>

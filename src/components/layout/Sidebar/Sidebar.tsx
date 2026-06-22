@@ -112,11 +112,11 @@ export function Sidebar({ collapsed = false }: SidebarProps) {
       {/* Logo */}
       <div className="flex h-16 shrink-0 items-center gap-3 border-b border-slate-800 px-4">
         <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-blue-600 font-display text-sm font-bold text-white">
-          F
+          K
         </div>
         {!collapsed && (
           <span className="font-display text-sm font-semibold text-white">
-            Financeiro
+            Kyros
           </span>
         )}
       </div>
