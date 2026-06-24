@@ -7,7 +7,7 @@ export default function LoginPage() {
     <div>
       <div className="mb-8">
         <div className="mb-6 flex h-10 w-10 items-center justify-center rounded-xl bg-blue-600 font-display text-lg font-bold text-white lg:hidden">
-          F
+          K
         </div>
 
         <h1 className="font-display text-2xl font-semibold text-slate-900 dark:text-slate-100">
