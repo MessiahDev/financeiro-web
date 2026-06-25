@@ -4,17 +4,8 @@ import type { BankAccount, CreateBankAccountRequest, TransferBetweenAccountsRequ
 import type { PagedResult } from '../types/pagination.types'
 
 export const bankAccountsService = {
-  async getAll(_params?: Record<string, unknown>): Promise<PagedResult<BankAccount>> {
-    const data = await get<BankAccount[]>(API_ROUTES.BANK_ACCOUNTS)
-    return {
-      items:           data ?? [],
-      totalCount:      data?.length ?? 0,
-      totalPages:      1,
-      pageNumber:      1,
-      pageSize:        data?.length ?? 0,
-      hasPreviousPage: false,
-      hasNextPage:     false,
-    }
+  async getAll(params?: Record<string, unknown>): Promise<PagedResult<BankAccount>> {
+    return get<PagedResult<BankAccount>>(API_ROUTES.BANK_ACCOUNTS, params)
   },
   async getById(id: string): Promise<BankAccount> {
     return get<BankAccount>(`${API_ROUTES.BANK_ACCOUNTS}/${id}`)

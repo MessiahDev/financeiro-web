@@ -41,14 +41,31 @@ export default function CostCentersPage() {
   const [editing, setEditing] = useState<CostCenter | null>(null)
 
   const pagedData: PagedResult<CostCenter> = { items, totalCount, pageNumber: page, pageSize, totalPages, hasPreviousPage: page > 1, hasNextPage: page < totalPages }
+
   useEffect(() => { fetchAll() }, [page])
+
+  const handleCostCenterSubmit = async (d: CostCenterFormData) => {
+    try {
+      if (editing) {
+        await update(editing.id, d)
+      } else {
+        await create(d)
+      }
+      success(editing ? 'Atualizado!' : 'Criado!')
+      setFormOpen(false)
+      setEditing(null)
+      fetchAll()
+    } catch {
+      notifyError('Erro ao salvar.')
+    }
+  }
 
   const columns: Column<CostCenter>[] = [
     { key: 'code',        header: 'Codigo',    render: r => <span className="font-mono text-xs bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded">{r.code}</span> },
     { key: 'name',        header: 'Nome',      render: r => <span className="font-medium">{r.name}</span> },
     { key: 'description', header: 'Descricao', render: r => r.description ?? '-' },
     { key: 'status', header: 'Status', render: r => <Badge variant={r.status === 'Active' ? 'success' : 'default'} dot>{r.status === 'Active' ? 'Ativo' : 'Inativo'}</Badge> },
-    { key: 'actions',     header: '', render: r => (
+    { key: 'actions', header: '', render: r => (
       <div className="flex justify-end gap-1">
         <Button size="sm" variant="ghost" onClick={() => { setEditing(r); setFormOpen(true) }}>Editar</Button>
         <Button size="sm" variant="ghost" onClick={() => setDeleteTarget(r)} className="text-red-500 hover:bg-red-50">Excluir</Button>
@@ -63,8 +80,12 @@ export default function CostCentersPage() {
       <Table columns={columns} data={items} keyExtractor={r => r.id} isLoading={isLoading} emptyMessage="Nenhum centro de custo cadastrado." />
       {pagedData.totalPages > 1 && <TablePagination pagination={pagedData} onPageChange={setPage} />}
       <Modal isOpen={formOpen} onClose={() => { setFormOpen(false); setEditing(null) }} title={editing ? 'Editar centro' : 'Novo centro de custo'} size="md">
-        <CostCenterForm initial={editing ?? undefined} isSaving={isSaving} onCancel={() => { setFormOpen(false); setEditing(null) }}
-          onSubmit={async d => { try { editing ? await update(editing.id, d) : await create(d); success(editing ? 'Atualizado!' : 'Criado!'); setFormOpen(false); setEditing(null); fetchAll() } catch { notifyError('Erro ao salvar.') } }} />
+        <CostCenterForm
+          initial={editing ?? undefined}
+          isSaving={isSaving}
+          onCancel={() => { setFormOpen(false); setEditing(null) }}
+          onSubmit={handleCostCenterSubmit}
+        />
       </Modal>
       <ConfirmModal isOpen={!!deleteTarget} onClose={() => setDeleteTarget(null)}
         onConfirm={async () => { try { await remove(deleteTarget!.id); success('Excluido.'); setDeleteTarget(null) } catch { notifyError('Erro.') } }}

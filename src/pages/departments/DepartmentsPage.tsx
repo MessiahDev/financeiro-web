@@ -21,29 +21,68 @@ export default function DepartmentsPage() {
 
   const pagedData: PagedResult<Department> = { items, totalCount, pageNumber: page, pageSize, totalPages, hasPreviousPage: page > 1, hasNextPage: page < totalPages }
 
-  useEffect(() => { fetchDepartments({ search }) }, [page])
-  const handleSearch = useCallback((q: string) => { setSearch(q); setPage(1); fetchDepartments({ search: q, pageNumber: 1 } as Record<string, unknown>) }, [fetchDepartments, setPage])
+  useEffect(() => { void fetchDepartments({ search }) }, [page])
+
+  const handleSearch = useCallback((q: string) => {
+    setSearch(q)
+    setPage(1)
+    void fetchDepartments({ search: q, pageNumber: 1 } as Record<string, unknown>)
+  }, [fetchDepartments, setPage])
 
   async function handleSubmit(data: DepartmentFormData) {
     try {
-      editing ? await update(editing.id, data) : await create(data)
+      if (editing) {
+        await update(editing.id, data)
+      } else {
+        await create(data)
+      }
       success(editing ? 'Departamento atualizado!' : 'Departamento criado!')
-      setFormOpen(false); setEditing(null); fetchDepartments()
-    } catch { notifyError('Erro ao salvar departamento.') }
+      setFormOpen(false)
+      setEditing(null)
+      void fetchDepartments()
+    } catch {
+      notifyError('Erro ao salvar departamento.')
+    }
   }
 
   return (
     <div className="flex flex-col gap-6">
       <PageHeader title="Departamentos" subtitle={`${totalCount} departamento${totalCount !== 1 ? 's' : ''}`} />
-      <DepartmentList data={pagedData} isLoading={isLoading} searchValue={search} onSearch={handleSearch} onPageChange={setPage}
+      <DepartmentList
+        data={pagedData}
+        isLoading={isLoading}
+        searchValue={search}
+        onSearch={handleSearch}
+        onPageChange={setPage}
         onNew={() => { setEditing(null); setFormOpen(true) }}
         onEdit={(d) => { setEditing(d); setFormOpen(true) }}
         onDelete={(d) => { setTarget(d); setDeleteOpen(true) }}
       />
       <Modal isOpen={formOpen} onClose={() => { setFormOpen(false); setEditing(null) }} title={editing ? 'Editar departamento' : 'Novo departamento'} size="md">
-        <DepartmentForm initial={editing ?? undefined} onSubmit={handleSubmit} onCancel={() => { setFormOpen(false); setEditing(null) }} isSaving={isSaving} />
+        <DepartmentForm
+          initial={editing ?? undefined}
+          onSubmit={handleSubmit}
+          onCancel={() => { setFormOpen(false); setEditing(null) }}
+          isSaving={isSaving}
+        />
       </Modal>
-      <ConfirmModal isOpen={deleteOpen} onClose={() => setDeleteOpen(false)} onConfirm={async () => { try { await remove(target!.id); success('Departamento excluido.'); setDeleteOpen(false) } catch { notifyError('Nao foi possivel excluir.') } }} title="Excluir departamento" message={`Excluir "${target?.name}"?`} confirmLabel="Excluir" isLoading={isSaving} />
+      <ConfirmModal
+        isOpen={deleteOpen}
+        onClose={() => setDeleteOpen(false)}
+        onConfirm={async () => {
+          try {
+            await remove(target!.id)
+            success('Departamento excluido.')
+            setDeleteOpen(false)
+          } catch {
+            notifyError('Nao foi possivel excluir.')
+          }
+        }}
+        title="Excluir departamento"
+        message={`Excluir "${target?.name}"?`}
+        confirmLabel="Excluir"
+        isLoading={isSaving}
+      />
     </div>
   )
 }

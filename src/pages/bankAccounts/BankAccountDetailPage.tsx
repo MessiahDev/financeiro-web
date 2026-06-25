@@ -131,6 +131,7 @@ export default function BankAccountDetailPage() {
     try {
       const payload: ImportBankStatementRequest = {
         ...form,
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         entries: entries.map(({ _id, ...e }) => e),
       }
       await bankStatementsService.import(payload)

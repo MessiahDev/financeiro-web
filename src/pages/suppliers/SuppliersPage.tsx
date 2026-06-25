@@ -28,10 +28,18 @@ export default function SuppliersPage() {
 
   async function handleSubmit(data: SupplierFormData) {
     try {
-      editing ? await update(editing.id, data) : await create(data)
+      if (editing) {
+        await update(editing.id, data)
+      } else {
+        await create(data)
+      }
       success(editing ? 'Fornecedor atualizado!' : 'Fornecedor cadastrado!')
-      setFormOpen(false); setEditing(null); fetchSuppliers({ search })
-    } catch { notifyError('Erro ao salvar fornecedor.') }
+      setFormOpen(false)
+      setEditing(null)
+      fetchSuppliers({ search })
+    } catch {
+      notifyError('Erro ao salvar fornecedor.')
+    }
   }
 
   return (

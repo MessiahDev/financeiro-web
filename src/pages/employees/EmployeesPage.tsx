@@ -46,7 +46,11 @@ export default function EmployeesPage() {
 
   async function handleSubmit(data: EmployeeFormData) {
     try {
-      editing ? await update(editing.id, data) : await create(data)
+      if (editing) {
+        await update(editing.id, data)
+      } else {
+        await create(data)
+      }
       success(editing ? 'Funcionário atualizado!' : 'Funcionário cadastrado!')
       setFormOpen(false)
       setEditing(null)
