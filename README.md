@@ -6,7 +6,7 @@ Frontend do sistema de gestão financeira **Financeiro** — uma aplicação Rea
 
 ## 📸 Screenshots
 
-### Dashboard Executivo
+### Dashboard
 
 <p align="center">
   <img src="docs/dashboard.png" alt="Dashboard" width="900">
