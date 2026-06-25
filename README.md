@@ -4,6 +4,44 @@ Frontend do sistema de gestão financeira **Financeiro** — uma aplicação Rea
 
 > Este é o frontend (SPA). O backend está em [`FinanceiroApi`](../FinanceiroApi).
 
+## 📸 Screenshots
+
+### Dashboard Executivo
+
+<p align="center">
+  <img src="docs/dashboard.png" alt="Dashboard" width="900">
+</p>
+
+### Conciliação Bancária
+
+<p align="center">
+  <img src="docs/conciliacao.png" alt="Conciliação Bancária" width="900">
+</p>
+
+### Contas a Pagar
+
+<p align="center">
+  <img src="docs/contas-pagar.png" alt="Contas a pagar" width="900">
+</p>
+
+### Balancete de Verificação
+
+<p align="center">
+  <img src="docs/balancete.png" alt="Balancete" width="900">
+</p>
+
+### Folha de Pagamento
+
+<p align="center">
+  <img src="docs/folha.png" alt="Folha de Pagamento" width="900">
+</p>
+
+### Gerênciamento de Usuários
+
+<p align="center">
+  <img src="docs/usuarios.png" alt="Gerênciamento de Usuários" width="900">
+</p>
+
 ## ✨ O que o sistema faz
 
 **Contabilidade**
