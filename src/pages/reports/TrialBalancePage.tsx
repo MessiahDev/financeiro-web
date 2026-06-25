@@ -20,6 +20,35 @@ const typeLabel: Record<AccountType, string> = {
   [AccountType.CostOfGoods]: 'CMV',
 }
 
+function exportCSV(trialBalance: NonNullable<ReturnType<typeof useReports>['trialBalance']>) {
+  const header = ['Código', 'Conta', 'Tipo', 'Débito', 'Crédito', 'Saldo']
+  const rows = trialBalance.lines.map(r => [
+    r.accountCode,
+    r.accountName,
+    typeLabel[r.accountType] ?? String(r.accountType),
+    r.totalDebits.toFixed(2).replace('.', ','),
+    r.totalCredits.toFixed(2).replace('.', ','),
+    r.balance.toFixed(2).replace('.', ','),
+  ])
+  const totals = ['', 'TOTAL', '',
+    trialBalance.totalDebits.toFixed(2).replace('.', ','),
+    trialBalance.totalCredits.toFixed(2).replace('.', ','),
+    '',
+  ]
+  const csv = [header, ...rows, [], totals].map(r => r.join(';')).join('\n')
+  const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' })
+  const url = URL.createObjectURL(blob)
+  const a = document.createElement('a')
+  a.href = url
+  a.download = `balancete-${trialBalance.periodName}.csv`
+  a.click()
+  URL.revokeObjectURL(url)
+}
+
+function exportPDF() {
+  window.print()
+}
+
 export default function TrialBalancePage() {
   const { trialBalance, isLoading, fetchTrialBalance } = useReports()
   const [periods, setPeriods] = useState<AccountingPeriod[]>([])
@@ -52,7 +81,20 @@ export default function TrialBalancePage() {
 
   return (
     <div className="flex flex-col gap-6">
-      <PageHeader title="Balancete de Verificação" backTo={ROUTES.REPORTS} />
+      <PageHeader
+        title="Balancete de Verificação"
+        backTo={ROUTES.REPORTS}
+        actions={trialBalance ? (
+          <div className="flex gap-2">
+            <Button variant="secondary" onClick={() => exportCSV(trialBalance)}>
+              Exportar CSV
+            </Button>
+            <Button variant="secondary" onClick={exportPDF}>
+              Exportar PDF
+            </Button>
+          </div>
+        ) : undefined}
+      />
       <div className="flex items-end gap-3">
         <div className="w-80">
           <Select

@@ -95,6 +95,28 @@ code, pre, kbd { font-family: var(--font-mono); }
   outline-offset: 2px;
 }
 
+@media print {
+  .sidebar,
+  .navbar,
+  aside,
+  nav,
+  button,
+  [role="navigation"] {
+    display: none !important;
+  }
+
+  body {
+    background: white !important;
+    color: black !important;
+  }
+
+  .card,
+  [class*="card"] {
+    border: 1px solid #ddd !important;
+    box-shadow: none !important;
+  }
+}
+
 @layer utilities {
   .font-display  { font-family: var(--font-display); }
   .font-body     { font-family: var(--font-body); }

@@ -8,6 +8,38 @@ import { useReports } from '../../hooks/useReports'
 import { formatCurrency } from '../../utils/formatters'
 import { ROUTES } from '../../router/routes'
 
+function exportCSV(summary: NonNullable<ReturnType<typeof useReports>['summary']>, periodStart: string, periodEnd: string) {
+  const rows = [
+    ['Resumo Financeiro'],
+    [`Período: ${periodStart} até ${periodEnd}`],
+    [],
+    ['Métrica', 'Valor'],
+    ['Total de Créditos',        summary.totalCredits],
+    ['Total de Débitos',         summary.totalDebits],
+    ['Resultado Líquido',        summary.netBalance],
+    ['Total Folha de Pagamento', summary.totalPayroll],
+    ['Funcionários Ativos',      summary.activeEmployees],
+    ['Folhas Processadas',       summary.payrollsProcessed],
+    ['Total Pago (AP)',          summary.totalPaid],
+    ['Total Recebido (AR)',      summary.totalReceived],
+    ['Pendente a Pagar',         summary.pendingPayables],
+    ['Pendente a Receber',       summary.pendingReceivables],
+    ['Total de Impostos Pagos',  summary.totalTaxesPaid],
+  ]
+  const csv = rows.map(r => r.join(';')).join('\n')
+  const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' })
+  const url = URL.createObjectURL(blob)
+  const a = document.createElement('a')
+  a.href = url
+  a.download = `resumo-financeiro-${periodStart}-${periodEnd}.csv`
+  a.click()
+  URL.revokeObjectURL(url)
+}
+
+function exportPDF() {
+  window.print()
+}
+
 function MetricRow({ label, value, highlight, isCount }: {
   label: string
   value: number
@@ -44,7 +76,20 @@ export default function FinancialSummaryPage() {
 
   return (
     <div className="flex flex-col gap-6">
-      <PageHeader title="Resumo Financeiro" backTo={ROUTES.REPORTS} />
+      <PageHeader
+        title="Resumo Financeiro"
+        backTo={ROUTES.REPORTS}
+        actions={summary ? (
+          <div className="flex gap-2">
+            <Button variant="secondary" onClick={() => exportCSV(summary, periodStart, periodEnd)}>
+              Exportar CSV
+            </Button>
+            <Button variant="secondary" onClick={exportPDF}>
+              Exportar PDF
+            </Button>
+          </div>
+        ) : undefined}
+      />
 
       <div className="flex flex-wrap items-end gap-3">
         <DatePicker label="De"  value={periodStart} onChange={e => setPeriodStart((e.target as HTMLInputElement).value)} />
