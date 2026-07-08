@@ -28,7 +28,7 @@ export default function BankStatementsPage() {
 
   useEffect(() => {
     bankAccountsService.getAll()
-      .then(r => setAccounts(r.items))
+      .then(r => setAccounts(r.items ?? []))
       .catch(() => setAccounts([]))
   }, [])
 
@@ -38,7 +38,7 @@ export default function BankStatementsPage() {
     if (selectedAccount) {
       // Uma conta específica
       bankStatementsService.getAll({ bankAccountId: selectedAccount })
-        .then(r => setItems(r.items))
+        .then(r => setItems(r.items ?? []))
         .catch(() => setItems([]))
         .finally(() => setIsLoading(false))
     } else if (accounts.length > 0) {
@@ -46,7 +46,7 @@ export default function BankStatementsPage() {
       Promise.all(
         accounts.map(account =>
           bankStatementsService.getAll({ bankAccountId: account.id })
-            .then(r => r.items)
+            .then(r => r.items ?? [])
             .catch(() => [])
         )
       )
@@ -60,7 +60,7 @@ export default function BankStatementsPage() {
 
   const accountOptions = [
     { value: '', label: 'Todas as contas' },
-    ...accounts.map(a => ({
+    ...(accounts ?? []).map(a => ({
       value: a.id,
       label: `${a.bankName} — Ag. ${a.agency} · Cc. ${a.accountNumber}`,
     }))
